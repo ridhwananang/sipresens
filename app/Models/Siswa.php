@@ -16,6 +16,9 @@ class Siswa extends Model
         'nisn',
         'kelas_id',
         'orangtua_id',
+        'jenis_kelamin',
+        'no_hp',
+        'status',
     ];
 
     public function user(): BelongsTo

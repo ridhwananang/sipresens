@@ -2,50 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
+use App\Services\PresensiService;
+use App\Http\Requests\Presensi\StorePresensiRequest;
+use App\Http\Requests\Presensi\StoreIzinRequest;
+use App\Http\Requests\Presensi\VerifikasiIzinRequest;
 use App\Models\Presensi;
 use App\Models\PengajuanIzin;
-use App\Models\Guru;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Gate;
 
 class PresensiController extends Controller
 {
-    /**
-     * Store or update attendance record (called by Guru).
-     */
-    public function storePresensi(Request $request)
+    protected PresensiService $presensiService;
+
+    public function __construct(PresensiService $presensiService)
     {
-        $request->validate([
-            'siswa_id' => 'required|exists:siswas,id',
-            'status' => 'required|in:hadir,sakit,izin,alpa',
-            'tanggal' => 'required|date',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
+        $this->presensiService = $presensiService;
+    }
+
+    /**
+     * Store or update attendance record (called by Guru or Admin).
+     */
+    public function storePresensi(StorePresensiRequest $request)
+    {
+        Gate::authorize('record', [Presensi::class, $request->siswa_id]);
 
         $user = Auth::user();
-        $guru = $user->guru;
-
-        if (!$guru) {
-            return back()->withErrors(['message' => 'Hanya guru yang dapat merekam presensi.']);
+        
+        // Admins can log attendance, but if it is a Guru, ensure they have a profile
+        if ($user->role === 'guru' && !$user->guru) {
+            return back()->withErrors(['message' => 'Akun Guru Anda tidak terhubung dengan profil Guru.']);
         }
 
-        // Check if student belongs to the class or general authorization (if needed)
-        // For simplicity, we allow any logged-in Guru to verify
-        
-        $presensi = Presensi::updateOrCreate(
-            [
-                'siswa_id' => $request->siswa_id,
-                'tanggal' => $request->tanggal,
-            ],
-            [
-                'status' => $request->status,
-                'keterangan' => $request->keterangan,
-                'diverifikasi_oleh' => $guru->id,
-            ]
-        );
+        $guruId = $user->guru ? $user->guru->id : null;
+
+        $this->presensiService->recordPresensi($request->validated(), $guruId);
 
         return back()->with('success', 'Presensi berhasil direkam.');
     }
@@ -53,40 +44,11 @@ class PresensiController extends Controller
     /**
      * Submit a leave application (called by Siswa or Orang Tua).
      */
-    public function storeIzin(Request $request)
+    public function storeIzin(StoreIzinRequest $request)
     {
-        $request->validate([
-            'siswa_id' => 'required|exists:siswas,id',
-            'tanggal_mulai' => 'required|date|after_or_equal:today',
-            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jenis_izin' => 'required|in:sakit,izin',
-            'alasan' => 'required|string|min:5|max:1000',
-        ]);
+        Gate::authorize('create', [PengajuanIzin::class, $request->siswa_id]);
 
-        $user = Auth::user();
-
-        // Security check
-        if ($user->role === 'siswa') {
-            if ($user->siswa->id != $request->siswa_id) {
-                return back()->withErrors(['message' => 'Anda hanya dapat mengajukan izin untuk diri sendiri.']);
-            }
-        } elseif ($user->role === 'orangtua') {
-            $anakIds = Siswa::where('orangtua_id', $user->orangTua->id)->pluck('id')->toArray();
-            if (!in_array($request->siswa_id, $anakIds)) {
-                return back()->withErrors(['message' => 'Anda hanya dapat mengajukan izin untuk anak Anda.']);
-            }
-        } else {
-            return back()->withErrors(['message' => 'Role Anda tidak diizinkan mengajukan izin.']);
-        }
-
-        PengajuanIzin::create([
-            'siswa_id' => $request->siswa_id,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'jenis_izin' => $request->jenis_izin,
-            'alasan' => $request->alasan,
-            'status' => 'pending',
-        ]);
+        $this->presensiService->submitIzin($request->validated());
 
         return back()->with('success', 'Pengajuan izin berhasil dikirim.');
     }
@@ -94,48 +56,16 @@ class PresensiController extends Controller
     /**
      * Verify a leave application (called by Guru or Admin).
      */
-    public function verifikasiIzin(Request $request, $id)
+    public function verifikasiIzin(VerifikasiIzinRequest $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:disetujui,ditolak',
-        ]);
+        $izin = PengajuanIzin::findOrFail($id);
+        
+        Gate::authorize('verify', $izin);
 
         $user = Auth::user();
-        
-        if (!in_array($user->role, ['guru', 'admin'])) {
-            return back()->withErrors(['message' => 'Hanya guru atau admin yang dapat memverifikasi izin.']);
-        }
+        $guruId = $user->guru ? $user->guru->id : null;
 
-        $izin = PengajuanIzin::findOrFail($id);
-        $izin->status = $request->status;
-        $izin->ditinjau_oleh = $user->id;
-        $izin->save();
-
-        // If approved, automatically update or create the student's attendance records
-        if ($request->status === 'disetujui') {
-            $period = CarbonPeriod::create($izin->tanggal_mulai, $izin->tanggal_selesai);
-            
-            $guruId = $user->guru ? $user->guru->id : null;
-
-            foreach ($period as $date) {
-                // If it is a weekend, we might skip (optional, but good practice)
-                if ($date->isWeekend()) {
-                    continue;
-                }
-
-                Presensi::updateOrCreate(
-                    [
-                        'siswa_id' => $izin->siswa_id,
-                        'tanggal' => $date->toDateString(),
-                    ],
-                    [
-                        'status' => $izin->jenis_izin, // 'sakit' or 'izin'
-                        'keterangan' => 'Izin disetujui: ' . $izin->alasan,
-                        'diverifikasi_oleh' => $guruId,
-                    ]
-                );
-            }
-        }
+        $this->presensiService->verifyIzin($id, $request->status, $user->id, $guruId);
 
         return back()->with('success', 'Status pengajuan izin berhasil diperbarui.');
     }

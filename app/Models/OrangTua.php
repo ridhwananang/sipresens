@@ -16,6 +16,7 @@ class OrangTua extends Model
     protected $fillable = [
         'user_id',
         'no_hp',
+        'jenis_kelamin',
     ];
 
     public function user(): BelongsTo
