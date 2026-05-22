@@ -7,6 +7,8 @@ use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\OrangTua;
+use App\Models\Mapel;
+use App\Models\Jadwal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -218,5 +220,63 @@ class AdminService
     {
         $ortu = OrangTua::findOrFail($id);
         return $ortu->user->delete();
+    }
+
+    // ==========================================
+    // MATA PELAJARAN CRUD
+    // ==========================================
+    public function createMapel(array $data): Mapel
+    {
+        return Mapel::create([
+            'nama_mapel' => $data['nama_mapel'],
+        ]);
+    }
+
+    public function updateMapel(int $id, array $data): Mapel
+    {
+        $mapel = Mapel::findOrFail($id);
+        $mapel->update([
+            'nama_mapel' => $data['nama_mapel'],
+        ]);
+        return $mapel;
+    }
+
+    public function deleteMapel(int $id): bool
+    {
+        $mapel = Mapel::findOrFail($id);
+        return $mapel->delete();
+    }
+
+    // ==========================================
+    // JADWAL CRUD
+    // ==========================================
+    public function createJadwal(array $data): Jadwal
+    {
+        return Jadwal::create([
+            'mapel_id' => $data['mapel_id'],
+            'guru_id' => $data['guru_id'],
+            'kelas_id' => $data['kelas_id'],
+            'hari' => $data['hari'],
+            'waktu' => $data['waktu'],
+        ]);
+    }
+
+    public function updateJadwal(int $id, array $data): Jadwal
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        $jadwal->update([
+            'mapel_id' => $data['mapel_id'],
+            'guru_id' => $data['guru_id'],
+            'kelas_id' => $data['kelas_id'],
+            'hari' => $data['hari'],
+            'waktu' => $data['waktu'],
+        ]);
+        return $jadwal;
+    }
+
+    public function deleteJadwal(int $id): bool
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        return $jadwal->delete();
     }
 }

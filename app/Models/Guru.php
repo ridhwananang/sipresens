@@ -32,4 +32,9 @@ class Guru extends Model
     {
         return $this->hasMany(Presensi::class, 'diverifikasi_oleh');
     }
+
+    public function jadwals(): HasMany
+    {
+        return $this->hasMany(Jadwal::class);
+    }
 }

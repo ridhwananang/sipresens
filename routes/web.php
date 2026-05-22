@@ -28,6 +28,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/orangtua', [AdminController::class, 'storeOrangTua'])->name('admin.orangtua.store');
         Route::put('/admin/orangtua/{id}', [AdminController::class, 'updateOrangTua'])->name('admin.orangtua.update');
         Route::delete('/admin/orangtua/{id}', [AdminController::class, 'destroyOrangTua'])->name('admin.orangtua.destroy');
+
+        Route::post('/admin/mapel', [AdminController::class, 'storeMapel'])->name('admin.mapel.store');
+        Route::put('/admin/mapel/{id}', [AdminController::class, 'updateMapel'])->name('admin.mapel.update');
+        Route::delete('/admin/mapel/{id}', [AdminController::class, 'destroyMapel'])->name('admin.mapel.destroy');
+
+        Route::post('/admin/jadwal', [AdminController::class, 'storeJadwal'])->name('admin.jadwal.store');
+        Route::put('/admin/jadwal/{id}', [AdminController::class, 'updateJadwal'])->name('admin.jadwal.update');
+        Route::delete('/admin/jadwal/{id}', [AdminController::class, 'destroyJadwal'])->name('admin.jadwal.destroy');
     });
 
     // Guru-only Routes

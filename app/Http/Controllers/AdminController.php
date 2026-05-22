@@ -11,10 +11,16 @@ use App\Http\Requests\Admin\StoreSiswaRequest;
 use App\Http\Requests\Admin\UpdateSiswaRequest;
 use App\Http\Requests\Admin\StoreOrangTuaRequest;
 use App\Http\Requests\Admin\UpdateOrangTuaRequest;
+use App\Http\Requests\Admin\StoreMapelRequest;
+use App\Http\Requests\Admin\UpdateMapelRequest;
+use App\Http\Requests\Admin\StoreJadwalRequest;
+use App\Http\Requests\Admin\UpdateJadwalRequest;
 use App\Models\Kelas;
 use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\OrangTua;
+use App\Models\Mapel;
+use App\Models\Jadwal;
 use Illuminate\Support\Facades\Gate;
 
 class AdminController extends Controller
@@ -153,4 +159,69 @@ class AdminController extends Controller
 
         return back()->with('success', 'Data Orang Tua berhasil dihapus.');
     }
+
+    // ==========================================
+    // MATA PELAJARAN CRUD
+    // ==========================================
+    public function storeMapel(StoreMapelRequest $request)
+    {
+        Gate::authorize('create', Mapel::class);
+
+        $this->adminService->createMapel($request->validated());
+
+        return back()->with('success', 'Mata Pelajaran berhasil ditambahkan.');
+    }
+
+    public function updateMapel(UpdateMapelRequest $request, $id)
+    {
+        $mapel = Mapel::findOrFail($id);
+        Gate::authorize('update', $mapel);
+
+        $this->adminService->updateMapel($id, $request->validated());
+
+        return back()->with('success', 'Mata Pelajaran berhasil diperbarui.');
+    }
+
+    public function destroyMapel($id)
+    {
+        $mapel = Mapel::findOrFail($id);
+        Gate::authorize('delete', $mapel);
+
+        $this->adminService->deleteMapel($id);
+
+        return back()->with('success', 'Mata Pelajaran berhasil dihapus.');
+    }
+
+    // ==========================================
+    // JADWAL CRUD
+    // ==========================================
+    public function storeJadwal(StoreJadwalRequest $request)
+    {
+        Gate::authorize('create', Jadwal::class);
+
+        $this->adminService->createJadwal($request->validated());
+
+        return back()->with('success', 'Jadwal berhasil ditambahkan.');
+    }
+
+    public function updateJadwal(UpdateJadwalRequest $request, $id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        Gate::authorize('update', $jadwal);
+
+        $this->adminService->updateJadwal($id, $request->validated());
+
+        return back()->with('success', 'Jadwal berhasil diperbarui.');
+    }
+
+    public function destroyJadwal($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        Gate::authorize('delete', $jadwal);
+
+        $this->adminService->deleteJadwal($id);
+
+        return back()->with('success', 'Jadwal berhasil dihapus.');
+    }
 }
+

@@ -9,12 +9,16 @@ use App\Models\Kelas;
 use App\Models\OrangTua;
 use App\Models\Presensi;
 use App\Models\PengajuanIzin;
+use App\Models\Mapel;
+use App\Models\Jadwal;
 use App\Http\Resources\KelasResource;
 use App\Http\Resources\GuruResource;
 use App\Http\Resources\SiswaResource;
 use App\Http\Resources\OrangTuaResource;
 use App\Http\Resources\PresensiResource;
 use App\Http\Resources\PengajuanIzinResource;
+use App\Http\Resources\MapelResource;
+use App\Http\Resources\JadwalResource;
 use Carbon\Carbon;
 
 class DashboardService
@@ -53,6 +57,14 @@ class DashboardService
             OrangTua::with(['user', 'anak.user', 'anak.kelas'])->get()
         )->resolve();
 
+        $mapels = MapelResource::collection(
+            Mapel::all()
+        )->resolve();
+
+        $jadwals = JadwalResource::collection(
+            Jadwal::with(['mapel', 'guru.user', 'kelas'])->get()
+        )->resolve();
+
         return [
             'role' => 'admin',
             'stats' => [
@@ -69,6 +81,8 @@ class DashboardService
             'teachers' => $teachers,
             'students' => $students,
             'parents' => $parents,
+            'mapels' => $mapels,
+            'jadwals' => $jadwals,
         ];
     }
 
@@ -143,6 +157,11 @@ class DashboardService
             ];
         })->toArray();
 
+        // Get teacher's schedules
+        $jadwals = JadwalResource::collection(
+            Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get()
+        )->resolve();
+
         return [
             'role' => 'guru',
             'kelas_wali' => [
@@ -153,6 +172,7 @@ class DashboardService
             'pending_izin' => $pendingIzin,
             'history' => $history,
             'all_classes' => $allClasses,
+            'jadwals' => $jadwals,
         ];
     }
 
@@ -185,6 +205,10 @@ class DashboardService
             $presensi->sortByDesc('tanggal')->take(10)
         )->resolve();
 
+        $siswaJadwals = $siswa->kelas_id ? JadwalResource::collection(
+            Jadwal::where('kelas_id', $siswa->kelas_id)->with(['mapel', 'guru.user'])->get()
+        )->resolve() : [];
+
         return [
             'role' => 'siswa',
             'kelas_name' => $kelasName,
@@ -198,6 +222,7 @@ class DashboardService
             ],
             'leave_requests' => $leaveRequests,
             'history' => $recentHistory,
+            'jadwals' => $siswaJadwals,
         ];
     }
 
@@ -230,6 +255,10 @@ class DashboardService
                         ->get()
                 )->resolve();
 
+                $childJadwals = $siswa->kelas_id ? JadwalResource::collection(
+                    Jadwal::where('kelas_id', $siswa->kelas_id)->with(['mapel', 'guru.user'])->get()
+                )->resolve() : [];
+
                 return [
                     'id' => $siswa->id,
                     'name' => $siswa->user->name,
@@ -245,6 +274,7 @@ class DashboardService
                     ],
                     'history' => $history,
                     'leave_requests' => $leaveRequests,
+                    'jadwals' => $childJadwals,
                 ];
             })->toArray();
 

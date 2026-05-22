@@ -30,6 +30,8 @@ export default function Dashboard({ role, auth, ...props }: DashboardProps) {
                         teachers={props.teachers} 
                         students={props.students} 
                         parents={props.parents} 
+                        mapels={props.mapels || []}
+                        jadwals={props.jadwals || []}
                     />
                 )}
                 {role === 'guru' && (
@@ -40,6 +42,7 @@ export default function Dashboard({ role, auth, ...props }: DashboardProps) {
                         history={props.history} 
                         all_classes={props.all_classes} 
                         auth={auth} 
+                        jadwals={props.jadwals || []}
                     />
                 )}
                 {role === 'siswa' && (
@@ -49,11 +52,12 @@ export default function Dashboard({ role, auth, ...props }: DashboardProps) {
                         leave_requests={props.leave_requests} 
                         history={props.history} 
                         auth={auth} 
+                        jadwals={props.jadwals || []}
                     />
                 )}
                 {role === 'orangtua' && (
                     <OrangTuaDashboard 
-                        children={props.children} 
+                        children={props.children || []} 
                         auth={auth} 
                     />
                 )}
