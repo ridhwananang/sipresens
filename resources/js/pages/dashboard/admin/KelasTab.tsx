@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface KelasItem {
     id: number;
@@ -24,12 +25,24 @@ export default function KelasTab({ classes, openCreateModal, openEditModal, hand
                 <h2 className="text-xl font-bold">
                     Daftar Kelas Akademik
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('kelas')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Kelas
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={classes}
+                        columns={[
+                            { label: 'Nama Kelas', key: 'nama_kelas' },
+                            { label: 'Wali Kelas', key: 'wali_kelas' },
+                            { label: 'Jumlah Siswa', key: (item) => `${item.siswa_count} Siswa` },
+                        ]}
+                        title="Daftar Kelas Akademik Sipresens"
+                        filename="daftar_kelas"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('kelas')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Kelas
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface ParentItem {
     id: number;
@@ -26,12 +27,26 @@ export default function OrangTuaTab({ parents, openCreateModal, openEditModal, h
                 <h2 className="text-xl font-bold">
                     Daftar Wali Murid (Orang Tua)
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('orangtua')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Orang Tua
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={parents}
+                        columns={[
+                            { label: 'Nama Orang Tua', key: 'name' },
+                            { label: 'Jenis Kelamin', key: (item) => item.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' },
+                            { label: 'Email', key: 'email' },
+                            { label: 'No. HP', key: 'no_hp' },
+                            { label: 'Anak Binaan', key: (item) => item.anak && item.anak.length > 0 ? item.anak.map((a: any) => `${a.name} (Kelas ${a.kelas})`).join(', ') : 'Belum Terhubung' },
+                        ]}
+                        title="Daftar Wali Murid / Orang Tua Sipresens"
+                        filename="daftar_orang_tua"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('orangtua')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Orang Tua
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">

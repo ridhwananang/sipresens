@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface TeacherItem {
     id: number;
@@ -26,12 +27,26 @@ export default function GuruTab({ teachers, openCreateModal, openEditModal, hand
                 <h2 className="text-xl font-bold">
                     Daftar Tenaga Pendidik
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('guru')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Guru
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={teachers}
+                        columns={[
+                            { label: 'Nama Lengkap', key: 'name' },
+                            { label: 'NIP / ID', key: 'nip' },
+                            { label: 'Email', key: 'email' },
+                            { label: 'No. HP', key: (item) => item.no_hp || '-' },
+                            { label: 'Tanggung Jawab Wali Kelas', key: (item) => item.wali_kelas || 'Bukan Wali Kelas' },
+                        ]}
+                        title="Daftar Staf Pengajar / Guru Sipresens"
+                        filename="daftar_guru"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('guru')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Guru
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">

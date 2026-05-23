@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface StudentItem {
     id: number;
@@ -29,12 +30,28 @@ export default function SiswaTab({ students, openCreateModal, openEditModal, han
                 <h2 className="text-xl font-bold">
                     Daftar Siswa Terdaftar
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('siswa')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Siswa
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={students}
+                        columns={[
+                            { label: 'Nama Siswa', key: 'name' },
+                            { label: 'NISN', key: 'nisn' },
+                            { label: 'Kelas Rombel', key: 'kelas' },
+                            { label: 'Jenis Kelamin', key: (item) => item.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' },
+                            { label: 'No. HP Siswa', key: (item) => item.no_hp || '-' },
+                            { label: 'Wali Murid / Orang Tua', key: 'orang_tua' },
+                            { label: 'Status Keaktifan', key: (item) => item.status === 'aktif' ? 'Aktif' : 'Non-Aktif' },
+                        ]}
+                        title="Daftar Siswa Terdaftar Sipresens"
+                        filename="daftar_siswa"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('siswa')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Siswa
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">

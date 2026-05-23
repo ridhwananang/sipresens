@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm, router, Head } from '@inertiajs/react';
 import { toast } from 'sonner';
 import { Shield, TrendingUp, BookOpen, GraduationCap, Users, UsersRound, Calendar } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 import OverviewTab from './admin/OverviewTab';
 import KelasTab from './admin/KelasTab';
@@ -82,9 +83,32 @@ export default function AdminDashboard({
     mapels,
     jadwals,
 }: AdminDashboardProps) {
+    const getInitialTab = (): 'overview' | 'classes' | 'teachers' | 'students' | 'parents' | 'mapels' | 'jadwals' => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (['overview', 'classes', 'teachers', 'students', 'parents', 'mapels', 'jadwals'].includes(tabParam || '')) {
+                return tabParam as any;
+            }
+        }
+        return 'overview';
+    };
+
     const [activeTab, setActiveTab] = useState<
         'overview' | 'classes' | 'teachers' | 'students' | 'parents' | 'mapels' | 'jadwals'
-    >('overview');
+    >(getInitialTab);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (['overview', 'classes', 'teachers', 'students', 'parents', 'mapels', 'jadwals'].includes(tabParam || '')) {
+                setActiveTab(tabParam as any);
+            } else {
+                setActiveTab('overview');
+            }
+        }
+    }, [typeof window !== 'undefined' ? window.location.search : '']);
 
     // Modal & Edit state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -365,97 +389,64 @@ export default function AdminDashboard({
                 </div>
             </div>
 
-            {/* Sidebar-like Tab selector */}
-            <div className="flex flex-wrap gap-2 border-b border-neutral-200 pb-3 dark:border-neutral-800">
-                {(
-                    [
-                        { id: 'overview', label: 'Ringkasan', icon: TrendingUp },
-                        { id: 'classes', label: 'Data Kelas', icon: BookOpen },
-                        { id: 'teachers', label: 'Data Guru', icon: GraduationCap },
-                        { id: 'students', label: 'Data Siswa', icon: Users },
-                        { id: 'parents', label: 'Data Orang Tua', icon: UsersRound },
-                        { id: 'mapels', label: 'Mata Pelajaran', icon: BookOpen },
-                        { id: 'jadwals', label: 'Jadwal Pelajaran', icon: Calendar },
-                    ] as const
-                ).map((tab) => {
-                    const Icon = tab.icon;
-                    return (
-                        <button
-                            key={tab.id}
-                            type="button"
-                            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
-                                activeTab === tab.id
-                                    ? 'bg-indigo-600 text-white shadow'
-                                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800'
-                            }`}
-                            onClick={() => {
-                                setActiveTab(tab.id);
-                                setIsModalOpen(false);
-                            }}
-                        >
-                            <Icon className="size-4" />
-                            {tab.label}
-                        </button>
-                    );
-                })}
+            {/* Main Content Panel - Full Width */}
+            <div className="space-y-6">
+                {activeTab === 'overview' && <OverviewTab stats={stats} />}
+
+                {activeTab === 'classes' && (
+                    <KelasTab
+                        classes={classes}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
+
+                {activeTab === 'teachers' && (
+                    <GuruTab
+                        teachers={teachers}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
+
+                {activeTab === 'students' && (
+                    <SiswaTab
+                        students={students}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
+
+                {activeTab === 'parents' && (
+                    <OrangTuaTab
+                        parents={parents}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
+
+                {activeTab === 'mapels' && (
+                    <MapelTab
+                        mapels={mapels}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
+
+                {activeTab === 'jadwals' && (
+                    <JadwalTab
+                        jadwals={jadwals}
+                        openCreateModal={openCreateModal}
+                        openEditModal={openEditModal}
+                        handleDeleteItem={handleDeleteItem}
+                    />
+                )}
             </div>
-
-            {/* Tab Contents */}
-            {activeTab === 'overview' && <OverviewTab stats={stats} />}
-
-            {activeTab === 'classes' && (
-                <KelasTab
-                    classes={classes}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
-
-            {activeTab === 'teachers' && (
-                <GuruTab
-                    teachers={teachers}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
-
-            {activeTab === 'students' && (
-                <SiswaTab
-                    students={students}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
-
-            {activeTab === 'parents' && (
-                <OrangTuaTab
-                    parents={parents}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
-
-            {activeTab === 'mapels' && (
-                <MapelTab
-                    mapels={mapels}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
-
-            {activeTab === 'jadwals' && (
-                <JadwalTab
-                    jadwals={jadwals}
-                    openCreateModal={openCreateModal}
-                    openEditModal={openEditModal}
-                    handleDeleteItem={handleDeleteItem}
-                />
-            )}
 
             {/* Crud Modal Terpadu */}
             <CrudModal

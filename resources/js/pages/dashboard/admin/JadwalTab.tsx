@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface JadwalItem {
     id: number;
@@ -26,12 +27,26 @@ export default function JadwalTab({ jadwals, openCreateModal, openEditModal, han
                 <h2 className="text-xl font-bold">
                     Daftar Jadwal Pelajaran
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('jadwal')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Jadwal
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={jadwals}
+                        columns={[
+                            { label: 'Mata Pelajaran', key: 'nama_mapel' },
+                            { label: 'Guru Pengampu', key: 'nama_guru' },
+                            { label: 'Kelas Rombel', key: 'nama_kelas' },
+                            { label: 'Hari Pelaksanaan', key: 'hari' },
+                            { label: 'Slot Waktu (WIB)', key: 'waktu' },
+                        ]}
+                        title="Jadwal Pelajaran Mingguan Sipresens"
+                        filename="jadwal_pelajaran_sekolah"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('jadwal')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Jadwal
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">

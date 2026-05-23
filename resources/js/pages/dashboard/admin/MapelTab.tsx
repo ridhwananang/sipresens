@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
+import ExportDropdown from '@/components/ExportDropdown';
 
 interface MapelItem {
     id: number;
@@ -22,12 +23,23 @@ export default function MapelTab({ mapels, openCreateModal, openEditModal, handl
                 <h2 className="text-xl font-bold">
                     Daftar Mata Pelajaran
                 </h2>
-                <Button
-                    onClick={() => openCreateModal('mapel')}
-                    className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
-                >
-                    <Plus className="size-4" /> Tambah Mapel
-                </Button>
+                <div className="flex items-center gap-3">
+                    <ExportDropdown
+                        data={mapels}
+                        columns={[
+                            { label: 'ID Mata Pelajaran', key: (item) => String(item.id) },
+                            { label: 'Nama Mata Pelajaran', key: 'nama_mapel' },
+                        ]}
+                        title="Daftar Mata Pelajaran Kurikulum Sipresens"
+                        filename="daftar_mata_pelajaran"
+                    />
+                    <Button
+                        onClick={() => openCreateModal('mapel')}
+                        className="gap-2 bg-indigo-600 text-sm font-semibold text-white"
+                    >
+                        <Plus className="size-4" /> Tambah Mapel
+                    </Button>
+                </div>
             </div>
 
             <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
