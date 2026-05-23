@@ -57,11 +57,13 @@ class DatabaseSeeder extends Seeder
         // 3. Create Kelas
         $kelas1 = Kelas::create([
             'nama_kelas' => 'XI-RPL',
+            'tahun_ajaran' => '2025/2026',
             'wali_kelas_id' => $guru1->id,
         ]);
 
         $kelas2 = Kelas::create([
             'nama_kelas' => 'XII-RPL',
+            'tahun_ajaran' => '2025/2026',
             'wali_kelas_id' => $guru2->id,
         ]);
 

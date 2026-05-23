@@ -64,7 +64,7 @@ export default function CrudModal({
                     <CardContent className="space-y-4">
                         {/* ================= KELAS FORM ================= */}
                         {editItemType === 'kelas' && (
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                 <div className="space-y-2">
                                     <Label htmlFor="nama_kelas">
                                         Nama Kelas
@@ -81,6 +81,25 @@ export default function CrudModal({
                                     {kelasForm.errors.nama_kelas && (
                                         <p className="text-xs text-rose-500">
                                             {kelasForm.errors.nama_kelas}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="tahun_ajaran">
+                                        Tahun Ajaran
+                                    </Label>
+                                    <Input
+                                        id="tahun_ajaran"
+                                        placeholder="Contoh: 2025/2026"
+                                        value={kelasForm.data.tahun_ajaran}
+                                        onChange={(e) =>
+                                            kelasForm.setData('tahun_ajaran', e.target.value)
+                                        }
+                                        required
+                                    />
+                                    {kelasForm.errors.tahun_ajaran && (
+                                        <p className="text-xs text-rose-500">
+                                            {kelasForm.errors.tahun_ajaran}
                                         </p>
                                     )}
                                 </div>

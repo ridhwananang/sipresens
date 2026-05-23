@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\AdminService;
+use Illuminate\Http\Request;
 use App\Http\Requests\Admin\StoreKelasRequest;
 use App\Http\Requests\Admin\UpdateKelasRequest;
 use App\Http\Requests\Admin\StoreGuruRequest;
@@ -222,6 +223,28 @@ class AdminController extends Controller
         $this->adminService->deleteJadwal($id);
 
         return back()->with('success', 'Jadwal berhasil dihapus.');
+    }
+
+    public function promoteStudents(Request $request)
+    {
+        $validated = $request->validate([
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:siswas,id',
+            'action' => 'required|in:promote,graduate',
+            'target_kelas_id' => 'required_if:action,promote|nullable|exists:kelas,id',
+        ]);
+
+        $this->adminService->promoteStudents(
+            $validated['student_ids'],
+            $validated['target_kelas_id'] ?? null,
+            $validated['action']
+        );
+
+        $msg = $validated['action'] === 'promote' 
+            ? 'Kenaikan kelas bertahap berhasil diproses!' 
+            : 'Kelulusan siswa berhasil diproses!';
+
+        return back()->with('success', $msg);
     }
 }
 

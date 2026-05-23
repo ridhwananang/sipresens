@@ -21,6 +21,7 @@ class AdminService
     {
         return Kelas::create([
             'nama_kelas' => $data['nama_kelas'],
+            'tahun_ajaran' => $data['tahun_ajaran'],
             'wali_kelas_id' => $data['wali_kelas_id'] ?? null,
         ]);
     }
@@ -30,6 +31,7 @@ class AdminService
         $kelas = Kelas::findOrFail($id);
         $kelas->update([
             'nama_kelas' => $data['nama_kelas'],
+            'tahun_ajaran' => $data['tahun_ajaran'],
             'wali_kelas_id' => $data['wali_kelas_id'] ?? null,
         ]);
         return $kelas;
@@ -278,5 +280,22 @@ class AdminService
     {
         $jadwal = Jadwal::findOrFail($id);
         return $jadwal->delete();
+    }
+
+    public function promoteStudents(array $studentIds, ?int $targetKelasId, string $action): void
+    {
+        DB::transaction(function () use ($studentIds, $targetKelasId, $action) {
+            if ($action === 'graduate') {
+                // Ubah status siswa menjadi non-aktif (Lulus)
+                Siswa::whereIn('id', $studentIds)->update([
+                    'status' => 'non-aktif'
+                ]);
+            } else {
+                // Pindahkan kelas siswa terpilih ke kelas baru
+                Siswa::whereIn('id', $studentIds)->update([
+                    'kelas_id' => $targetKelasId
+                ]);
+            }
+        });
     }
 }

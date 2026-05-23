@@ -16,7 +16,7 @@ class JadwalResource extends JsonResource
             'guru_id' => $this->guru_id,
             'nama_guru' => $this->guru && $this->guru->user ? $this->guru->user->name : 'Belum Ditentukan',
             'kelas_id' => $this->kelas_id,
-            'nama_kelas' => $this->kelas ? $this->kelas->nama_kelas : 'Belum Ditentukan',
+            'nama_kelas' => $this->kelas ? $this->kelas->nama_kelas . ' (' . $this->kelas->tahun_ajaran . ')' : 'Belum Ditentukan',
             'hari' => $this->hari,
             'waktu' => $this->waktu,
         ];

@@ -12,6 +12,7 @@ import OrangTuaTab from './admin/OrangTuaTab';
 import MapelTab from './admin/MapelTab';
 import JadwalTab from './admin/JadwalTab';
 import CrudModal from './admin/CrudModal';
+import PromotionModal from './admin/PromotionModal';
 
 interface AdminDashboardProps {
     stats: {
@@ -27,6 +28,7 @@ interface AdminDashboardProps {
     classes: Array<{
         id: number;
         nama_kelas: string;
+        tahun_ajaran: string;
         wali_kelas: string;
         siswa_count: number;
     }>;
@@ -44,6 +46,7 @@ interface AdminDashboardProps {
         email: string;
         nisn: string;
         kelas: string;
+        kelas_id: number;
         orang_tua: string;
         jenis_kelamin: 'L' | 'P';
         no_hp?: string;
@@ -112,6 +115,7 @@ export default function AdminDashboard({
 
     // Modal & Edit state
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
     const [editItemType, setEditItemType] = useState<
         'kelas' | 'guru' | 'siswa' | 'orangtua' | 'mapel' | 'jadwal' | null
     >(null);
@@ -120,6 +124,7 @@ export default function AdminDashboard({
     // Form Hooks
     const kelasForm = useForm({
         nama_kelas: '',
+        tahun_ajaran: '',
         wali_kelas_id: '' as string | number,
     });
     const guruForm = useForm({
@@ -190,6 +195,7 @@ export default function AdminDashboard({
             );
             kelasForm.setData({
                 nama_kelas: item.nama_kelas,
+                tahun_ajaran: item.tahun_ajaran || '',
                 wali_kelas_id: matchedGuru ? matchedGuru.id : '',
             });
         } else if (type === 'guru') {
@@ -396,9 +402,11 @@ export default function AdminDashboard({
                 {activeTab === 'classes' && (
                     <KelasTab
                         classes={classes}
+                        students={students}
                         openCreateModal={openCreateModal}
                         openEditModal={openEditModal}
                         handleDeleteItem={handleDeleteItem}
+                        openPromotionModal={() => setIsPromotionModalOpen(true)}
                     />
                 )}
 
@@ -465,6 +473,14 @@ export default function AdminDashboard({
                 parentForm={parentForm}
                 mapelForm={mapelForm}
                 jadwalForm={jadwalForm}
+            />
+
+            {/* Promotion Modal Terpadu */}
+            <PromotionModal
+                isOpen={isPromotionModalOpen}
+                onClose={() => setIsPromotionModalOpen(false)}
+                classes={classes}
+                students={students}
             />
         </div>
     );

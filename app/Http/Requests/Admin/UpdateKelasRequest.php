@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateKelasRequest extends FormRequest
 {
@@ -16,7 +17,15 @@ class UpdateKelasRequest extends FormRequest
         $id = $this->route('id');
 
         return [
-            'nama_kelas' => 'required|string|max:50|unique:kelas,nama_kelas,' . $id,
+            'nama_kelas' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('kelas')->ignore($id)->where(function ($query) {
+                    return $query->where('tahun_ajaran', $this->tahun_ajaran);
+                }),
+            ],
+            'tahun_ajaran' => 'required|string|max:50',
             'wali_kelas_id' => 'nullable|exists:gurus,id',
         ];
     }
