@@ -18,6 +18,7 @@ class Presensi extends Model
         'tanggal',
         'keterangan',
         'diverifikasi_oleh',
+        'jadwal_id',
     ];
 
     public function siswa(): BelongsTo
@@ -28,5 +29,10 @@ class Presensi extends Model
     public function verifikator(): BelongsTo
     {
         return $this->belongsTo(Guru::class, 'diverifikasi_oleh');
+    }
+
+    public function jadwal(): BelongsTo
+    {
+        return $this->belongsTo(Jadwal::class);
     }
 }

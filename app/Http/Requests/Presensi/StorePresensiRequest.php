@@ -14,10 +14,12 @@ class StorePresensiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'siswa_id' => 'required|exists:siswas,id',
-            'status' => 'required|in:hadir,sakit,izin,alpa',
             'tanggal' => 'required|date',
-            'keterangan' => 'nullable|string|max:255',
+            'jadwal_id' => 'nullable|exists:jadwals,id',
+            'presensi' => 'required|array',
+            'presensi.*.siswa_id' => 'required|exists:siswas,id',
+            'presensi.*.status' => 'required|in:hadir,sakit,izin,alpa',
+            'presensi.*.keterangan' => 'nullable|string|max:255',
         ];
     }
 }

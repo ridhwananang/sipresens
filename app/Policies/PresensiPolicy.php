@@ -15,18 +15,24 @@ class PresensiPolicy
         return null;
     }
 
-    /**
-     * Determine if the user can record presence for the student.
-     */
     public function record(User $user, int $siswaId): bool
     {
         if ($user->role === 'guru') {
             $guru = $user->guru;
             $siswa = Siswa::find($siswaId);
-            if (!$guru || !$siswa || !$guru->kelasWali) {
+            if (!$guru || !$siswa) {
                 return false;
             }
-            return $siswa->kelas_id === $guru->kelasWali->id;
+            
+            if ($guru->kelasWali && $siswa->kelas_id === $guru->kelasWali->id) {
+                return true;
+            }
+
+            $hasSchedule = \App\Models\Jadwal::where('guru_id', $guru->id)
+                ->where('kelas_id', $siswa->kelas_id)
+                ->exists();
+
+            return $hasSchedule;
         }
 
         return false;

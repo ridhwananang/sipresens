@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Siswa;
 
 /**
  * @extends Factory<User>
@@ -57,4 +58,19 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => now(),
         ]);
     }
+
+ public function configure(): static
+{
+    return $this->afterCreating(function (User $user) {
+        Siswa::create([
+            'user_id' => $user->id,
+            'nisn' => fake()->unique()->numerify('##########'),
+            'kelas_id' => fake()->numberBetween(1, 3),
+            'orangtua_id' => null,
+            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
+            'no_hp' => fake()->phoneNumber(),
+            'status' => 'aktif',
+        ]);
+    });
+}
 }

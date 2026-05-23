@@ -86,7 +86,7 @@ class DashboardService
         ];
     }
 
-    public function getGuruDashboardData(User $user): array
+    public function getGuruDashboardData(User $user, ?int $selectedJadwalId = null, ?string $selectedDate = null): array
     {
         $guru = $user->guru;
         if (!$guru) {
@@ -94,23 +94,37 @@ class DashboardService
         }
 
         $kelasWali = $guru->kelasWali;
-        $today = Carbon::today()->toDateString();
+        $today = $selectedDate ?: Carbon::today()->toDateString();
         
+        // Retrieve all schedules for this teacher
+        $schedules = Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get();
+        $jadwals = JadwalResource::collection($schedules)->resolve();
+        
+        $activeJadwal = null;
+        if ($selectedJadwalId) {
+            $activeJadwal = $schedules->firstWhere('id', $selectedJadwalId);
+        } else if ($schedules->count() > 0) {
+            $activeJadwal = $schedules->first();
+        }
+
+        // Apply active day snapping if schedule is selected
+        if ($activeJadwal) {
+            $today = $this->getDateForDayName($activeJadwal->hari, $today);
+        }
+
         $studentList = [];
         $pendingIzin = [];
         $history = [];
-        $kelasWaliName = 'Bukan Wali Kelas';
-        $kelasWaliId = null;
 
-        if ($kelasWali) {
-            $kelasWaliName = $kelasWali->nama_kelas;
-            $kelasWaliId = $kelasWali->id;
+        // 1. Load active attendance sheet data (main panel)
+        if ($activeJadwal) {
+            $kelasId = $activeJadwal->kelas_id;
+            $kelasNama = $activeJadwal->kelas->nama_kelas;
             
-            // Get all students in this class
-            $students = Siswa::where('kelas_id', $kelasWali->id)->with('user')->get();
+            $students = Siswa::where('kelas_id', $kelasId)->with('user')->get();
             
-            // Get today's attendance for this class
             $presensiDb = Presensi::where('tanggal', $today)
+                ->where('jadwal_id', $activeJadwal->id)
                 ->whereIn('siswa_id', $students->pluck('id'))
                 ->get()
                 ->keyBy('siswa_id');
@@ -128,28 +142,67 @@ class DashboardService
                 ];
             }
 
-            // Pending Leave Requests (Resource-formatted)
+        }
+
+        // 2. Load Wali Kelas Sidebar Data (decoupled from active schedule!)
+        if ($kelasWali) {
+            $studentsWali = Siswa::where('kelas_id', $kelasWali->id)->get();
+            
             $pendingIzin = PengajuanIzinResource::collection(
-                PengajuanIzin::whereIn('siswa_id', $students->pluck('id'))
+                PengajuanIzin::whereIn('siswa_id', $studentsWali->pluck('id'))
                     ->where('status', 'pending')
                     ->with('siswa.user')
                     ->get()
             )->resolve();
 
-            // Weekly history (Resource-formatted)
-            $startOfWeek = Carbon::now()->startOfWeek()->toDateString();
-            $endOfWeek = Carbon::now()->endOfWeek()->toDateString();
+            $startOfWeek = Carbon::parse($today)->startOfWeek()->toDateString();
+            $endOfWeek = Carbon::parse($today)->endOfWeek()->toDateString();
             
+            // Show all subject attendance history for Wali Kelas class students
             $history = PresensiResource::collection(
                 Presensi::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
-                    ->whereIn('siswa_id', $students->pluck('id'))
-                    ->with('siswa.user')
+                    ->whereIn('siswa_id', $studentsWali->pluck('id'))
+                    ->with(['siswa.user', 'jadwal.mapel'])
                     ->orderBy('tanggal', 'desc')
                     ->get()
             )->resolve();
+        } else if ($activeJadwal) {
+            // Fallback for non-Wali Kelas teachers: show history for active schedule
+            $studentsSchedule = Siswa::where('kelas_id', $activeJadwal->kelas_id)->get();
+            $startOfWeek = Carbon::parse($today)->startOfWeek()->toDateString();
+            $endOfWeek = Carbon::parse($today)->endOfWeek()->toDateString();
+            
+            $history = PresensiResource::collection(
+                Presensi::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
+                    ->where('jadwal_id', $activeJadwal->id)
+                    ->whereIn('siswa_id', $studentsSchedule->pluck('id'))
+                    ->with(['siswa.user', 'jadwal.mapel'])
+                    ->orderBy('tanggal', 'desc')
+                    ->get()
+            )->resolve();
+            $pendingIzin = [];
         }
 
-        // All classes for dropdown selection
+        // 3. Load "Jadwal Hari Ini" Widget Data
+        $daysInIndonesian = [
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sunday' => 'Minggu',
+        ];
+        
+        $currentDayName = $daysInIndonesian[Carbon::today()->format('l')] ?? 'Senin';
+        
+        $todaySchedules = Jadwal::where('guru_id', $guru->id)
+            ->where('hari', $currentDayName)
+            ->with(['mapel', 'kelas'])
+            ->get();
+            
+        $jadwalHariIni = JadwalResource::collection($todaySchedules)->resolve();
+
         $allClasses = Kelas::all()->map(function ($k) {
             return [
                 'id' => $k->id,
@@ -157,23 +210,76 @@ class DashboardService
             ];
         })->toArray();
 
-        // Get teacher's schedules
-        $jadwals = JadwalResource::collection(
-            Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get()
-        )->resolve();
+        $hasArrived = true;
+        if ($activeJadwal) {
+            $hasArrived = $this->hasSessionArrived($activeJadwal, $today);
+        } else {
+            $hasArrived = $today <= Carbon::today()->toDateString();
+        }
 
         return [
             'role' => 'guru',
             'kelas_wali' => [
-                'id' => $kelasWaliId,
-                'nama' => $kelasWaliName,
+                'id' => $kelasWali ? $kelasWali->id : null,
+                'nama' => $kelasWali ? $kelasWali->nama_kelas : '',
             ],
             'students' => $studentList,
             'pending_izin' => $pendingIzin,
             'history' => $history,
             'all_classes' => $allClasses,
             'jadwals' => $jadwals,
+            'active_jadwal_id' => $activeJadwal ? $activeJadwal->id : null,
+            'selected_date' => $today,
+            'jadwal_hari_ini' => $jadwalHariIni,
+            'has_arrived' => $hasArrived,
         ];
+    }
+
+    private function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
+    {
+        $today = Carbon::today()->toDateString();
+        
+        if ($dateString < $today) {
+            return true;
+        }
+        
+        if ($dateString > $today) {
+            return false;
+        }
+        
+        try {
+            $waktu = $jadwal->waktu;
+            $parts = explode('-', $waktu);
+            $startPart = trim($parts[0]);
+            
+            $startPart = str_replace('.', ':', $startPart);
+            
+            $startTime = Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
+            $now = Carbon::now('Asia/Jakarta');
+            
+            return $now->format('H:i') >= $startTime->format('H:i');
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    private function getDateForDayName(string $dayName, string $relativeToDate): string
+    {
+        $daysMap = [
+            'Senin' => 1,
+            'Selasa' => 2,
+            'Rabu' => 3,
+            'Kamis' => 4,
+            'Jumat' => 5,
+            'Sabtu' => 6,
+            'Minggu' => 7,
+        ];
+
+        $targetDayIndex = $daysMap[$dayName] ?? 1;
+        $baseDate = Carbon::parse($relativeToDate);
+        $monday = $baseDate->startOfWeek();
+        
+        return $monday->addDays($targetDayIndex - 1)->toDateString();
     }
 
     public function getSiswaDashboardData(User $user): array
@@ -186,7 +292,7 @@ class DashboardService
         $kelasName = $siswa->kelas ? $siswa->kelas->nama_kelas : 'Belum masuk kelas';
 
         // Attendance statistics
-        $presensi = Presensi::where('siswa_id', $siswa->id)->get();
+        $presensi = Presensi::where('siswa_id', $siswa->id)->with(['jadwal.mapel'])->get();
         $total = $presensi->count();
         $hadir = $presensi->where('status', 'hadir')->count();
         $sakit = $presensi->where('status', 'sakit')->count();
@@ -238,7 +344,7 @@ class DashboardService
             ->with(['user', 'kelas'])
             ->get()
             ->map(function ($siswa) {
-                $presensi = Presensi::where('siswa_id', $siswa->id)->get();
+                $presensi = Presensi::where('siswa_id', $siswa->id)->with(['jadwal.mapel'])->get();
                 $total = $presensi->count();
                 $hadir = $presensi->where('status', 'hadir')->count();
                 $sakit = $presensi->where('status', 'sakit')->count();

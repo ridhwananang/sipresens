@@ -1,44 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { router, Head } from '@inertiajs/react';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Check, X, Calendar, AlertCircle, FileText, CheckCircle2, UserCheck, Eye } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
-interface StudentPresence {
-    id: number;
-    name: string;
-    nisn: string;
-    status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa';
-    keterangan: string;
-}
-
-interface PendingIzin {
-    id: number;
-    siswa_id: number;
-    name: string;
-    tanggal_mulai: string;
-    tanggal_selesai: string;
-    alasan: string;
-}
-
-interface HistoryItem {
-    id: number;
-    name: string;
-    tanggal: string;
-    status: 'hadir' | 'sakit' | 'izin' | 'alpa';
-    keterangan: string;
-}
-
-interface ScheduleItem {
-    id: number;
-    nama_mapel: string;
-    nama_kelas: string;
-    hari: string;
-    waktu: string;
-}
+import InputPresensi, { StudentPresence } from './guru/InputPresensi';
+import PersetujuanIzin, { PendingIzin } from './guru/PersetujuanIzin';
+import RiwayatPresensi, { HistoryItem } from './guru/RiwayatPresensi';
+import JadwalMengajar, { ScheduleItem } from './guru/JadwalMengajar';
+import JadwalHariIni, { TodayScheduleItem } from './guru/JadwalHariIni';
 
 interface GuruDashboardProps {
     kelas_wali: {
@@ -50,6 +20,10 @@ interface GuruDashboardProps {
     history: HistoryItem[];
     all_classes: Array<{ id: number; nama_kelas: string }>;
     jadwals: ScheduleItem[];
+    active_jadwal_id: number | null;
+    selected_date: string;
+    has_arrived: boolean;
+    jadwal_hari_ini: TodayScheduleItem[];
     auth: {
         user: {
             id: number;
@@ -59,46 +33,137 @@ interface GuruDashboardProps {
     };
 }
 
-export default function GuruDashboard({ kelas_wali, students, pending_izin, history, auth, jadwals }: GuruDashboardProps) {
+export default function GuruDashboard({ 
+    kelas_wali, 
+    students, 
+    pending_izin, 
+    history, 
+    auth, 
+    jadwals,
+    active_jadwal_id,
+    selected_date,
+    jadwal_hari_ini,
+    has_arrived
+}: GuruDashboardProps) {
     const teacher = auth.user;
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-    const [presenceNotes, setPresenceNotes] = useState<Record<number, string>>({});
+    
+    // Sync date with backend selected_date
+    const [selectedDate, setSelectedDate] = useState(selected_date || new Date().toISOString().split('T')[0]);
+    
+    // Local batch attendance state: maps student ID to status & keterangan
+    const [localAttendance, setLocalAttendance] = useState<Record<number, { status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa'; keterangan: string }>>({});
+    const [isSaving, setIsSaving] = useState(false);
 
-    // Handle changing attendance status
-    const handleStatusChange = (siswaId: number, status: 'hadir' | 'sakit' | 'izin' | 'alpa') => {
-        router.post('/guru/presensi', {
-            siswa_id: siswaId,
-            status: status,
-            tanggal: selectedDate,
-            keterangan: presenceNotes[siswaId] || '',
+    // Initialize/Sync local state when students list changes from backend
+    useEffect(() => {
+        const init: Record<number, { status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa'; keterangan: string }> = {};
+        students.forEach(s => {
+            init[s.id] = {
+                status: s.status,
+                keterangan: s.keterangan || ''
+            };
+        });
+        setLocalAttendance(init);
+    }, [students]);
+
+    // Keep internal date select state updated if selected_date prop changes (e.g. from backend day-snapping)
+    useEffect(() => {
+        if (selected_date) {
+            setSelectedDate(selected_date);
+        }
+    }, [selected_date]);
+
+    // Check if there are local modifications compared to loaded student data
+    const isDirty = students.some(s => {
+        const local = localAttendance[s.id];
+        if (!local) return false;
+        return local.status !== s.status || local.keterangan !== (s.keterangan || '');
+    });
+
+    // Date change triggers Inertia reload to fetch students for active session & date
+    const handleDateChange = (date: string) => {
+        if (isDirty) {
+            const confirmLeave = window.confirm('Anda memiliki perubahan presensi yang belum disimpan. Pindah tanggal akan membatalkan perubahan tersebut. Lanjutkan?');
+            if (!confirmLeave) return;
+        }
+        
+        setSelectedDate(date);
+        router.get('/dashboard', {
+            jadwal_id: active_jadwal_id,
+            tanggal: date
         }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                toast.success('Presensi berhasil diperbarui!');
-            },
-            onError: () => {
-                toast.error('Gagal memperbarui presensi.');
-            }
+            preserveState: false, // Clean reload to reset local state to backend
+            preserveScroll: true
         });
     };
 
-    // Save individual note
-    const handleSaveNote = (siswaId: number) => {
-        const student = students.find(s => s.id === siswaId);
-        if (!student || student.status === 'belum') {
-            toast.error('Tentukan status presensi terlebih dahulu sebelum menulis keterangan.');
+    // Schedule change triggers Inertia reload to load that schedule's class students
+    const handleSelectSchedule = (jadwalId: number | null) => {
+        if (isDirty) {
+            const confirmLeave = window.confirm('Anda memiliki perubahan presensi yang belum disimpan. Pindah sesi akan membatalkan perubahan tersebut. Lanjutkan?');
+            if (!confirmLeave) return;
+        }
+
+        router.get('/dashboard', {
+            jadwal_id: jadwalId,
+            tanggal: selectedDate
+        }, {
+            preserveState: false, // Clean reload to reset local state to backend
+            preserveScroll: true
+        });
+    };
+
+    // Update local attendance status in state
+    const handleStatusChange = (siswaId: number, status: 'hadir' | 'sakit' | 'izin' | 'alpa') => {
+        setLocalAttendance(prev => ({
+            ...prev,
+            [siswaId]: {
+                ...prev[siswaId],
+                status
+            }
+        }));
+    };
+
+    // Update local attendance note in state
+    const handleNoteChange = (siswaId: number, note: string) => {
+        setLocalAttendance(prev => ({
+            ...prev,
+            [siswaId]: {
+                ...prev[siswaId],
+                keterangan: note
+            }
+        }));
+    };
+
+    // Save all locally updated records in a single batch request
+    const handleSaveAll = () => {
+        const payload = Object.entries(localAttendance)
+            .filter(([_, val]) => val.status !== 'belum') // Only submit filled rows
+            .map(([siswaId, val]) => ({
+                siswa_id: Number(siswaId),
+                status: val.status,
+                keterangan: val.keterangan
+            }));
+
+        if (payload.length === 0) {
+            toast.error('Tentukan status presensi untuk minimal 1 siswa sebelum menyimpan.');
             return;
         }
 
+        setIsSaving(true);
         router.post('/guru/presensi', {
-            siswa_id: siswaId,
-            status: student.status,
             tanggal: selectedDate,
-            keterangan: presenceNotes[siswaId] || '',
+            jadwal_id: active_jadwal_id,
+            presensi: payload
         }, {
             preserveScroll: true,
             onSuccess: () => {
-                toast.success('Keterangan berhasil disimpan!');
+                toast.success('Semua catatan presensi berhasil disimpan!');
+                setIsSaving(false);
+            },
+            onError: () => {
+                toast.error('Gagal menyimpan catatan presensi.');
+                setIsSaving(false);
             }
         });
     };
@@ -118,271 +183,98 @@ export default function GuruDashboard({ kelas_wali, students, pending_izin, hist
         });
     };
 
+    const hasKelasWali = kelas_wali.id !== null;
+
     return (
         <div className="space-y-6">
+            <Head title="Dashboard Guru" />
+            
             {/* Header info */}
-            <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
-                    Halo, {teacher.name}!
-                </h1>
-                <p className="text-neutral-500 dark:text-neutral-400">
-                    Wali Kelas: <span className="font-semibold text-indigo-600 dark:text-indigo-400">{kelas_wali.nama}</span>
-                </p>
-            </div>
-
-            {kelas_wali.id === null ? (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
+                        Halo, {teacher.name}!
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                        {hasKelasWali ? (
+                            <span className="text-xs font-bold text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-full">
+                                Wali Kelas: {kelas_wali.nama}
+                            </span>
+                        ) : (
+                            <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-full">
+                                Guru Pengampu Mata Pelajaran
+                            </span>
+                        )}
+                        <span className="text-xs font-bold text-neutral-350 dark:text-neutral-700">•</span>
+                        <span className="text-xs font-bold text-indigo-650 dark:text-indigo-450 bg-indigo-50/50 dark:bg-indigo-950/20 px-2.5 py-1 rounded-full">
+                            Staf Pengajar Aktif
+                        </span>
+                    </div>
+                </div>
+            </div>            {jadwals.length === 0 ? (
                 <Card className="border border-amber-200 bg-amber-50/50 dark:border-amber-900/30 dark:bg-amber-950/10">
                     <CardContent className="p-6 flex items-start gap-4">
                         <AlertCircle className="size-6 text-amber-600 dark:text-amber-500 mt-1 shrink-0" />
                         <div>
-                            <h3 className="font-bold text-amber-800 dark:text-amber-400">Informasi Jabatan</h3>
+                            <h3 className="font-bold text-amber-800 dark:text-amber-400">Jadwal Mengajar Tidak Ditemukan</h3>
                             <p className="text-sm text-amber-700 dark:text-amber-500 mt-1">
-                                Anda tidak terdaftar sebagai Wali Kelas aktif. Fitur pengisian presensi kelas dan peninjauan perizinan hanya tersedia untuk guru yang ditunjuk sebagai Wali Kelas oleh Admin.
+                                Anda tidak memiliki jadwal mengajar aktif minggu ini. Fitur presensi saat ini hanya digunakan untuk mencatat kehadiran siswa pada kelas pengampu yang Anda ajar.
                             </p>
                         </div>
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid gap-6 lg:grid-cols-3">
+                <div className="grid gap-6 lg:grid-cols-3 animate-fade-in">
                     {/* Main input presence table */}
                     <div className="lg:col-span-2 space-y-6">
-                        <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
-                            <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                <div>
-                                    <CardTitle className="text-xl font-bold">Input Presensi Harian ({kelas_wali.nama})</CardTitle>
-                                    <CardDescription>Pilih tanggal dan kelola kehadiran siswa di kelas Anda</CardDescription>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Label htmlFor="date-picker" className="text-xs uppercase font-semibold text-neutral-400">Tanggal</Label>
-                                    <Input
-                                        id="date-picker"
-                                        type="date"
-                                        className="w-auto h-9 text-sm"
-                                        value={selectedDate}
-                                        onChange={(e) => setSelectedDate(e.target.value)}
-                                    />
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                {students.length === 0 ? (
-                                    <div className="text-center py-8 text-neutral-500">
-                                        Tidak ada siswa terdaftar di kelas ini.
-                                    </div>
-                                ) : (
-                                    <div className="relative overflow-x-auto rounded-lg border border-neutral-100 dark:border-neutral-800">
-                                        <table className="w-full text-left text-sm text-neutral-500 dark:text-neutral-400">
-                                            <thead className="bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 text-xs uppercase">
-                                                <tr>
-                                                    <th className="px-4 py-3">Nama Siswa</th>
-                                                    <th className="px-4 py-3">Presensi</th>
-                                                    <th className="px-4 py-3">Keterangan / Catatan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 bg-white dark:bg-neutral-950">
-                                                {students.map((stud) => {
-                                                    // Sync note value from presence prop if local state not defined
-                                                    if (presenceNotes[stud.id] === undefined && stud.keterangan) {
-                                                        presenceNotes[stud.id] = stud.keterangan;
-                                                    }
+                        <InputPresensi
+                            students={students}
+                            selectedDate={selectedDate}
+                            onDateChange={handleDateChange}
+                            
+                            // Local batch props
+                            localAttendance={localAttendance}
+                            onStatusChange={handleStatusChange}
+                            onNoteChange={handleNoteChange}
+                            onSaveAll={handleSaveAll}
+                            isDirty={isDirty}
+                            isSaving={isSaving}
 
-                                                    return (
-                                                        <tr key={stud.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50">
-                                                            <td className="px-4 py-4 font-semibold text-neutral-900 dark:text-neutral-200">
-                                                                <div>
-                                                                    <p>{stud.name}</p>
-                                                                    <p className="text-xs font-normal text-neutral-400">NISN: {stud.nisn}</p>
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-4 py-4 whitespace-nowrap">
-                                                                <div className="flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-900 p-1 rounded-lg w-fit">
-                                                                    {(['hadir', 'sakit', 'izin', 'alpa'] as const).map((st) => (
-                                                                        <button
-                                                                            key={st}
-                                                                            className={`px-3 py-1.5 text-xs font-semibold rounded-md uppercase transition-all ${
-                                                                                stud.status === st
-                                                                                    ? st === 'hadir' ? 'bg-emerald-600 text-white shadow' :
-                                                                                      st === 'sakit' ? 'bg-orange-500 text-white shadow' :
-                                                                                      st === 'izin' ? 'bg-blue-600 text-white shadow' :
-                                                                                      'bg-rose-600 text-white shadow'
-                                                                                    : 'hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
-                                                                            }`}
-                                                                            onClick={() => handleStatusChange(stud.id, st)}
-                                                                        >
-                                                                            {st.substring(0, 1)}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-4 py-4 whitespace-nowrap">
-                                                                <div className="flex items-center gap-1">
-                                                                    <Input
-                                                                        placeholder="Tambah catatan..."
-                                                                        className="h-8 text-xs max-w-[150px]"
-                                                                        value={presenceNotes[stud.id] || ''}
-                                                                        onChange={(e) => setPresenceNotes({
-                                                                            ...presenceNotes,
-                                                                            [stud.id]: e.target.value
-                                                                        })}
-                                                                    />
-                                                                    <Button
-                                                                        className="h-8 w-8 p-0 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
-                                                                        onClick={() => handleSaveNote(stud.id)}
-                                                                    >
-                                                                        <Check className="size-4" />
-                                                                    </Button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                            activeJadwalId={active_jadwal_id}
+                            jadwals={jadwals}
+                            onSelectSchedule={handleSelectSchedule}
+                            hasArrived={has_arrived}
+                        />
                     </div>
 
                     {/* Sidebar components: pending izin & stats */}
                     <div className="lg:col-span-1 space-y-6">
-                        {/* Pending Leaves */}
-                        <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
-                            <CardHeader>
-                                <CardTitle className="text-xl font-bold">Persetujuan Izin Siswa</CardTitle>
-                                <CardDescription>Daftar izin siswa kelas Anda yang menunggu validasi</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {pending_izin.length === 0 ? (
-                                    <div className="text-center py-6 text-neutral-500">
-                                        <UserCheck className="mx-auto size-12 stroke-neutral-300 mb-2" />
-                                        Tidak ada izin yang menunggu persetujuan.
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {pending_izin.map((iz) => (
-                                            <div key={iz.id} className="p-4 border border-neutral-100 dark:border-neutral-800 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 space-y-3">
-                                                <div>
-                                                    <h4 className="font-bold text-sm text-neutral-900 dark:text-neutral-200">{iz.name}</h4>
-                                                    <p className="text-xs text-neutral-500">{iz.tanggal_mulai} s/d {iz.tanggal_selesai}</p>
-                                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2 bg-white dark:bg-neutral-950 p-2 rounded border border-neutral-100 dark:border-neutral-900">
-                                                        Alasan: {iz.alasan}
-                                                    </p>
-                                                </div>
-                                                <div className="flex gap-2 justify-end">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 border-rose-200 hover:bg-rose-50 text-rose-600 dark:border-rose-950/50 dark:hover:bg-rose-950/20"
-                                                        onClick={() => handleVerifyIzin(iz.id, 'ditolak')}
-                                                    >
-                                                        <X className="size-3.5 mr-1" /> Tolak
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white"
-                                                        onClick={() => handleVerifyIzin(iz.id, 'disetujui')}
-                                                    >
-                                                        <Check className="size-3.5 mr-1" /> Setujui
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                        <JadwalHariIni
+                            jadwal_hari_ini={jadwal_hari_ini}
+                            activeJadwalId={active_jadwal_id}
+                            onSelectSchedule={handleSelectSchedule}
+                        />
 
-                        {/* Recent History */}
-                        <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
-                            <CardHeader>
-                                <CardTitle className="text-xl font-bold">Riwayat Presensi Terbaru</CardTitle>
-                                <CardDescription>Catatan kehadiran kelas minggu ini</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {history.length === 0 ? (
-                                    <div className="text-center py-6 text-neutral-500">
-                                        Belum ada riwayat tercatat.
-                                    </div>
-                                ) : (
-                                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                                        {history.map((hist) => (
-                                            <div key={hist.id} className="flex items-start justify-between text-xs py-2 border-b border-neutral-100 dark:border-neutral-900 last:border-0">
-                                                <div>
-                                                    <p className="font-bold text-neutral-850 dark:text-neutral-250">{hist.name}</p>
-                                                    <p className="text-neutral-450 mt-0.5">{hist.tanggal}</p>
-                                                    {hist.keterangan && <p className="text-neutral-400 italic">"{hist.keterangan}"</p>}
-                                                </div>
-                                                <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                                                    hist.status === 'hadir' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20' :
-                                                    hist.status === 'sakit' ? 'bg-orange-50 text-orange-700 dark:bg-orange-950/20' :
-                                                    hist.status === 'izin' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/20' :
-                                                    'bg-rose-50 text-rose-700 dark:bg-rose-950/20'
-                                                }`}>
-                                                    {hist.status}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                        {hasKelasWali && pending_izin.length > 0 && (
+                            <PersetujuanIzin
+                                pending_izin={pending_izin}
+                                onVerify={handleVerifyIzin}
+                            />
+                        )}
+
+                        <RiwayatPresensi
+                            history={history}
+                        />
                     </div>
                 </div>
             )}
 
-            {/* ========================================================================= */}
-            {/* JADWAL MENGAJAR GURU */}
-            {/* ========================================================================= */}
-            <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 mt-6">
-                <CardHeader>
-                    <div className="flex items-center gap-2">
-                        <Calendar className="size-5 text-indigo-600 dark:text-indigo-400" />
-                        <div>
-                            <CardTitle className="text-xl font-bold">Jadwal Mengajar Anda</CardTitle>
-                            <CardDescription>Daftar mata pelajaran dan kelas yang Anda ampu minggu ini</CardDescription>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map((day) => {
-                            const daySchedules = jadwals.filter((j) => j.hari === day);
-                            return (
-                                <div key={day} className="rounded-xl border border-neutral-100 bg-neutral-50/30 p-4 dark:border-neutral-900 dark:bg-neutral-900/10">
-                                    <h3 className="flex items-center justify-between border-b border-neutral-100 pb-2 font-extrabold text-neutral-850 dark:border-neutral-900 dark:text-neutral-200">
-                                        <span>{day}</span>
-                                        <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
-                                            {daySchedules.length} Sesi
-                                        </span>
-                                    </h3>
-                                    <div className="mt-3 space-y-3">
-                                        {daySchedules.map((j) => (
-                                            <div key={j.id} className="relative overflow-hidden rounded-lg border border-neutral-200/60 bg-white p-3 shadow-sm transition-all hover:shadow-md dark:border-neutral-800 dark:bg-neutral-950">
-                                                <div className="absolute top-0 left-0 h-full w-1 bg-indigo-600" />
-                                                <div className="pl-2 space-y-1">
-                                                    <p className="font-bold text-sm text-neutral-900 dark:text-neutral-100">{j.nama_mapel}</p>
-                                                    <div className="flex items-center gap-2 text-xs text-neutral-500">
-                                                        <span className="font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded">
-                                                            Kelas {j.nama_kelas}
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span className="font-mono">{j.waktu}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                        {daySchedules.length === 0 && (
-                                            <p className="py-4 text-center text-xs text-neutral-450 italic">
-                                                Tidak ada jadwal mengajar.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </CardContent>
-            </Card>
+            {/* Jadwal Mengajar */}
+            <JadwalMengajar 
+                jadwals={jadwals} 
+                activeJadwalId={active_jadwal_id}
+                onSelectSchedule={handleSelectSchedule}
+            />
         </div>
     );
 }

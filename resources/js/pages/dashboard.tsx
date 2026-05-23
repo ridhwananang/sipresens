@@ -43,6 +43,10 @@ export default function Dashboard({ role, auth, ...props }: DashboardProps) {
                         all_classes={props.all_classes} 
                         auth={auth} 
                         jadwals={props.jadwals || []}
+                        active_jadwal_id={props.active_jadwal_id}
+                        selected_date={props.selected_date}
+                        jadwal_hari_ini={props.jadwal_hari_ini || []}
+                        has_arrived={props.has_arrived}
                     />
                 )}
                 {role === 'siswa' && (

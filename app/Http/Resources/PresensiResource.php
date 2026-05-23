@@ -16,6 +16,8 @@ class PresensiResource extends JsonResource
             'tanggal' => $this->tanggal,
             'status' => $this->status,
             'keterangan' => $this->keterangan,
+            'jadwal_id' => $this->jadwal_id,
+            'nama_mapel' => $this->jadwal && $this->jadwal->mapel ? $this->jadwal->mapel->nama_mapel : 'Harian',
         ];
     }
 }

@@ -21,12 +21,10 @@ class PresensiController extends Controller
     }
 
     /**
-     * Store or update attendance record (called by Guru or Admin).
+     * Store or update attendance records in batch (called by Guru).
      */
     public function storePresensi(StorePresensiRequest $request)
     {
-        Gate::authorize('record', [Presensi::class, $request->siswa_id]);
-
         $user = Auth::user();
         
         // Admins can log attendance, but if it is a Guru, ensure they have a profile
@@ -36,7 +34,39 @@ class PresensiController extends Controller
 
         $guruId = $user->guru ? $user->guru->id : null;
 
-        $this->presensiService->recordPresensi($request->validated(), $guruId);
+        // Perform strict time-arrival and date-snapping checks
+        $selectedDate = $request->tanggal;
+        $selectedJadwalId = $request->jadwal_id;
+
+        if ($user->role === 'guru' && !$selectedJadwalId) {
+            return back()->withErrors(['message' => 'Jadwal pelajaran wajib dipilih untuk merekam presensi.']);
+        }
+
+        if ($selectedJadwalId) {
+            $jadwal = \App\Models\Jadwal::findOrFail($selectedJadwalId);
+            
+            if ($user->role === 'guru' && $jadwal->guru_id !== $guruId) {
+                return back()->withErrors(['message' => 'Anda tidak memiliki hak untuk merekam presensi pada jadwal ini.']);
+            }
+            
+            // Snap date check
+            $correctDate = $this->presensiService->getDateForDayName($jadwal->hari, $selectedDate);
+            if ($selectedDate !== $correctDate) {
+                return back()->withErrors(['message' => 'Tanggal presensi tidak sesuai dengan hari jadwal belajar.']);
+            }
+
+            // Sesi arrival check
+            if (!$this->presensiService->hasSessionArrived($jadwal, $selectedDate)) {
+                return back()->withErrors(['message' => 'Waktu sesi presensi untuk jadwal ini belum tiba.']);
+            }
+        }
+
+        // Perform authorization checks on each item in the batch
+        foreach ($request->presensi as $item) {
+            Gate::authorize('record', [Presensi::class, $item['siswa_id']]);
+        }
+
+        $this->presensiService->recordPresensiBatch($request->validated(), $guruId);
 
         return back()->with('success', 'Presensi berhasil direkam.');
     }

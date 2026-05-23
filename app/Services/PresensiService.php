@@ -17,6 +17,7 @@ class PresensiService
             [
                 'siswa_id' => $data['siswa_id'],
                 'tanggal' => $data['tanggal'],
+                'jadwal_id' => $data['jadwal_id'] ?? null,
             ],
             [
                 'status' => $data['status'],
@@ -24,6 +25,27 @@ class PresensiService
                 'diverifikasi_oleh' => $guruId,
             ]
         );
+    }
+
+    /**
+     * Record batch student attendance (called by Guru).
+     */
+    public function recordPresensiBatch(array $data, ?int $guruId): void
+    {
+        foreach ($data['presensi'] as $item) {
+            Presensi::updateOrCreate(
+                [
+                    'siswa_id' => $item['siswa_id'],
+                    'tanggal' => $data['tanggal'],
+                    'jadwal_id' => $data['jadwal_id'] ?? null,
+                ],
+                [
+                    'status' => $item['status'],
+                    'keterangan' => $item['keterangan'] ?? null,
+                    'diverifikasi_oleh' => $guruId,
+                ]
+            );
+        }
     }
 
     /**
@@ -75,5 +97,52 @@ class PresensiService
         }
 
         return $izin;
+    }
+
+    public function hasSessionArrived(\App\Models\Jadwal $jadwal, string $dateString): bool
+    {
+        $today = \Carbon\Carbon::today()->toDateString();
+        
+        if ($dateString < $today) {
+            return true;
+        }
+        
+        if ($dateString > $today) {
+            return false;
+        }
+        
+        try {
+            $waktu = $jadwal->waktu;
+            $parts = explode('-', $waktu);
+            $startPart = trim($parts[0]);
+            
+            $startPart = str_replace('.', ':', $startPart);
+            
+            $startTime = \Carbon\Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
+            $now = \Carbon\Carbon::now('Asia/Jakarta');
+            
+            return $now->format('H:i') >= $startTime->format('H:i');
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    public function getDateForDayName(string $dayName, string $relativeToDate): string
+    {
+        $daysMap = [
+            'Senin' => 1,
+            'Selasa' => 2,
+            'Rabu' => 3,
+            'Kamis' => 4,
+            'Jumat' => 5,
+            'Sabtu' => 6,
+            'Minggu' => 7,
+        ];
+
+        $targetDayIndex = $daysMap[$dayName] ?? 1;
+        $baseDate = \Carbon\Carbon::parse($relativeToDate);
+        $monday = $baseDate->startOfWeek();
+        
+        return $monday->addDays($targetDayIndex - 1)->toDateString();
     }
 }

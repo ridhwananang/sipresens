@@ -32,7 +32,9 @@ class DashboardController extends Controller
                 $data = $this->dashboardService->getAdminDashboardData();
                 break;
             case 'guru':
-                $data = $this->dashboardService->getGuruDashboardData($user);
+                $selectedJadwalId = $request->query('jadwal_id') ? (int) $request->query('jadwal_id') : null;
+                $selectedDate = $request->query('tanggal');
+                $data = $this->dashboardService->getGuruDashboardData($user, $selectedJadwalId, $selectedDate);
                 break;
             case 'siswa':
                 $data = $this->dashboardService->getSiswaDashboardData($user);
