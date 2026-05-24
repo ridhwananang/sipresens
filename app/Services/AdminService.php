@@ -184,11 +184,17 @@ class AdminService
                 'role' => 'orangtua',
             ]);
 
-            return OrangTua::create([
+            $ortu = OrangTua::create([
                 'user_id' => $user->id,
                 'no_hp' => $data['no_hp'] ?? null,
                 'jenis_kelamin' => $data['jenis_kelamin'],
             ]);
+
+            if (!empty($data['siswa_ids'])) {
+                Siswa::whereIn('id', $data['siswa_ids'])->update(['orangtua_id' => $ortu->id]);
+            }
+
+            return $ortu;
         });
     }
 
@@ -213,6 +219,13 @@ class AdminService
                 'no_hp' => $data['no_hp'] ?? null,
                 'jenis_kelamin' => $data['jenis_kelamin'],
             ]);
+
+            // Clear old children of this parent
+            Siswa::where('orangtua_id', $ortu->id)->update(['orangtua_id' => null]);
+
+            if (!empty($data['siswa_ids'])) {
+                Siswa::whereIn('id', $data['siswa_ids'])->update(['orangtua_id' => $ortu->id]);
+            }
         });
 
         return $ortu;

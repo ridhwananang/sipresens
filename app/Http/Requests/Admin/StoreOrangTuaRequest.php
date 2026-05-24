@@ -19,6 +19,8 @@ class StoreOrangTuaRequest extends FormRequest
             'password' => 'required|string|min:8',
             'no_hp' => 'nullable|string|max:20',
             'jenis_kelamin' => 'required|in:L,P',
+            'siswa_ids' => 'nullable|array',
+            'siswa_ids.*' => 'exists:siswas,id',
         ];
     }
 }

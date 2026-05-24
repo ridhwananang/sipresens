@@ -14,7 +14,7 @@ class UpdateGuruRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = $this->route('guru');
         $guru = Guru::findOrFail($id);
         $userId = $guru->user_id;
 

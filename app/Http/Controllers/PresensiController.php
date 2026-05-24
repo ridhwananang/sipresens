@@ -21,6 +21,24 @@ class PresensiController extends Controller
     }
 
     /**
+     * Polymorphic dispatch for presence taking (Guru only).
+     */
+    public function index(\Illuminate\Http\Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->role === 'guru') {
+            return app(\App\Http\Controllers\Guru\PresensiController::class)->index($request);
+        }
+
+        abort(403, 'Akses ditolak.');
+    }
+
+    /**
      * Store or update attendance records in batch (called by Guru).
      */
     public function storePresensi(StorePresensiRequest $request)

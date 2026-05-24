@@ -14,7 +14,7 @@ class UpdateKelasRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = $this->route('kela');
 
         return [
             'nama_kelas' => [

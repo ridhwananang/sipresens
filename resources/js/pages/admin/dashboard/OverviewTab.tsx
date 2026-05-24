@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GraduationCap, Users, BookOpen, Calendar } from 'lucide-react';
 
 interface OverviewTabProps {
@@ -86,7 +86,7 @@ export default function OverviewTab({ stats }: OverviewTabProps) {
                             <p className="text-xs font-bold tracking-wider text-emerald-600 uppercase dark:text-emerald-400">
                                 Hadir
                             </p>
-                            <h4 className="dark:text-emerald-350 mt-1 text-3xl font-black text-emerald-800">
+                            <h4 className="dark:text-emerald-355 mt-1 text-3xl font-black text-emerald-800">
                                 {stats.hadir}
                             </h4>
                         </div>
@@ -94,7 +94,7 @@ export default function OverviewTab({ stats }: OverviewTabProps) {
                             <p className="text-xs font-bold tracking-wider text-amber-600 uppercase dark:text-amber-400">
                                 Sakit
                             </p>
-                            <h4 className="dark:text-amber-350 mt-1 text-3xl font-black text-amber-800">
+                            <h4 className="dark:text-amber-355 mt-1 text-3xl font-black text-amber-800">
                                 {stats.sakit}
                             </h4>
                         </div>
@@ -102,7 +102,7 @@ export default function OverviewTab({ stats }: OverviewTabProps) {
                             <p className="text-xs font-bold tracking-wider text-blue-600 uppercase dark:text-blue-400">
                                 Izin
                             </p>
-                            <h4 className="dark:text-blue-350 mt-1 text-3xl font-black text-blue-800">
+                            <h4 className="dark:text-blue-355 mt-1 text-3xl font-black text-blue-800">
                                 {stats.izin}
                             </h4>
                         </div>
@@ -110,7 +110,7 @@ export default function OverviewTab({ stats }: OverviewTabProps) {
                             <p className="text-xs font-bold tracking-wider text-rose-600 uppercase dark:text-rose-400">
                                 Alpa
                             </p>
-                            <h4 className="dark:text-rose-350 mt-1 text-3xl font-black text-rose-800">
+                            <h4 className="dark:text-rose-355 mt-1 text-3xl font-black text-rose-800">
                                 {stats.alpa}
                             </h4>
                         </div>
@@ -118,7 +118,7 @@ export default function OverviewTab({ stats }: OverviewTabProps) {
                             <p className="text-xs font-bold tracking-wider text-neutral-500 uppercase">
                                 Belum Presensi
                             </p>
-                            <h4 className="dark:text-neutral-350 mt-1 text-3xl font-black text-neutral-700">
+                            <h4 className="dark:text-neutral-355 mt-1 text-3xl font-black text-neutral-700">
                                 {stats.belum_presensi}
                             </h4>
                         </div>

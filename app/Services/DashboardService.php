@@ -23,6 +23,35 @@ use Carbon\Carbon;
 
 class DashboardService
 {
+    public function getAdminStatsOnly(): array
+    {
+        $today = Carbon::today()->toDateString();
+        
+        $totalSiswa = Siswa::count();
+        $totalGuru = Guru::count();
+        $totalKelas = Kelas::count();
+
+        // Today's attendance stats
+        $presensiToday = Presensi::where('tanggal', $today)->get();
+        $hadirToday = $presensiToday->where('status', 'hadir')->count();
+        $sakitToday = $presensiToday->where('status', 'sakit')->count();
+        $izinToday = $presensiToday->where('status', 'izin')->count();
+        $alpaToday = $presensiToday->where('status', 'alpa')->count();
+        
+        $belumPresensiToday = max(0, $totalSiswa - $presensiToday->count());
+
+        return [
+            'total_siswa' => $totalSiswa,
+            'total_guru' => $totalGuru,
+            'total_kelas' => $totalKelas,
+            'hadir' => $hadirToday,
+            'sakit' => $sakitToday,
+            'izin' => $izinToday,
+            'alpa' => $alpaToday,
+            'belum_presensi' => $belumPresensiToday,
+        ];
+    }
+
     public function getAdminDashboardData(): array
     {
         $today = Carbon::today()->toDateString();
@@ -235,7 +264,7 @@ class DashboardService
         ];
     }
 
-    private function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
+    public function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
     {
         $today = Carbon::today()->toDateString();
         
@@ -263,7 +292,7 @@ class DashboardService
         }
     }
 
-    private function getDateForDayName(string $dayName, string $relativeToDate): string
+    public function getDateForDayName(string $dayName, string $relativeToDate): string
     {
         $daysMap = [
             'Senin' => 1,

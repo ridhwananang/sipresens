@@ -14,7 +14,7 @@ class UpdateSiswaRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = $this->route('siswa');
         $siswa = Siswa::findOrFail($id);
         $userId = $siswa->user_id;
 

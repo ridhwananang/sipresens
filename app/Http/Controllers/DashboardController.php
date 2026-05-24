@@ -29,23 +29,15 @@ class DashboardController extends Controller
 
         switch ($user->role) {
             case 'admin':
-                $data = $this->dashboardService->getAdminDashboardData();
-                break;
+                return redirect()->route('admin.dashboard');
             case 'guru':
-                $selectedJadwalId = $request->query('jadwal_id') ? (int) $request->query('jadwal_id') : null;
-                $selectedDate = $request->query('tanggal');
-                $data = $this->dashboardService->getGuruDashboardData($user, $selectedJadwalId, $selectedDate);
-                break;
+                return app(\App\Http\Controllers\Guru\DashboardController::class)->index();
             case 'siswa':
-                $data = $this->dashboardService->getSiswaDashboardData($user);
-                break;
+                return app(\App\Http\Controllers\Siswa\DashboardController::class)->index();
             case 'orangtua':
-                $data = $this->dashboardService->getOrangTuaDashboardData($user);
-                break;
+                return app(\App\Http\Controllers\OrangTua\DashboardController::class)->index();
             default:
                 abort(403, 'Role tidak dikenali');
         }
-
-        return Inertia::render('dashboard', $data);
     }
 }

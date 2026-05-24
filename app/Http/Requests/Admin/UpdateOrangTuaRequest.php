@@ -14,7 +14,7 @@ class UpdateOrangTuaRequest extends FormRequest
 
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = $this->route('orangtua');
         $ortu = OrangTua::findOrFail($id);
         $userId = $ortu->user_id;
 
@@ -24,6 +24,8 @@ class UpdateOrangTuaRequest extends FormRequest
             'password' => 'nullable|string|min:8',
             'no_hp' => 'nullable|string|max:20',
             'jenis_kelamin' => 'required|in:L,P',
+            'siswa_ids' => 'nullable|array',
+            'siswa_ids.*' => 'exists:siswas,id',
         ];
     }
 }
