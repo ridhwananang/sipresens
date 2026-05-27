@@ -4,7 +4,11 @@ namespace App\Services;
 
 use App\Models\Presensi;
 use App\Models\PengajuanIzin;
+use App\Models\Siswa;
+use App\Jobs\SendWhatsappNotificationJob;
 use Carbon\CarbonPeriod;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class PresensiService
 {
@@ -13,7 +17,7 @@ class PresensiService
      */
     public function recordPresensi(array $data, ?int $guruId): Presensi
     {
-        return Presensi::updateOrCreate(
+        $presensi = Presensi::updateOrCreate(
             [
                 'siswa_id' => $data['siswa_id'],
                 'tanggal' => $data['tanggal'],
@@ -25,6 +29,16 @@ class PresensiService
                 'diverifikasi_oleh' => $guruId,
             ]
         );
+
+        $this->triggerWhatsappNotification(
+            $data['siswa_id'],
+            $data['status'],
+            $data['tanggal'],
+            $data['keterangan'] ?? null,
+            $data['jadwal_id'] ?? null
+        );
+
+        return $presensi;
     }
 
     /**
@@ -45,6 +59,73 @@ class PresensiService
                     'diverifikasi_oleh' => $guruId,
                 ]
             );
+
+            $this->triggerWhatsappNotification(
+                $item['siswa_id'],
+                $item['status'],
+                $data['tanggal'],
+                $item['keterangan'] ?? null,
+                $data['jadwal_id'] ?? null
+            );
+        }
+    }
+
+    /**
+     * Trigger a WhatsApp notification to the student's parent/guardian.
+     */
+    private function triggerWhatsappNotification(int $siswaId, string $status, string $tanggal, ?string $keterangan, ?int $jadwalId): void
+    {
+        try {
+            // Eager load Siswa with user, and orangTua with user
+            $siswa = Siswa::with(['user', 'orangTua.user', 'kelas'])->find($siswaId);
+
+            if ($siswa && $siswa->orangTua && !empty($siswa->orangTua->no_hp)) {
+                $parentPhone = $siswa->orangTua->no_hp;
+                $studentName = $siswa->user ? $siswa->user->name : 'Siswa';
+                $className = $siswa->kelas ? $siswa->kelas->nama_kelas : '-';
+                
+                // Fetch Mapel and Guru details if jadwalId is set
+                $mapelName = null;
+                $guruName = null;
+                if ($jadwalId) {
+                    $jadwal = \App\Models\Jadwal::with(['mapel', 'guru.user'])->find($jadwalId);
+                    if ($jadwal) {
+                        $mapelName = $jadwal->mapel ? $jadwal->mapel->nama_mapel : null;
+                        $guruName = $jadwal->guru && $jadwal->guru->user ? $jadwal->guru->user->name : null;
+                    }
+                }
+
+                // Map status code to friendly Indonesian label
+                $statusMap = [
+                    'hadir' => 'HADIR ✅',
+                    'alfa' => 'ALFA (Tanpa Keterangan) ❌',
+                    'sakit' => 'SAKIT 🤒',
+                    'izin' => 'IZIN 📝',
+                ];
+                $statusLabel = $statusMap[strtolower($status)] ?? strtoupper($status);
+                
+                $formattedDate = Carbon::parse($tanggal)->translatedFormat('l, d F Y');
+                
+                // Construct premium dynamic message details
+                $mapelDetails = $mapelName ? "\nMata Pelajaran: *{$mapelName}*" : '';
+                $guruDetails = $guruName ? "\nGuru Pengajar: *{$guruName}*" : '';
+                $keteranganSuffix = !empty($keterangan) ? "\nKeterangan: *{$keterangan}*" : '';
+
+                // Formulate the beautiful premium template
+                $message = "*LAPORAN KEHADIRAN SISWA - SiPresens*\n\n"
+                    . "Yth. Orang Tua / Wali dari *{$studentName}* (Kelas {$className}),\n\n"
+                    . "Menginfokan bahwa pada *{$formattedDate}*, putra/putri Anda tercatat: *{$statusLabel}*."
+                    . $mapelDetails
+                    . $guruDetails
+                    . $keteranganSuffix . "\n\n"
+                    . "Terima kasih atas perhatian Bapak/Ibu.\n\n"
+                    . "_Pesan otomatis oleh SiPresens Akademik_";
+
+                // Dispatch the asynchronous Job
+                SendWhatsappNotificationJob::dispatch($parentPhone, $message);
+            }
+        } catch (\Exception $e) {
+            Log::error("Gagal memicu WhatsApp notifikasi untuk Siswa ID {$siswaId}: " . $e->getMessage());
         }
     }
 
@@ -101,7 +182,7 @@ class PresensiService
 
     public function hasSessionArrived(\App\Models\Jadwal $jadwal, string $dateString): bool
     {
-        $today = \Carbon\Carbon::today()->toDateString();
+        $today = Carbon::today()->toDateString();
         
         if ($dateString < $today) {
             return true;
@@ -118,8 +199,8 @@ class PresensiService
             
             $startPart = str_replace('.', ':', $startPart);
             
-            $startTime = \Carbon\Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
-            $now = \Carbon\Carbon::now('Asia/Jakarta');
+            $startTime = Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
+            $now = Carbon::now('Asia/Jakarta');
             
             return $now->format('H:i') >= $startTime->format('H:i');
         } catch (\Exception $e) {
@@ -140,7 +221,7 @@ class PresensiService
         ];
 
         $targetDayIndex = $daysMap[$dayName] ?? 1;
-        $baseDate = \Carbon\Carbon::parse($relativeToDate);
+        $baseDate = Carbon::parse($relativeToDate);
         $monday = $baseDate->startOfWeek();
         
         return $monday->addDays($targetDayIndex - 1)->toDateString();
