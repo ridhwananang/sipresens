@@ -76,6 +76,11 @@ class PresensiService
     private function triggerWhatsappNotification(int $siswaId, string $status, string $tanggal, ?string $keterangan, ?int $jadwalId): void
     {
         try {
+            // Hanya kirim notifikasi jika statusnya adalah selain HADIR (untuk menghemat kuota API dan menghindari spam)
+            if (strtolower(trim($status)) === 'hadir') {
+                return;
+            }
+
             // Eager load Siswa with user, and orangTua with user
             $siswa = Siswa::with(['user', 'orangTua.user', 'kelas'])->find($siswaId);
 

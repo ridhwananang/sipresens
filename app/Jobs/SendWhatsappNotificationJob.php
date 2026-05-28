@@ -32,4 +32,20 @@ class SendWhatsappNotificationJob implements ShouldQueue
     {
         $whatsappService->sendMessage($this->phoneNumber, $this->message);
     }
+
+    /**
+     * Get the phone number.
+     */
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * Get the message content.
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
 }
