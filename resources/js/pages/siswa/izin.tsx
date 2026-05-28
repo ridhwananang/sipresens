@@ -41,48 +41,33 @@ export default function SiswaIzinPage({ leave_requests, auth }: SiswaIzinPagePro
     };
 
     return (
-        <div className="space-y-6 animate-fade-in">
-            <Head title="Pengajuan Izin" />
+        <div className="space-y-5 pb-4 animate-fade-in">
+            <Head title="Ajukan Izin Siswa" />
 
-            <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
-                    Pengajuan Izin & Sakit
-                </h1>
-                <p className="text-sm text-neutral-500">
-                    Ajukan surat keterangan izin atau sakit secara online untuk disetujui oleh Wali Kelas Anda.
+            <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-teal-650 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/30 px-2.5 py-1 rounded-full">
+                    Siswa Izin
+                </span>
+                <h2 className="text-xl font-black text-neutral-800 dark:text-neutral-200 mt-2">Pengajuan Izin & Sakit</h2>
+                <p className="text-[11px] text-neutral-450 dark:text-neutral-500 font-medium">
+                    Kirim permohonan ketidakhadiran sekolah secara online.
                 </p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-5">
                 {/* Submit Permission Form */}
-                <div className="lg:col-span-1">
-                    <SiswaIzinForm
-                        data={data}
-                        setData={setData}
-                        errors={errors}
-                        processing={processing}
-                        onSubmit={handleSubmitLeave}
-                    />
-                </div>
+                <SiswaIzinForm
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    processing={processing}
+                    onSubmit={handleSubmitLeave}
+                />
 
                 {/* Status List */}
-                <div className="lg:col-span-2">
-                    <SiswaIzinStatus leave_requests={leave_requests} />
-                </div>
+                <SiswaIzinStatus leave_requests={leave_requests} />
             </div>
         </div>
     );
 }
 
-SiswaIzinPage.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: '/dashboard',
-        },
-        {
-            title: 'Pengajuan Izin',
-            href: '/izin',
-        },
-    ],
-};

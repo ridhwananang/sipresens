@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Calendar, CheckCircle2, XCircle, Clock, FileText } from 'lucide-react';
 
 export interface LeaveRequest {
     id: number;
@@ -17,52 +17,60 @@ interface SiswaIzinStatusProps {
 
 export default function SiswaIzinStatus({ leave_requests }: SiswaIzinStatusProps) {
     return (
-        <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
-            <CardHeader>
-                <CardTitle className="text-xl font-bold">Status Pengajuan Izin Anda</CardTitle>
+        <Card className="border border-neutral-100 dark:border-zinc-900 bg-white dark:bg-zinc-900/40 rounded-3xl shadow-xs overflow-hidden">
+            <CardHeader className="pb-2 px-5 pt-5">
+                <CardTitle className="text-sm font-bold text-neutral-800 dark:text-neutral-200">Riwayat Pengajuan</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-5 pb-5">
                 {leave_requests.length === 0 ? (
-                    <div className="text-center py-8 text-neutral-500">
-                        <Calendar className="mx-auto size-12 stroke-neutral-300 mb-2" />
-                        Belum ada pengajuan izin.
+                    <div className="text-center py-8 text-neutral-400 dark:text-neutral-500 flex flex-col items-center justify-center gap-2">
+                        <Calendar className="size-8 stroke-neutral-300 dark:stroke-zinc-800" />
+                        <span className="text-[11px] font-bold">Belum ada pengajuan izin.</span>
                     </div>
                 ) : (
-                    <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                    <div className="space-y-3">
                         {leave_requests.map((req) => (
-                            <div key={req.id} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                        <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium uppercase ${
-                                            req.jenis_izin === 'sakit' ? 'bg-orange-100 text-orange-800 dark:bg-orange-950/50 dark:text-orange-400' : 'bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-400'
-                                        }`}>
-                                            {req.jenis_izin}
-                                        </span>
-                                        <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-200">
-                                            {req.tanggal_mulai} s/d {req.tanggal_selesai}
-                                        </span>
+                            <div 
+                                key={req.id} 
+                                className="flex flex-col gap-2.5 p-3.5 bg-neutral-50/50 dark:bg-zinc-900/20 border border-neutral-100 dark:border-zinc-900/60 rounded-2xl shadow-xs"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-extrabold uppercase ${
+                                        req.jenis_izin === 'sakit' 
+                                            ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-500 dark:text-amber-400' 
+                                            : 'bg-sky-50 dark:bg-sky-950/20 text-sky-600 dark:text-sky-400'
+                                    }`}>
+                                        {req.jenis_izin === 'sakit' ? 'Sakit' : 'Izin'}
+                                    </span>
+                                    
+                                    {/* Status Indicator */}
+                                    <div>
+                                        {req.status === 'disetujui' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400">
+                                                <CheckCircle2 className="size-3" /> Disetujui
+                                            </span>
+                                        )}
+                                        {req.status === 'ditolak' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 dark:bg-rose-950/20 px-2 py-0.5 text-[9px] font-extrabold text-rose-600 dark:text-rose-400">
+                                                <XCircle className="size-3" /> Ditolak
+                                            </span>
+                                        )}
+                                        {req.status === 'pending' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 dark:bg-zinc-800 px-2 py-0.5 text-[9px] font-extrabold text-neutral-500 dark:text-neutral-450">
+                                                <Clock className="size-3 animate-pulse" /> Pending
+                                            </span>
+                                        )}
                                     </div>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                                        Alasan: {req.alasan}
-                                    </p>
                                 </div>
 
-                                <div>
-                                    {req.status === 'disetujui' && (
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-                                            <CheckCircle2 className="size-4" /> Disetujui
-                                        </span>
-                                    )}
-                                    {req.status === 'ditolak' && (
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/30 dark:text-rose-400">
-                                            <XCircle className="size-4" /> Ditolak
-                                        </span>
-                                    )}
-                                    {req.status === 'pending' && (
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-1 text-xs font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
-                                            <Clock className="size-4 animate-pulse" /> Pending
-                                        </span>
-                                    )}
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-1 text-[10px] text-neutral-500 dark:text-neutral-400 font-bold">
+                                        <Calendar className="size-3 text-neutral-400" />
+                                        <span>{req.tanggal_mulai} s/d {req.tanggal_selesai}</span>
+                                    </div>
+                                    <p className="text-[10px] text-neutral-550 dark:text-neutral-400 font-medium pl-4 leading-relaxed">
+                                        Alasan: {req.alasan}
+                                    </p>
                                 </div>
                             </div>
                         ))}
@@ -72,3 +80,4 @@ export default function SiswaIzinStatus({ leave_requests }: SiswaIzinStatusProps
         </Card>
     );
 }
+

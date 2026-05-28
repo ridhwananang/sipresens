@@ -65,7 +65,7 @@ class UserFactory extends Factory
         Siswa::create([
             'user_id' => $user->id,
             'nisn' => fake()->unique()->numerify('##########'),
-            'kelas_id' => fake()->numberBetween(1, 3),
+            'kelas_id' => \App\Models\Kelas::inRandomOrder()->value('id'),
             'orangtua_id' => null,
             'jenis_kelamin' => fake()->randomElement(['L', 'P']),
             'no_hp' => fake()->phoneNumber(),

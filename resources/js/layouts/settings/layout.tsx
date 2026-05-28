@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,15 @@ const sidebarNavItems: NavItem[] = [
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
+    const { props } = usePage();
+    const auth = props.auth as any;
+    const role = auth.user?.role;
     const { isCurrentOrParentUrl } = useCurrentUrl();
+
+    // If role is siswa, bypass the desktop settings layout to show a clean standalone mobile hub!
+    if (role === 'siswa') {
+        return <div className="animate-fade-in pb-4">{children}</div>;
+    }
 
     return (
         <div className="px-4 py-6">
@@ -76,3 +84,5 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
         </div>
     );
 }
+
+
