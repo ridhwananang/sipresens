@@ -19,7 +19,16 @@ class Siswa extends Model
         'jenis_kelamin',
         'no_hp',
         'status',
+        'foto_profile',
     ];
+
+    protected $appends = ['foto_profile_url'];
+
+    public function getFotoProfileUrlAttribute()
+    {
+        return $this->foto_profile ? asset('storage/' . $this->foto_profile) : null;
+    }
+
 
     public function user(): BelongsTo
     {

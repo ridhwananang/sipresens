@@ -44,7 +44,14 @@ class GuruController extends Controller
     {
         Gate::authorize('create', Guru::class);
 
-        $this->adminService->createGuru($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            $path = $request->file('foto_profile')->store('profile/guru', 'public');
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->createGuru($validated);
 
         return back()->with('success', 'Data Guru berhasil ditambahkan.');
     }
@@ -54,7 +61,17 @@ class GuruController extends Controller
         $guru = Guru::findOrFail($id);
         Gate::authorize('update', $guru);
 
-        $this->adminService->updateGuru($id, $request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            if ($guru->foto_profile) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($guru->foto_profile);
+            }
+            $path = $request->file('foto_profile')->store('profile/guru', 'public');
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->updateGuru($id, $validated);
 
         return back()->with('success', 'Data Guru berhasil diperbarui.');
     }
@@ -63,6 +80,10 @@ class GuruController extends Controller
     {
         $guru = Guru::findOrFail($id);
         Gate::authorize('delete', $guru);
+
+        if ($guru->foto_profile) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($guru->foto_profile);
+        }
 
         $this->adminService->deleteGuru($id);
 

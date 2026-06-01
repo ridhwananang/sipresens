@@ -25,7 +25,15 @@ interface SiswaModalProps {
     parents: ParentItem[];
 }
 
-export default function SiswaModal({ isOpen, onClose, editItem, classes, parents }: SiswaModalProps) {
+export default function SiswaModal({
+    isOpen,
+    onClose,
+    editItem,
+    classes,
+    parents,
+}: SiswaModalProps) {
+    const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -36,6 +44,7 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
         jenis_kelamin: 'L' as 'L' | 'P',
         no_hp: '',
         status: 'aktif' as 'aktif' | 'non-aktif',
+        foto_profile: null as File | null,
     });
 
     useEffect(() => {
@@ -50,23 +59,47 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                 jenis_kelamin: editItem.jenis_kelamin || 'L',
                 no_hp: editItem.no_hp || '',
                 status: editItem.status || 'aktif',
+                foto_profile: null,
             });
+            setPreviewUrl(editItem.foto_profile_url || null);
         } else {
             reset();
+            setPreviewUrl(null);
         }
     }, [editItem, isOpen]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setData('foto_profile', file);
+        if (file) {
+            setPreviewUrl(URL.createObjectURL(file));
+        } else {
+            setPreviewUrl(editItem?.foto_profile_url || null);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const url = editItem ? `/admin/siswa/${editItem.id}` : '/admin/siswa';
 
         if (editItem) {
-            put(url, {
-                onSuccess: () => {
-                    toast.success('Data Siswa berhasil diperbarui!');
-                    onClose();
-                },
-                onError: () => toast.error('Gagal memperbarui data siswa.'),
+            // Spoofing PUT using POST to support file uploads in PHP
+            import('@inertiajs/react').then(({ router }) => {
+                router.post(
+                    url,
+                    {
+                        _method: 'PUT',
+                        ...data,
+                    },
+                    {
+                        onSuccess: () => {
+                            toast.success('Data Siswa berhasil diperbarui!');
+                            onClose();
+                        },
+                        onError: () =>
+                            toast.error('Gagal memperbarui data siswa.'),
+                    },
+                );
             });
         } else {
             post(url, {
@@ -92,16 +125,62 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                 <form onSubmit={handleSubmit}>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {/* Input Foto Profil & Preview */}
+                            <div className="flex items-center gap-4 space-y-2 rounded-2xl border border-neutral-100 bg-neutral-50/50 p-4 sm:col-span-2 dark:border-neutral-800 dark:bg-zinc-900/10">
+                                <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-neutral-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                                    {previewUrl ? (
+                                        <img
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            className="size-full object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-xl font-bold text-neutral-400 uppercase dark:text-neutral-600">
+                                            {data.name
+                                                ? data.name.substring(0, 2)
+                                                : 'SW'}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex-grow space-y-1.5">
+                                    <Label
+                                        htmlFor="foto_profile"
+                                        className="text-xs font-bold text-neutral-700 dark:text-neutral-300"
+                                    >
+                                        Foto Profil
+                                    </Label>
+                                    <Input
+                                        id="foto_profile"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/jpg,image/webp"
+                                        onChange={handleFileChange}
+                                        className="text-xs file:mr-2 file:rounded-md file:border-0 file:bg-neutral-100 file:px-2 file:py-1 file:text-[10px] file:font-semibold file:text-neutral-700 dark:file:bg-zinc-800 dark:file:text-neutral-300"
+                                    />
+                                    <p className="text-[9px] text-neutral-400 dark:text-neutral-500">
+                                        Maks. 2MB (JPG, JPEG, PNG, WEBP)
+                                    </p>
+                                    {errors.foto_profile && (
+                                        <p className="mt-1 text-xs text-rose-500">
+                                            {errors.foto_profile}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="space-y-2">
                                 <Label htmlFor="name">Nama Lengkap</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
                                     required
                                 />
                                 {errors.name && (
-                                    <p className="text-xs text-rose-500">{errors.name}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.name}
+                                    </p>
                                 )}
                             </div>
 
@@ -111,27 +190,37 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                     id="email"
                                     type="email"
                                     value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('email', e.target.value)
+                                    }
                                     required
                                 />
                                 {errors.email && (
-                                    <p className="text-xs text-rose-500">{errors.email}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.email}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="password">
-                                    {editItem ? 'Kata Sandi Baru (Kosongkan jika tidak diubah)' : 'Kata Sandi'}
+                                    {editItem
+                                        ? 'Kata Sandi Baru (Kosongkan jika tidak diubah)'
+                                        : 'Kata Sandi'}
                                 </Label>
                                 <Input
                                     id="password"
                                     type="password"
                                     value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('password', e.target.value)
+                                    }
                                     required={!editItem}
                                 />
                                 {errors.password && (
-                                    <p className="text-xs text-rose-500">{errors.password}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.password}
+                                    </p>
                                 )}
                             </div>
 
@@ -140,11 +229,15 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                 <Input
                                     id="nisn"
                                     value={data.nisn}
-                                    onChange={(e) => setData('nisn', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('nisn', e.target.value)
+                                    }
                                     required
                                 />
                                 {errors.nisn && (
-                                    <p className="text-xs text-rose-500">{errors.nisn}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.nisn}
+                                    </p>
                                 )}
                             </div>
 
@@ -152,9 +245,11 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                 <Label htmlFor="kelas_id">Kelas</Label>
                                 <select
                                     id="kelas_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={data.kelas_id}
-                                    onChange={(e) => setData('kelas_id', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('kelas_id', e.target.value)
+                                    }
                                     required
                                 >
                                     <option value="">Pilih Kelas...</option>
@@ -165,19 +260,27 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                     ))}
                                 </select>
                                 {errors.kelas_id && (
-                                    <p className="text-xs text-rose-500">{errors.kelas_id}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.kelas_id}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="orangtua_id">Wali Murid (Orang Tua)</Label>
+                                <Label htmlFor="orangtua_id">
+                                    Wali Murid (Orang Tua)
+                                </Label>
                                 <select
                                     id="orangtua_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={data.orangtua_id}
-                                    onChange={(e) => setData('orangtua_id', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('orangtua_id', e.target.value)
+                                    }
                                 >
-                                    <option value="">Hubungkan ke Orang Tua (Opsional)...</option>
+                                    <option value="">
+                                        Hubungkan ke Orang Tua (Opsional)...
+                                    </option>
                                     {parents.map((p) => (
                                         <option key={p.id} value={p.id}>
                                             {p.name} (Email: {p.email})
@@ -185,24 +288,35 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                     ))}
                                 </select>
                                 {errors.orangtua_id && (
-                                    <p className="text-xs text-rose-500">{errors.orangtua_id}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.orangtua_id}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="jenis_kelamin">Jenis Kelamin</Label>
+                                <Label htmlFor="jenis_kelamin">
+                                    Jenis Kelamin
+                                </Label>
                                 <select
                                     id="jenis_kelamin"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={data.jenis_kelamin}
-                                    onChange={(e) => setData('jenis_kelamin', e.target.value as 'L' | 'P')}
+                                    onChange={(e) =>
+                                        setData(
+                                            'jenis_kelamin',
+                                            e.target.value as 'L' | 'P',
+                                        )
+                                    }
                                     required
                                 >
                                     <option value="L">Laki-laki (L)</option>
                                     <option value="P">Perempuan (P)</option>
                                 </select>
                                 {errors.jenis_kelamin && (
-                                    <p className="text-xs text-rose-500">{errors.jenis_kelamin}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.jenis_kelamin}
+                                    </p>
                                 )}
                             </div>
 
@@ -211,10 +325,14 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                 <Input
                                     id="no_hp"
                                     value={data.no_hp}
-                                    onChange={(e) => setData('no_hp', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('no_hp', e.target.value)
+                                    }
                                 />
                                 {errors.no_hp && (
-                                    <p className="text-xs text-rose-500">{errors.no_hp}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.no_hp}
+                                    </p>
                                 )}
                             </div>
 
@@ -222,25 +340,43 @@ export default function SiswaModal({ isOpen, onClose, editItem, classes, parents
                                 <Label htmlFor="status">Status</Label>
                                 <select
                                     id="status"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={data.status}
-                                    onChange={(e) => setData('status', e.target.value as 'aktif' | 'non-aktif')}
+                                    onChange={(e) =>
+                                        setData(
+                                            'status',
+                                            e.target.value as
+                                                | 'aktif'
+                                                | 'non-aktif',
+                                        )
+                                    }
                                     required
                                 >
                                     <option value="aktif">Aktif</option>
                                     <option value="non-aktif">Non-Aktif</option>
                                 </select>
                                 {errors.status && (
-                                    <p className="text-xs text-rose-500">{errors.status}</p>
+                                    <p className="text-xs text-rose-500">
+                                        {errors.status}
+                                    </p>
                                 )}
                             </div>
                         </div>
 
                         <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                            <Button type="button" variant="outline" onClick={onClose} disabled={processing}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={onClose}
+                                disabled={processing}
+                            >
                                 Batal
                             </Button>
-                            <Button type="submit" className="bg-indigo-650 text-white hover:bg-indigo-700" disabled={processing}>
+                            <Button
+                                type="submit"
+                                className="bg-indigo-650 text-white hover:bg-indigo-700"
+                                disabled={processing}
+                            >
                                 {processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
                         </div>

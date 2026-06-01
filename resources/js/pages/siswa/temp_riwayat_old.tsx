@@ -1,42 +1,42 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import SiswaJadwal, { ScheduleItem } from '../dashboard/siswa/SiswaJadwal';
+import SiswaRiwayat, { HistoryRow } from '../dashboard/siswa/SiswaRiwayat';
 
-interface SiswaJadwalPageProps {
-    jadwals: ScheduleItem[];
+interface SiswaRiwayatPageProps {
+    history: HistoryRow[];
 }
 
-export default function SiswaJadwalPage({ jadwals }: SiswaJadwalPageProps) {
+export default function SiswaRiwayatPage({ history }: SiswaRiwayatPageProps) {
     return (
         <div className="animate-fade-in space-y-6">
-            <Head title="Jadwal Kelas" />
+            <Head title="Riwayat Presensi" />
 
             <div className="flex flex-col gap-1">
                 <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
-                    Jadwal Pelajaran Kelas
+                    Riwayat Kehadiran
                 </h1>
                 <p className="text-sm text-neutral-500">
-                    Jadwal mata pelajaran lengkap beserta guru pengampu di kelas
-                    Anda.
+                    Daftar presensi mata pelajaran terbaru yang telah direkam
+                    oleh guru pengampu Anda.
                 </p>
             </div>
 
             <div className="max-w-4xl">
-                <SiswaJadwal jadwals={jadwals} />
+                <SiswaRiwayat history={history} />
             </div>
         </div>
     );
 }
 
-SiswaJadwalPage.layout = {
+SiswaRiwayatPage.layout = {
     breadcrumbs: [
         {
             title: 'Dashboard',
             href: '/dashboard',
         },
         {
-            title: 'Jadwal Kelas',
-            href: '/jadwal',
+            title: 'Riwayat Presensi',
+            href: '/riwayat',
         },
     ],
 };

@@ -23,6 +23,7 @@ class StoreSiswaRequest extends FormRequest
             'jenis_kelamin' => 'required|in:L,P',
             'no_hp' => 'nullable|string|max:20',
             'status' => 'required|in:aktif,non-aktif',
+            'foto_profile' => 'nullable|image|max:2048|mimes:jpg,jpeg,png,webp',
         ];
     }
 }

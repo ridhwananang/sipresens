@@ -19,7 +19,12 @@ interface KelasModalProps {
     teachers: TeacherItem[];
 }
 
-export default function KelasModal({ isOpen, onClose, editItem, teachers }: KelasModalProps) {
+export default function KelasModal({
+    isOpen,
+    onClose,
+    editItem,
+    teachers,
+}: KelasModalProps) {
     const { data, setData, post, put, processing, errors, reset } = useForm({
         nama_kelas: '',
         tahun_ajaran: '',
@@ -41,7 +46,7 @@ export default function KelasModal({ isOpen, onClose, editItem, teachers }: Kela
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const url = editItem ? `/admin/kelas/${editItem.id}` : '/admin/kelas';
-        
+
         if (editItem) {
             put(url, {
                 onSuccess: () => {
@@ -79,11 +84,15 @@ export default function KelasModal({ isOpen, onClose, editItem, teachers }: Kela
                                 id="nama_kelas"
                                 placeholder="Contoh: XI-RPL"
                                 value={data.nama_kelas}
-                                onChange={(e) => setData('nama_kelas', e.target.value)}
+                                onChange={(e) =>
+                                    setData('nama_kelas', e.target.value)
+                                }
                                 required
                             />
                             {errors.nama_kelas && (
-                                <p className="text-xs text-rose-500">{errors.nama_kelas}</p>
+                                <p className="text-xs text-rose-500">
+                                    {errors.nama_kelas}
+                                </p>
                             )}
                         </div>
                         <div className="space-y-2">
@@ -92,20 +101,26 @@ export default function KelasModal({ isOpen, onClose, editItem, teachers }: Kela
                                 id="tahun_ajaran"
                                 placeholder="Contoh: 2025/2026"
                                 value={data.tahun_ajaran}
-                                onChange={(e) => setData('tahun_ajaran', e.target.value)}
+                                onChange={(e) =>
+                                    setData('tahun_ajaran', e.target.value)
+                                }
                                 required
                             />
                             {errors.tahun_ajaran && (
-                                <p className="text-xs text-rose-500">{errors.tahun_ajaran}</p>
+                                <p className="text-xs text-rose-500">
+                                    {errors.tahun_ajaran}
+                                </p>
                             )}
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="wali_kelas_id">Wali Kelas</Label>
                             <select
                                 id="wali_kelas_id"
-                                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                 value={data.wali_kelas_id}
-                                onChange={(e) => setData('wali_kelas_id', e.target.value)}
+                                onChange={(e) =>
+                                    setData('wali_kelas_id', e.target.value)
+                                }
                             >
                                 <option value="">Pilih Wali Kelas...</option>
                                 {teachers.map((t) => (
@@ -115,15 +130,26 @@ export default function KelasModal({ isOpen, onClose, editItem, teachers }: Kela
                                 ))}
                             </select>
                             {errors.wali_kelas_id && (
-                                <p className="text-xs text-rose-500">{errors.wali_kelas_id}</p>
+                                <p className="text-xs text-rose-500">
+                                    {errors.wali_kelas_id}
+                                </p>
                             )}
                         </div>
 
                         <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                            <Button type="button" variant="outline" onClick={onClose} disabled={processing}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={onClose}
+                                disabled={processing}
+                            >
                                 Batal
                             </Button>
-                            <Button type="submit" className="bg-indigo-650 text-white hover:bg-indigo-700" disabled={processing}>
+                            <Button
+                                type="submit"
+                                className="bg-indigo-650 text-white hover:bg-indigo-700"
+                                disabled={processing}
+                            >
                                 {processing ? 'Menyimpan...' : 'Simpan'}
                             </Button>
                         </div>

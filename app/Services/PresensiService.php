@@ -9,6 +9,7 @@ use App\Jobs\SendWhatsappNotificationJob;
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PresensiService
 {
@@ -19,13 +20,13 @@ class PresensiService
     {
         $presensi = Presensi::updateOrCreate(
             [
-                'siswa_id' => $data['siswa_id'],
-                'tanggal' => $data['tanggal'],
+                'siswa_id'  => $data['siswa_id'],
+                'tanggal'   => $data['tanggal'],
                 'jadwal_id' => $data['jadwal_id'] ?? null,
             ],
             [
-                'status' => $data['status'],
-                'keterangan' => $data['keterangan'] ?? null,
+                'status'           => $data['status'],
+                'keterangan'       => $data['keterangan'] ?? null,
                 'diverifikasi_oleh' => $guruId,
             ]
         );
@@ -49,13 +50,13 @@ class PresensiService
         foreach ($data['presensi'] as $item) {
             Presensi::updateOrCreate(
                 [
-                    'siswa_id' => $item['siswa_id'],
-                    'tanggal' => $data['tanggal'],
+                    'siswa_id'  => $item['siswa_id'],
+                    'tanggal'   => $data['tanggal'],
                     'jadwal_id' => $data['jadwal_id'] ?? null,
                 ],
                 [
-                    'status' => $item['status'],
-                    'keterangan' => $item['keterangan'] ?? null,
+                    'status'           => $item['status'],
+                    'keterangan'       => $item['keterangan'] ?? null,
                     'diverifikasi_oleh' => $guruId,
                 ]
             );
@@ -103,17 +104,17 @@ class PresensiService
                 // Map status code to friendly Indonesian label
                 $statusMap = [
                     'hadir' => 'HADIR ✅',
-                    'alfa' => 'ALFA (Tanpa Keterangan) ❌',
+                    'alfa'  => 'ALFA (Tanpa Keterangan) ❌',
                     'sakit' => 'SAKIT 🤒',
-                    'izin' => 'IZIN 📝',
+                    'izin'  => 'IZIN 📝',
                 ];
                 $statusLabel = $statusMap[strtolower($status)] ?? strtoupper($status);
                 
                 $formattedDate = Carbon::parse($tanggal)->translatedFormat('l, d F Y');
                 
                 // Construct premium dynamic message details
-                $mapelDetails = $mapelName ? "\nMata Pelajaran: *{$mapelName}*" : '';
-                $guruDetails = $guruName ? "\nGuru Pengajar: *{$guruName}*" : '';
+                $mapelDetails    = $mapelName ? "\nMata Pelajaran: *{$mapelName}*" : '';
+                $guruDetails     = $guruName ? "\nGuru Pengajar: *{$guruName}*" : '';
                 $keteranganSuffix = !empty($keterangan) ? "\nKeterangan: *{$keterangan}*" : '';
 
                 // Formulate the beautiful premium template
@@ -136,27 +137,49 @@ class PresensiService
 
     /**
      * Submit student leave request (called by Siswa/OrangTua).
+     * Handles file upload for bukti_foto.
      */
-    public function submitIzin(array $data): PengajuanIzin
+    public function submitIzin(array $data, ?object $file = null): PengajuanIzin
     {
+        $buktiFotoPath = null;
+        if ($file && $file->isValid()) {
+            $buktiFotoPath = $file->store('bukti-izin', 'public');
+        }
+
         return PengajuanIzin::create([
-            'siswa_id' => $data['siswa_id'],
+            'siswa_id'      => $data['siswa_id'],
             'tanggal_mulai' => $data['tanggal_mulai'],
             'tanggal_selesai' => $data['tanggal_selesai'],
-            'jenis_izin' => $data['jenis_izin'],
-            'alasan' => $data['alasan'],
-            'status' => 'pending',
+            'jenis_izin'    => $data['jenis_izin'],
+            'alasan'        => $data['alasan'],
+            'bukti_foto'    => $buktiFotoPath,
+            'status'        => 'pending',
         ]);
     }
 
     /**
-     * Verify/review a student leave request.
+     * Verify/review a student leave request (Admin only).
      */
-    public function verifyIzin(int $id, string $status, int $reviewerUserId, ?int $reviewerGuruId): PengajuanIzin
+    public function verifyIzin(int $id, string $status, int $reviewerUserId, ?int $reviewerGuruId, ?string $rejectionReason = null): PengajuanIzin
     {
         $izin = PengajuanIzin::findOrFail($id);
-        $izin->status = $status;
+        $izin->status        = $status;
         $izin->ditinjau_oleh = $reviewerUserId;
+
+        if ($status === 'disetujui') {
+            $izin->approved_by = $reviewerUserId;
+            $izin->approved_at = now();
+            $izin->rejected_by = null;
+            $izin->rejected_at = null;
+            $izin->rejection_reason = null;
+        } elseif ($status === 'ditolak') {
+            $izin->rejected_by      = $reviewerUserId;
+            $izin->rejected_at      = now();
+            $izin->rejection_reason = $rejectionReason;
+            $izin->approved_by      = null;
+            $izin->approved_at      = null;
+        }
+
         $izin->save();
 
         if ($status === 'disetujui') {
@@ -171,11 +194,11 @@ class PresensiService
                 Presensi::updateOrCreate(
                     [
                         'siswa_id' => $izin->siswa_id,
-                        'tanggal' => $date->toDateString(),
+                        'tanggal'  => $date->toDateString(),
                     ],
                     [
-                        'status' => $izin->jenis_izin,
-                        'keterangan' => 'Izin disetujui: ' . $izin->alasan,
+                        'status'            => $izin->jenis_izin,
+                        'keterangan'        => 'Izin disetujui: ' . $izin->alasan,
                         'diverifikasi_oleh' => $reviewerGuruId,
                     ]
                 );
@@ -198,8 +221,8 @@ class PresensiService
         }
         
         try {
-            $waktu = $jadwal->waktu;
-            $parts = explode('-', $waktu);
+            $waktu  = $jadwal->waktu;
+            $parts  = explode('-', $waktu);
             $startPart = trim($parts[0]);
             
             $startPart = str_replace('.', ':', $startPart);
@@ -216,18 +239,18 @@ class PresensiService
     public function getDateForDayName(string $dayName, string $relativeToDate): string
     {
         $daysMap = [
-            'Senin' => 1,
+            'Senin'  => 1,
             'Selasa' => 2,
-            'Rabu' => 3,
-            'Kamis' => 4,
-            'Jumat' => 5,
-            'Sabtu' => 6,
+            'Rabu'   => 3,
+            'Kamis'  => 4,
+            'Jumat'  => 5,
+            'Sabtu'  => 6,
             'Minggu' => 7,
         ];
 
         $targetDayIndex = $daysMap[$dayName] ?? 1;
         $baseDate = Carbon::parse($relativeToDate);
-        $monday = $baseDate->startOfWeek();
+        $monday   = $baseDate->startOfWeek();
         
         return $monday->addDays($targetDayIndex - 1)->toDateString();
     }

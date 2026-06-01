@@ -14,19 +14,28 @@ interface ExportDropdownProps {
     filename: string;
 }
 
-export default function ExportDropdown({ data, columns, title, filename }: ExportDropdownProps) {
+export default function ExportDropdown({
+    data,
+    columns,
+    title,
+    filename,
+}: ExportDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Close dropdown on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
                 setIsOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     // 1. Export data to Excel-friendly CSV with UTF-8 BOM
@@ -37,27 +46,37 @@ export default function ExportDropdown({ data, columns, title, filename }: Expor
         }
 
         // Generate CSV headers
-        const headers = columns.map(col => `"${col.label.replace(/"/g, '""')}"`).join(',');
+        const headers = columns
+            .map((col) => `"${col.label.replace(/"/g, '""')}"`)
+            .join(',');
 
         // Generate CSV rows
-        const rows = data.map(item => {
-            return columns.map(col => {
-                let val = '';
-                if (typeof col.key === 'function') {
-                    val = col.key(item);
-                } else {
-                    val = item[col.key] !== undefined && item[col.key] !== null ? String(item[col.key]) : '';
-                }
-                return `"${val.replace(/"/g, '""')}"`;
-            }).join(',');
+        const rows = data.map((item) => {
+            return columns
+                .map((col) => {
+                    let val = '';
+                    if (typeof col.key === 'function') {
+                        val = col.key(item);
+                    } else {
+                        val =
+                            item[col.key] !== undefined &&
+                            item[col.key] !== null
+                                ? String(item[col.key])
+                                : '';
+                    }
+                    return `"${val.replace(/"/g, '""')}"`;
+                })
+                .join(',');
         });
 
         // Combine headers and rows with UTF-8 BOM
         const csvContent = '\uFEFF' + [headers, ...rows].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvContent], {
+            type: 'text/csv;charset=utf-8;',
+        });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        
+
         const dateSuffix = new Date().toISOString().split('T')[0];
         link.setAttribute('href', url);
         link.setAttribute('download', `${filename}_${dateSuffix}.csv`);
@@ -76,7 +95,9 @@ export default function ExportDropdown({ data, columns, title, filename }: Expor
 
         const printWindow = window.open('', '_blank');
         if (!printWindow) {
-            alert('Mohon izinkan popup window pada browser Anda agar dapat mempratinjau laporan PDF.');
+            alert(
+                'Mohon izinkan popup window pada browser Anda agar dapat mempratinjau laporan PDF.',
+            );
             return;
         }
 
@@ -84,28 +105,39 @@ export default function ExportDropdown({ data, columns, title, filename }: Expor
             weekday: 'long',
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
         });
 
         // Generate table header cells HTML
-        const headersHtml = columns.map(col => 
-            `<th style="padding: 10px 12px; border-bottom: 2px solid #ddd; background-color: #4f46e5; color: white; font-weight: bold; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">${col.label}</th>`
-        ).join('');
+        const headersHtml = columns
+            .map(
+                (col) =>
+                    `<th style="padding: 10px 12px; border-bottom: 2px solid #ddd; background-color: #4f46e5; color: white; font-weight: bold; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">${col.label}</th>`,
+            )
+            .join('');
 
         // Generate table body row cells HTML
-        const rowsHtml = data.map((item, idx) => {
-            const cellsHtml = columns.map(col => {
-                let val = '';
-                if (typeof col.key === 'function') {
-                    val = col.key(item);
-                } else {
-                    val = item[col.key] !== undefined && item[col.key] !== null ? String(item[col.key]) : '';
-                }
-                return `<td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #374151; max-width: 250px; word-wrap: break-word;">${val}</td>`;
-            }).join('');
-            const bg = idx % 2 === 0 ? '#ffffff' : '#f9fafb';
-            return `<tr style="background-color: ${bg};">${cellsHtml}</tr>`;
-        }).join('');
+        const rowsHtml = data
+            .map((item, idx) => {
+                const cellsHtml = columns
+                    .map((col) => {
+                        let val = '';
+                        if (typeof col.key === 'function') {
+                            val = col.key(item);
+                        } else {
+                            val =
+                                item[col.key] !== undefined &&
+                                item[col.key] !== null
+                                    ? String(item[col.key])
+                                    : '';
+                        }
+                        return `<td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #374151; max-width: 250px; word-wrap: break-word;">${val}</td>`;
+                    })
+                    .join('');
+                const bg = idx % 2 === 0 ? '#ffffff' : '#f9fafb';
+                return `<tr style="background-color: ${bg};">${cellsHtml}</tr>`;
+            })
+            .join('');
 
         printWindow.document.write(`
             <html>
@@ -250,18 +282,18 @@ export default function ExportDropdown({ data, columns, title, filename }: Expor
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
                 variant="outline"
-                className="gap-2 text-sm font-semibold border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                className="gap-2 border-neutral-300 bg-white text-sm font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
             >
                 <FileDown className="size-4 shrink-0" />
                 <span>Ekspor Laporan</span>
             </Button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-lg border border-neutral-200 dark:border-neutral-850 bg-white dark:bg-neutral-950 p-1 shadow-lg ring-1 ring-black/5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="dark:border-neutral-850 absolute right-0 z-50 mt-2 w-48 animate-in rounded-lg border border-neutral-200 bg-white p-1 shadow-lg ring-1 ring-black/5 duration-150 fade-in slide-in-from-top-2 dark:bg-neutral-950">
                     <button
                         type="button"
                         onClick={handleExportExcel}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-bold text-neutral-700 dark:text-neutral-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 hover:text-emerald-700 dark:hover:text-emerald-450 transition-all text-left"
+                        className="dark:hover:text-emerald-450 flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-xs font-bold text-neutral-700 transition-all hover:bg-emerald-50 hover:text-emerald-700 dark:text-neutral-300 dark:hover:bg-emerald-950/20"
                     >
                         <Table className="size-4 shrink-0 text-emerald-600 dark:text-emerald-500" />
                         <span>Ekspor ke Excel (.csv)</span>
@@ -269,7 +301,7 @@ export default function ExportDropdown({ data, columns, title, filename }: Expor
                     <button
                         type="button"
                         onClick={handleExportPDF}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-bold text-neutral-700 dark:text-neutral-300 hover:bg-rose-50 dark:hover:bg-rose-950/20 hover:text-rose-700 dark:hover:text-rose-450 transition-all text-left"
+                        className="dark:hover:text-rose-450 flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-xs font-bold text-neutral-700 transition-all hover:bg-rose-50 hover:text-rose-700 dark:text-neutral-300 dark:hover:bg-rose-950/20"
                     >
                         <FileText className="size-4 shrink-0 text-rose-600 dark:text-rose-500" />
                         <span>Ekspor ke PDF (.pdf)</span>

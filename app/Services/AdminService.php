@@ -60,6 +60,7 @@ class AdminService
                 'user_id' => $user->id,
                 'nip' => $data['nip'],
                 'no_hp' => $data['no_hp'] ?? null,
+                'foto_profile' => $data['foto_profile'] ?? null,
             ]);
 
             if (!empty($data['kelas_id'])) {
@@ -87,10 +88,16 @@ class AdminService
 
             $user->update($userUpdate);
 
-            $guru->update([
+            $guruUpdate = [
                 'nip' => $data['nip'],
                 'no_hp' => $data['no_hp'] ?? null,
-            ]);
+            ];
+
+            if (isset($data['foto_profile'])) {
+                $guruUpdate['foto_profile'] = $data['foto_profile'];
+            }
+
+            $guru->update($guruUpdate);
 
             // Clear old class assignment
             Kelas::where('wali_kelas_id', $guru->id)->update(['wali_kelas_id' => null]);
@@ -131,6 +138,7 @@ class AdminService
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'no_hp' => $data['no_hp'] ?? null,
                 'status' => $data['status'] ?? 'aktif',
+                'foto_profile' => $data['foto_profile'] ?? null,
             ]);
         });
     }
@@ -152,14 +160,20 @@ class AdminService
 
             $user->update($userUpdate);
 
-            $siswa->update([
+            $siswaUpdate = [
                 'nisn' => $data['nisn'],
                 'kelas_id' => $data['kelas_id'],
                 'orangtua_id' => $data['orangtua_id'] ?? null,
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'no_hp' => $data['no_hp'] ?? null,
                 'status' => $data['status'] ?? 'aktif',
-            ]);
+            ];
+
+            if (isset($data['foto_profile'])) {
+                $siswaUpdate['foto_profile'] = $data['foto_profile'];
+            }
+
+            $siswa->update($siswaUpdate);
         });
 
         return $siswa;

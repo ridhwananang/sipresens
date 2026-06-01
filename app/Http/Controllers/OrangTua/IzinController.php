@@ -34,6 +34,7 @@ class IzinController extends Controller
 
         $leaveRequests = PengajuanIzinResource::collection(
             PengajuanIzin::where('siswa_id', $activeChild->id)
+                ->with(['siswa.user', 'siswa.kelas', 'siswa.orangTua.user'])
                 ->orderBy('created_at', 'desc')
                 ->get()
         )->resolve();

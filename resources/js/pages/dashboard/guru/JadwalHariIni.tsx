@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { CalendarDays, Play, Clock, Sparkles } from 'lucide-react';
+import { Play, Clock, CalendarDays } from 'lucide-react';
 
 export interface TodayScheduleItem {
     id: number;
@@ -16,112 +15,137 @@ interface JadwalHariIniProps {
     onSelectSchedule: (id: number) => void;
 }
 
-export default function JadwalHariIni({ 
-    jadwal_hari_ini, 
-    activeJadwalId, 
-    onSelectSchedule 
-}: JadwalHariIniProps) {
-    
-    // Check if the schedule session time is currently ongoing
-    const isOngoing = (waktuStr: string) => {
-        try {
-            const [startPart, endPart] = waktuStr.split('-').map(s => s.trim());
-            const [startHour, startMin] = startPart.replace(':', '.').split('.').map(Number);
-            const [endHour, endMin] = endPart.replace(':', '.').split('.').map(Number);
-            
-            const now = new Date();
-            const curHour = now.getHours();
-            const curMin = now.getMinutes();
-            
-            const startVal = startHour * 60 + startMin;
-            const endVal = endHour * 60 + endMin;
-            const curVal = curHour * 60 + curMin;
-            
-            return curVal >= startVal && curVal <= endVal;
-        } catch {
-            return false;
-        }
-    };
+const isOngoing = (waktuStr: string): boolean => {
+    try {
+        const [startPart, endPart] = waktuStr.split('-').map((s) => s.trim());
+        const [startHour, startMin] = startPart
+            .replace(':', '.')
+            .split('.')
+            .map(Number);
+        const [endHour, endMin] = endPart
+            .replace(':', '.')
+            .split('.')
+            .map(Number);
+        const now = new Date();
+        const cur = now.getHours() * 60 + now.getMinutes();
+        return cur >= startHour * 60 + startMin && cur <= endHour * 60 + endMin;
+    } catch {
+        return false;
+    }
+};
 
+export default function JadwalHariIni({
+    jadwal_hari_ini,
+    activeJadwalId,
+    onSelectSchedule,
+}: JadwalHariIniProps) {
     return (
-        <Card className="border border-indigo-100 dark:border-indigo-950/60 bg-gradient-to-br from-white to-indigo-50/15 dark:from-neutral-950 dark:to-indigo-950/5 shadow-sm">
-            <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                    <CalendarDays className="size-5 text-indigo-600 dark:text-indigo-400" />
-                    <div>
-                        <CardTitle className="text-md font-extrabold flex items-center gap-1.5">
-                            <span>Sesi Mengajar Hari Ini</span>
-                            <Sparkles className="size-3.5 text-indigo-500 animate-pulse" />
-                        </CardTitle>
-                        <CardDescription className="text-xs">Akses kilat absen sesi hari berjalan</CardDescription>
+        <div className="space-y-4">
+            {/* Section Header */}
+            <div className="flex items-center gap-2">
+                <CalendarDays className="size-4.5 text-indigo-500" />
+                <span className="text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">
+                    Sesi Mengajar Hari Ini
+                </span>
+            </div>
+
+            {jadwal_hari_ini.length === 0 ? (
+                <div className="flex flex-col items-center justify-center space-y-2 rounded-2xl border border-neutral-200/60 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
+                    <div className="flex size-10 items-center justify-center rounded-full bg-neutral-50 text-neutral-400 dark:bg-zinc-800">
+                        <Clock className="size-5" />
+                    </div>
+                    <div className="space-y-0.5">
+                        <p className="dark:text-neutral-205 text-xs font-black text-neutral-800">
+                            Tidak Ada Kelas Hari Ini
+                        </p>
+                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500">
+                            Selamat menikmati waktu istirahat Anda!
+                        </p>
                     </div>
                 </div>
-            </CardHeader>
-            <CardContent>
-                {jadwal_hari_ini.length === 0 ? (
-                    <div className="text-center py-6 px-4 rounded-xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/10">
-                        <Clock className="size-8 mx-auto text-neutral-300 dark:text-neutral-700 mb-2" />
-                        <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">Tidak ada kelas hari ini</p>
-                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5">Selamat beristirahat & menikmati hari!</p>
-                    </div>
-                ) : (
-                    <div className="space-y-3">
-                        {jadwal_hari_ini.map((j) => {
-                            const isCurrent = isOngoing(j.waktu);
-                            const isActive = activeJadwalId === j.id;
+            ) : (
+                <div className="space-y-3">
+                    {jadwal_hari_ini.map((j) => {
+                        const ongoing = isOngoing(j.waktu);
+                        const isActive = activeJadwalId === j.id;
 
-                            return (
-                                <div 
-                                    key={j.id} 
-                                    className={`relative overflow-hidden rounded-xl border p-3 transition-all flex flex-col justify-between gap-3 ${
-                                        isActive 
-                                            ? 'border-indigo-600 bg-white dark:bg-neutral-900 shadow-md ring-1 ring-indigo-500/20' 
-                                            : isCurrent
-                                                ? 'border-emerald-300 bg-emerald-50/20 dark:border-emerald-950/30 dark:bg-emerald-950/5'
-                                                : 'border-neutral-200/60 bg-white hover:border-neutral-350 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700'
+                        return (
+                            <div
+                                key={j.id}
+                                className={`group relative cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300 hover:scale-[1.01] hover:shadow-sm ${
+                                    isActive
+                                        ? 'dark:border-indigo-650 border-indigo-400 bg-gradient-to-r from-indigo-50/70 to-violet-50/50 shadow-xs dark:from-indigo-950/20 dark:to-violet-950/10'
+                                        : ongoing
+                                          ? 'border-emerald-250 bg-emerald-50/40 dark:border-emerald-900/45 dark:bg-emerald-950/10'
+                                          : 'border-neutral-205 bg-white hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-indigo-900/50'
+                                }`}
+                                onClick={() => onSelectSchedule(j.id)}
+                            >
+                                {/* Left Accent Stripe */}
+                                <div
+                                    className={`absolute top-0 bottom-0 left-0 w-[4px] rounded-l-2xl ${
+                                        isActive
+                                            ? 'bg-indigo-650'
+                                            : ongoing
+                                              ? 'bg-emerald-500'
+                                              : 'bg-neutral-250 group-hover:bg-indigo-455 dark:bg-zinc-700'
                                     }`}
-                                >
-                                    {isCurrent && (
-                                        <div className="absolute top-0 right-0 bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg flex items-center gap-1 animate-pulse">
-                                            <span className="size-1.5 rounded-full bg-white block" />
-                                            <span>Sedang Berjalan</span>
-                                        </div>
-                                    )}
+                                />
 
-                                    <div className="space-y-1">
-                                        <p className="font-extrabold text-sm text-neutral-900 dark:text-neutral-100">{j.nama_mapel}</p>
-                                        <div className="flex items-center gap-2 text-[11px] text-neutral-500">
-                                            <span className="font-bold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded">
+                                <div className="flex items-center justify-between gap-4 py-3.5 pr-3.5 pl-4">
+                                    <div className="min-w-0 flex-1 space-y-1.5">
+                                        <div className="flex flex-wrap items-center gap-1.5">
+                                            <p className="text-neutral-850 truncate text-sm font-black dark:text-neutral-100">
+                                                {j.nama_mapel}
+                                            </p>
+                                            {ongoing && (
+                                                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[8px] font-black tracking-wider text-emerald-700 uppercase dark:bg-emerald-950/30 dark:text-emerald-400">
+                                                    <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                                                    Live
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="dark:text-neutral-450 rounded-md bg-neutral-100 px-2 py-0.5 text-[10px] font-extrabold text-neutral-500 dark:bg-zinc-900">
                                                 Kelas {j.nama_kelas}
                                             </span>
-                                            <span>•</span>
-                                            <span className="font-mono text-neutral-600 dark:text-neutral-400">{j.waktu}</span>
+                                            <span className="font-mono text-[10px] font-bold text-neutral-400 dark:text-neutral-500">
+                                                {j.waktu} WIB
+                                            </span>
                                         </div>
                                     </div>
-                                    
+
                                     <button
                                         type="button"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             onSelectSchedule(j.id);
-                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            window.scrollTo({
+                                                top: 0,
+                                                behavior: 'smooth',
+                                            });
                                         }}
-                                        className={`w-full text-center text-xs font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                                        className={`shrink-0 rounded-xl border p-2.5 transition-all duration-200 active:scale-95 ${
                                             isActive
-                                                ? 'bg-indigo-600 text-white shadow'
-                                                : isCurrent
-                                                    ? 'bg-emerald-600 text-white shadow hover:bg-emerald-700 hover:scale-[1.01]'
-                                                    : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 dark:hover:bg-indigo-900/40'
+                                                ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                                                : ongoing
+                                                  ? 'shadow-emerald-550/20 border-emerald-600 bg-emerald-600 text-white shadow-md'
+                                                  : 'border-neutral-200/50 bg-neutral-50 text-neutral-400 group-hover:border-indigo-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:border-zinc-700/80 dark:bg-zinc-800 dark:group-hover:border-indigo-900/40 dark:group-hover:bg-indigo-950/30 dark:group-hover:text-indigo-400'
                                         }`}
+                                        title={
+                                            isActive
+                                                ? 'Sedang Presensi'
+                                                : 'Mulai Presensi'
+                                        }
                                     >
-                                        <Play className="size-3 shrink-0 fill-current" />
-                                        <span>{isActive ? 'Sedang Absen' : 'Absen Sekarang'}</span>
+                                        <Play className="size-4 shrink-0 fill-current" />
                                     </button>
                                 </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
     );
 }

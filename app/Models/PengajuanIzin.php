@@ -18,8 +18,19 @@ class PengajuanIzin extends Model
         'tanggal_selesai',
         'jenis_izin',
         'alasan',
+        'bukti_foto',
         'status',
         'ditinjau_oleh',
+        'rejection_reason',
+        'approved_by',
+        'approved_at',
+        'rejected_by',
+        'rejected_at',
+    ];
+
+    protected $casts = [
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
     public function siswa(): BelongsTo
@@ -30,5 +41,15 @@ class PengajuanIzin extends Model
     public function peninjau(): BelongsTo
     {
         return $this->belongsTo(User::class, 'ditinjau_oleh');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 }

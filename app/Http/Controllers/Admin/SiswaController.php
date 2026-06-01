@@ -52,7 +52,14 @@ class SiswaController extends Controller
     {
         Gate::authorize('create', Siswa::class);
 
-        $this->adminService->createSiswa($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            $path = $request->file('foto_profile')->store('profile/siswa', 'public');
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->createSiswa($validated);
 
         return back()->with('success', 'Data Siswa berhasil ditambahkan.');
     }
@@ -62,7 +69,17 @@ class SiswaController extends Controller
         $siswa = Siswa::findOrFail($id);
         Gate::authorize('update', $siswa);
 
-        $this->adminService->updateSiswa($id, $request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            if ($siswa->foto_profile) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($siswa->foto_profile);
+            }
+            $path = $request->file('foto_profile')->store('profile/siswa', 'public');
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->updateSiswa($id, $validated);
 
         return back()->with('success', 'Data Siswa berhasil diperbarui.');
     }
@@ -71,6 +88,10 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::findOrFail($id);
         Gate::authorize('delete', $siswa);
+
+        if ($siswa->foto_profile) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($siswa->foto_profile);
+        }
 
         $this->adminService->deleteSiswa($id);
 

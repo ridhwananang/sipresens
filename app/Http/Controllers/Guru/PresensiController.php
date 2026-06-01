@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use App\Models\Jadwal;
 use App\Models\Siswa;
 use App\Models\Presensi;
+use App\Models\PengajuanIzin;
 use App\Http\Resources\JadwalResource;
 
 class PresensiController extends Controller
@@ -52,25 +53,59 @@ class PresensiController extends Controller
         $hasArrived = true;
 
         if ($activeJadwal) {
-            $kelasId = $activeJadwal->kelas_id;
+            $kelasId  = $activeJadwal->kelas_id;
             $students = Siswa::where('kelas_id', $kelasId)->with('user')->get();
-            
+            $siswaIds = $students->pluck('id');
+
+            // Presensi yang sudah direkam untuk jadwal & tanggal ini
             $presensiDb = Presensi::where('tanggal', $selectedDate)
                 ->where('jadwal_id', $activeJadwal->id)
-                ->whereIn('siswa_id', $students->pluck('id'))
+                ->whereIn('siswa_id', $siswaIds)
+                ->get()
+                ->keyBy('siswa_id');
+
+            // Fallback: pengajuan izin yang sudah disetujui wali kelas
+            // yang mencakup tanggal presensi ini
+            $izinDb = PengajuanIzin::where('status', 'disetujui')
+                ->where('tanggal_mulai', '<=', $selectedDate)
+                ->where('tanggal_selesai', '>=', $selectedDate)
+                ->whereIn('siswa_id', $siswaIds)
                 ->get()
                 ->keyBy('siswa_id');
 
             foreach ($students as $siswa) {
-                $status = isset($presensiDb[$siswa->id]) ? $presensiDb[$siswa->id]->status : 'belum';
-                $keterangan = isset($presensiDb[$siswa->id]) ? $presensiDb[$siswa->id]->keterangan : '';
-                
+                $presensi    = $presensiDb[$siswa->id] ?? null;
+                $izin        = $izinDb[$siswa->id]     ?? null;
+                $izinDefault = null;
+
+                if ($presensi) {
+                    // Sudah ada catatan presensi per jadwal → pakai itu
+                    $status     = $presensi->status;
+                    $keterangan = $presensi->keterangan ?? '';
+                } elseif ($izin) {
+                    // Belum ada presensi, tetapi ada izin disetujui → jadikan default
+                    $status     = $izin->jenis_izin; // 'izin' atau 'sakit'
+                    $keterangan = 'Izin disetujui: ' . $izin->alasan;
+                    $izinDefault = [
+                        'jenis'     => $izin->jenis_izin,
+                        'alasan'    => $izin->alasan,
+                        'bukti_url' => $izin->bukti_foto
+                                        ? asset('storage/' . $izin->bukti_foto)
+                                        : null,
+                    ];
+                } else {
+                    // Tidak ada presensi dan tidak ada izin disetujui
+                    $status     = 'belum';
+                    $keterangan = '';
+                }
+
                 $studentList[] = [
-                    'id' => $siswa->id,
-                    'name' => $siswa->user->name,
-                    'nisn' => $siswa->nisn,
-                    'status' => $status,
-                    'keterangan' => $keterangan,
+                    'id'          => $siswa->id,
+                    'name'        => $siswa->user->name,
+                    'nisn'        => $siswa->nisn,
+                    'status'      => $status,
+                    'keterangan'  => $keterangan,
+                    'izin_default' => $izinDefault, // null jika tidak ada izin aktif
                 ];
             }
 

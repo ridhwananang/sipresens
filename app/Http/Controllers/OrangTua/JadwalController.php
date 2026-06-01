@@ -42,6 +42,7 @@ class JadwalController extends Controller
                 'name' => $siswa->user->name,
                 'nisn' => $siswa->nisn,
                 'kelas' => $siswa->kelas ? $siswa->kelas->nama_kelas : 'Belum masuk kelas',
+                'foto_profile_url' => $siswa->foto_profile_url,
             ];
         })->toArray();
 

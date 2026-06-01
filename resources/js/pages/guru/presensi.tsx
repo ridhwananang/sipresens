@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ClipboardList } from 'lucide-react';
 import { toast } from 'sonner';
-import InputPresensi, { StudentPresence } from '../dashboard/guru/InputPresensi';
+import InputPresensi, {
+    StudentPresence,
+} from '../dashboard/guru/InputPresensi';
 import { ScheduleItem } from '../dashboard/guru/JadwalMengajar';
+import { useState, useEffect } from 'react';
 
 interface GuruPresensiProps {
     jadwals: ScheduleItem[];
@@ -19,190 +21,189 @@ export default function GuruPresensi({
     active_jadwal_id,
     selected_date,
     students,
-    has_arrived
+    has_arrived,
 }: GuruPresensiProps) {
-    
-    // Sync date with backend selected_date
-    const [selectedDate, setSelectedDate] = useState(selected_date || new Date().toISOString().split('T')[0]);
-    
-    // Local batch attendance state: maps student ID to status & keterangan
-    const [localAttendance, setLocalAttendance] = useState<Record<number, { status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa'; keterangan: string }>>({});
+    const [selectedDate, setSelectedDate] = useState(
+        selected_date || new Date().toISOString().split('T')[0],
+    );
+    const [localAttendance, setLocalAttendance] = useState<
+        Record<
+            number,
+            {
+                status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa';
+                keterangan: string;
+            }
+        >
+    >({});
     const [isSaving, setIsSaving] = useState(false);
 
-    // Initialize/Sync local state when students list changes from backend
     useEffect(() => {
-        const init: Record<number, { status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa'; keterangan: string }> = {};
-        students.forEach(s => {
-            init[s.id] = {
-                status: s.status,
-                keterangan: s.keterangan || ''
-            };
+        const init: Record<
+            number,
+            {
+                status: 'belum' | 'hadir' | 'sakit' | 'izin' | 'alpa';
+                keterangan: string;
+            }
+        > = {};
+        students.forEach((s) => {
+            init[s.id] = { status: s.status, keterangan: s.keterangan || '' };
         });
         setLocalAttendance(init);
     }, [students]);
 
-    // Keep internal date select state updated if selected_date prop changes (e.g. from backend day-snapping)
     useEffect(() => {
-        if (selected_date) {
-            setSelectedDate(selected_date);
-        }
+        if (selected_date) setSelectedDate(selected_date);
     }, [selected_date]);
 
-    // Check if there are local modifications compared to loaded student data
-    const isDirty = students.some(s => {
+    const isDirty = students.some((s) => {
         const local = localAttendance[s.id];
         if (!local) return false;
-        return local.status !== s.status || local.keterangan !== (s.keterangan || '');
+        return (
+            local.status !== s.status ||
+            local.keterangan !== (s.keterangan || '')
+        );
     });
 
-    // Date change triggers Inertia reload to fetch students for active session & date
     const handleDateChange = (date: string) => {
         if (isDirty) {
-            const confirmLeave = window.confirm('Anda memiliki perubahan presensi yang belum disimpan. Pindah tanggal akan membatalkan perubahan tersebut. Lanjutkan?');
+            const confirmLeave = window.confirm(
+                'Anda memiliki perubahan presensi yang belum disimpan. Pindah tanggal akan membatalkan perubahan tersebut. Lanjutkan?',
+            );
             if (!confirmLeave) return;
         }
-        
         setSelectedDate(date);
-        router.get('/presensi', {
-            jadwal_id: active_jadwal_id,
-            tanggal: date
-        }, {
-            preserveState: false, // Clean reload to reset local state to backend
-            preserveScroll: true
-        });
+        router.get(
+            '/presensi',
+            { jadwal_id: active_jadwal_id, tanggal: date },
+            { preserveState: false, preserveScroll: true },
+        );
     };
 
-    // Schedule change triggers Inertia reload to load that schedule's class students
     const handleSelectSchedule = (jadwalId: number | null) => {
         if (isDirty) {
-            const confirmLeave = window.confirm('Anda memiliki perubahan presensi yang belum disimpan. Pindah sesi akan membatalkan perubahan tersebut. Lanjutkan?');
+            const confirmLeave = window.confirm(
+                'Anda memiliki perubahan presensi yang belum disimpan. Pindah sesi akan membatalkan perubahan tersebut. Lanjutkan?',
+            );
             if (!confirmLeave) return;
         }
-
-        router.get('/presensi', {
-            jadwal_id: jadwalId,
-            tanggal: selectedDate
-        }, {
-            preserveState: false, // Clean reload to reset local state to backend
-            preserveScroll: true
-        });
+        router.get(
+            '/presensi',
+            { jadwal_id: jadwalId, tanggal: selectedDate },
+            { preserveState: false, preserveScroll: true },
+        );
     };
 
-    // Update local attendance status in state
-    const handleStatusChange = (siswaId: number, status: 'hadir' | 'sakit' | 'izin' | 'alpa') => {
-        setLocalAttendance(prev => ({
+    const handleStatusChange = (
+        siswaId: number,
+        status: 'hadir' | 'sakit' | 'izin' | 'alpa',
+    ) => {
+        setLocalAttendance((prev) => ({
             ...prev,
-            [siswaId]: {
-                ...prev[siswaId],
-                status
-            }
+            [siswaId]: { ...prev[siswaId], status },
         }));
     };
 
-    // Update local attendance note in state
     const handleNoteChange = (siswaId: number, note: string) => {
-        setLocalAttendance(prev => ({
+        setLocalAttendance((prev) => ({
             ...prev,
-            [siswaId]: {
-                ...prev[siswaId],
-                keterangan: note
-            }
+            [siswaId]: { ...prev[siswaId], keterangan: note },
         }));
     };
 
-    // Save all locally updated records in a single batch request
     const handleSaveAll = () => {
         const payload = Object.entries(localAttendance)
-            .filter(([_, val]) => val.status !== 'belum') // Only submit filled rows
+            .filter(([_, val]) => val.status !== 'belum')
             .map(([siswaId, val]) => ({
                 siswa_id: Number(siswaId),
                 status: val.status,
-                keterangan: val.keterangan
+                keterangan: val.keterangan,
             }));
 
         if (payload.length === 0) {
-            toast.error('Tentukan status presensi untuk minimal 1 siswa sebelum menyimpan.');
+            toast.error(
+                'Tentukan status presensi untuk minimal 1 siswa sebelum menyimpan.',
+            );
             return;
         }
 
         setIsSaving(true);
-        router.post('/presensi', {
-            tanggal: selectedDate,
-            jadwal_id: active_jadwal_id,
-            presensi: payload
-        }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                toast.success('Semua catatan presensi berhasil disimpan!');
-                setIsSaving(false);
+        router.post(
+            '/presensi',
+            {
+                tanggal: selectedDate,
+                jadwal_id: active_jadwal_id,
+                presensi: payload,
             },
-            onError: () => {
-                toast.error('Gagal menyimpan catatan presensi.');
-                setIsSaving(false);
-            }
-        });
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success('Semua catatan presensi berhasil disimpan!');
+                    setIsSaving(false);
+                },
+                onError: () => {
+                    toast.error('Gagal menyimpan catatan presensi.');
+                    setIsSaving(false);
+                },
+            },
+        );
     };
 
     return (
-        <div className="space-y-6 animate-fade-in">
+        <div className="animate-fade-in space-y-5 pb-4 text-left">
             <Head title="Input Presensi" />
 
-            <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
-                    Presensi Mengajar
-                </h1>
-                <p className="text-sm text-neutral-500">
-                    Kelola dan rekam kehadiran siswa Anda untuk setiap sesi kelas yang aktif.
-                </p>
+            {/* Page Header */}
+            <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/60 bg-white p-6 shadow-xs md:flex-row md:items-center md:justify-between dark:border-zinc-800/80 dark:bg-zinc-900/40">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                        <span className="text-indigo-650 inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black tracking-wider uppercase dark:bg-indigo-950/30 dark:text-indigo-400">
+                            Input Presensi
+                        </span>
+                    </div>
+                    <h1 className="text-neutral-855 mt-1.5 flex items-center gap-2 text-xl font-black md:text-2xl dark:text-neutral-50">
+                        <ClipboardList className="size-5.5 shrink-0 text-indigo-500" />
+                        <span>Presensi Mengajar</span>
+                    </h1>
+                    <p className="dark:text-neutral-405 text-[11px] leading-relaxed font-medium text-neutral-500">
+                        Kelola, rekam, dan perbarui kehadiran siswa untuk setiap
+                        sesi mata pelajaran kelas yang aktif hari ini.
+                    </p>
+                </div>
             </div>
 
             {jadwals.length === 0 ? (
-                <Card className="border border-amber-200 bg-amber-50/50 dark:border-amber-900/30 dark:bg-amber-950/10">
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <AlertCircle className="size-6 text-amber-600 dark:text-amber-500 mt-1 shrink-0" />
-                        <div>
-                            <h3 className="font-bold text-amber-800 dark:text-amber-400">Jadwal Mengajar Tidak Ditemukan</h3>
-                            <p className="text-sm text-amber-700 dark:text-amber-500 mt-1">
-                                Anda tidak memiliki jadwal mengajar aktif minggu ini. Fitur presensi hanya aktif bagi guru yang memiliki jadwal terdaftar di kelas pengampu.
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-            ) : (
-                <div className="max-w-4xl">
-                    <InputPresensi
-                        students={students}
-                        selectedDate={selectedDate}
-                        onDateChange={handleDateChange}
-                        
-                        // Local batch props
-                        localAttendance={localAttendance}
-                        onStatusChange={handleStatusChange}
-                        onNoteChange={handleNoteChange}
-                        onSaveAll={handleSaveAll}
-                        isDirty={isDirty}
-                        isSaving={isSaving}
-
-                        activeJadwalId={active_jadwal_id}
-                        jadwals={jadwals}
-                        onSelectSchedule={handleSelectSchedule}
-                        hasArrived={has_arrived}
-                    />
+                <div className="flex items-start gap-3 rounded-2xl border border-amber-100 bg-amber-50/60 p-4 dark:border-amber-900/30 dark:bg-amber-950/10">
+                    <AlertCircle className="mt-0.5 size-5 shrink-0 text-amber-500" />
+                    <div>
+                        <p className="text-sm font-bold text-amber-800 dark:text-amber-400">
+                            Jadwal Mengajar Tidak Ditemukan
+                        </p>
+                        <p className="mt-1 text-xs text-amber-600 dark:text-amber-500">
+                            Anda tidak memiliki jadwal mengajar aktif minggu
+                            ini. Fitur presensi hanya aktif bagi guru yang
+                            memiliki jadwal terdaftar di kelas pengampu.
+                        </p>
+                    </div>
                 </div>
+            ) : (
+                <InputPresensi
+                    students={students}
+                    selectedDate={selectedDate}
+                    onDateChange={handleDateChange}
+                    localAttendance={localAttendance}
+                    onStatusChange={handleStatusChange}
+                    onNoteChange={handleNoteChange}
+                    onSaveAll={handleSaveAll}
+                    isDirty={isDirty}
+                    isSaving={isSaving}
+                    activeJadwalId={active_jadwal_id}
+                    jadwals={jadwals}
+                    onSelectSchedule={handleSelectSchedule}
+                    hasArrived={has_arrived}
+                />
             )}
         </div>
     );
 }
 
-GuruPresensi.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: '/dashboard',
-        },
-        {
-            title: 'Presensi',
-            href: '/presensi',
-        },
-    ],
-};
+GuruPresensi.layout = undefined;

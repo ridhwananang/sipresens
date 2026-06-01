@@ -31,7 +31,12 @@ interface ClassDetailModalProps {
     students: StudentItem[];
 }
 
-export default function ClassDetailModal({ isOpen, onClose, classItem, students }: ClassDetailModalProps) {
+export default function ClassDetailModal({
+    isOpen,
+    onClose,
+    classItem,
+    students,
+}: ClassDetailModalProps) {
     if (!isOpen || !classItem) return null;
 
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -43,14 +48,20 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
     const displayedStudents = classStudents.filter(
         (s) =>
             s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            s.nisn.includes(searchQuery)
+            s.nisn.includes(searchQuery),
     );
 
     // Stats
     const totalCount = classStudents.length;
-    const maleCount = classStudents.filter((s) => s.jenis_kelamin === 'L').length;
-    const femaleCount = classStudents.filter((s) => s.jenis_kelamin === 'P').length;
-    const activeCount = classStudents.filter((s) => s.status === 'aktif').length;
+    const maleCount = classStudents.filter(
+        (s) => s.jenis_kelamin === 'L',
+    ).length;
+    const femaleCount = classStudents.filter(
+        (s) => s.jenis_kelamin === 'P',
+    ).length;
+    const activeCount = classStudents.filter(
+        (s) => s.status === 'aktif',
+    ).length;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
@@ -65,7 +76,10 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                                 Detail Kelas: {classItem.nama_kelas}
                             </CardTitle>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                Tahun Ajaran: <span className="font-semibold text-indigo-600 dark:text-indigo-400">{classItem.tahun_ajaran}</span>
+                                Tahun Ajaran:{' '}
+                                <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                                    {classItem.tahun_ajaran}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -77,12 +91,14 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                     </button>
                 </CardHeader>
 
-                <CardContent className="space-y-6 pt-5 max-h-[75vh] overflow-y-auto">
+                <CardContent className="max-h-[75vh] space-y-6 overflow-y-auto pt-5">
                     {/* 1. INFORMASI WALI KELAS & STATISTIK */}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {/* Wali Kelas Card */}
                         <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4 text-left dark:border-neutral-800 dark:bg-neutral-950/20">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Wali Kelas</span>
+                            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
+                                Wali Kelas
+                            </span>
                             <h4 className="mt-1 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                                 {classItem.wali_kelas}
                             </h4>
@@ -90,20 +106,30 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
 
                         {/* Statistik Gender Card */}
                         <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4 text-left dark:border-neutral-800 dark:bg-neutral-950/20">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Rasio Siswa</span>
+                            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
+                                Rasio Siswa
+                            </span>
                             <div className="mt-1 flex items-center gap-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                                <span className="text-blue-500">♂ {maleCount} L</span>
+                                <span className="text-blue-500">
+                                    ♂ {maleCount} L
+                                </span>
                                 <span className="text-neutral-300">|</span>
-                                <span className="text-pink-500">♀ {femaleCount} P</span>
+                                <span className="text-pink-500">
+                                    ♀ {femaleCount} P
+                                </span>
                             </div>
                         </div>
 
                         {/* Total Siswa Card */}
                         <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4 text-left dark:border-neutral-800 dark:bg-neutral-950/20">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Total Terdaftar</span>
+                            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
+                                Total Terdaftar
+                            </span>
                             <div className="mt-1 flex items-center gap-2 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                                 <Users className="size-4 text-indigo-600 dark:text-indigo-400" />
-                                <span>{totalCount} Murid ({activeCount} Aktif)</span>
+                                <span>
+                                    {totalCount} Murid ({activeCount} Aktif)
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -112,17 +138,30 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                     <div className="space-y-4">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
-                                Daftar Siswa Terdaftar ({displayedStudents.length})
+                                Daftar Siswa Terdaftar (
+                                {displayedStudents.length})
                             </h3>
 
-                            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                            <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
                                 <ExportDropdown
                                     data={displayedStudents}
                                     columns={[
                                         { label: 'Nama Siswa', key: 'name' },
                                         { label: 'NISN', key: 'nisn' },
-                                        { label: 'Jenis Kelamin', key: (item) => item.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' },
-                                        { label: 'Status', key: (item) => item.status === 'aktif' ? 'Aktif' : 'Non-aktif' },
+                                        {
+                                            label: 'Jenis Kelamin',
+                                            key: (item) =>
+                                                item.jenis_kelamin === 'L'
+                                                    ? 'Laki-laki'
+                                                    : 'Perempuan',
+                                        },
+                                        {
+                                            label: 'Status',
+                                            key: (item) =>
+                                                item.status === 'aktif'
+                                                    ? 'Aktif'
+                                                    : 'Non-aktif',
+                                        },
                                     ]}
                                     title={`Daftar Siswa Kelas ${classItem.nama_kelas} (${classItem.tahun_ajaran})`}
                                     filename={`daftar_siswa_kelas_${classItem.nama_kelas.toLowerCase().replace(/[^a-z0-9]/g, '_')}`}
@@ -130,11 +169,13 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
 
                                 {/* Search Box */}
                                 <div className="relative w-full sm:w-64">
-                                    <Search className="absolute left-2.5 top-2.5 size-4 text-neutral-400" />
+                                    <Search className="absolute top-2.5 left-2.5 size-4 text-neutral-400" />
                                     <Input
                                         placeholder="Cari nama atau NISN..."
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onChange={(e) =>
+                                            setSearchQuery(e.target.value)
+                                        }
                                         className="h-9 pl-9 text-xs"
                                     />
                                 </div>
@@ -142,16 +183,24 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                         </div>
 
                         {/* Table Frame */}
-                        <div className="overflow-hidden rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+                        <div className="overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-800 dark:bg-neutral-950">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-xs text-neutral-500 dark:text-neutral-400">
-                                    <thead className="bg-neutral-50 font-bold uppercase text-neutral-700 dark:bg-neutral-900/50 dark:text-neutral-300">
+                                    <thead className="bg-neutral-50 font-bold text-neutral-700 uppercase dark:bg-neutral-900/50 dark:text-neutral-300">
                                         <tr>
-                                            <th className="px-5 py-3 w-12 text-center">No.</th>
-                                            <th className="px-5 py-3">Nama Siswa</th>
+                                            <th className="w-12 px-5 py-3 text-center">
+                                                No.
+                                            </th>
+                                            <th className="px-5 py-3">
+                                                Nama Siswa
+                                            </th>
                                             <th className="px-5 py-3">NISN</th>
-                                            <th className="px-5 py-3 text-center">L/P</th>
-                                            <th className="px-5 py-3 text-center">Status</th>
+                                            <th className="px-5 py-3 text-center">
+                                                L/P
+                                            </th>
+                                            <th className="px-5 py-3 text-center">
+                                                Status
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/80">
@@ -164,16 +213,17 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                                                     <td className="px-5 py-3 text-center font-medium text-neutral-400">
                                                         {idx + 1}
                                                     </td>
-                                                    <td className="px-5 py-3 font-bold text-neutral-900 dark:text-neutral-200 text-left">
+                                                    <td className="px-5 py-3 text-left font-bold text-neutral-900 dark:text-neutral-200">
                                                         {s.name}
                                                     </td>
-                                                    <td className="px-5 py-3 font-mono text-neutral-600 dark:text-neutral-400 text-left">
+                                                    <td className="px-5 py-3 text-left font-mono text-neutral-600 dark:text-neutral-400">
                                                         {s.nisn}
                                                     </td>
                                                     <td className="px-5 py-3 text-center font-semibold">
                                                         <span
                                                             className={
-                                                                s.jenis_kelamin === 'L'
+                                                                s.jenis_kelamin ===
+                                                                'L'
                                                                     ? 'text-blue-500'
                                                                     : 'text-pink-500'
                                                             }
@@ -184,19 +234,26 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
                                                     <td className="px-5 py-3 text-center">
                                                         <span
                                                             className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                                                                s.status === 'aktif'
+                                                                s.status ===
+                                                                'aktif'
                                                                     ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
                                                                     : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400'
                                                             }`}
                                                         >
-                                                            {s.status === 'aktif' ? 'Aktif' : 'Non-aktif'}
+                                                            {s.status ===
+                                                            'aktif'
+                                                                ? 'Aktif'
+                                                                : 'Non-aktif'}
                                                         </span>
                                                     </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={5} className="py-8 text-center text-neutral-400">
+                                                <td
+                                                    colSpan={5}
+                                                    className="py-8 text-center text-neutral-400"
+                                                >
                                                     {classStudents.length === 0
                                                         ? 'Belum ada siswa yang terdaftar di kelas ini untuk Tahun Ajaran tersebut.'
                                                         : 'Tidak ada siswa yang cocok dengan pencarian.'}
@@ -210,9 +267,14 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
 
                         {classStudents.length > 0 && (
                             <div className="flex gap-2 rounded-lg bg-indigo-50/50 p-3 text-indigo-700 dark:bg-indigo-950/10 dark:text-indigo-400">
-                                <Info className="size-4 shrink-0 mt-0.5" />
+                                <Info className="mt-0.5 size-4 shrink-0" />
                                 <div className="text-left text-[11px] leading-relaxed">
-                                    Daftar di atas menampilkan semua siswa yang aktif maupun non-aktif (sejarah) yang terdaftar di kelas <strong>{classItem.nama_kelas}</strong> pada Tahun Ajaran <strong>{classItem.tahun_ajaran}</strong>.
+                                    Daftar di atas menampilkan semua siswa yang
+                                    aktif maupun non-aktif (sejarah) yang
+                                    terdaftar di kelas{' '}
+                                    <strong>{classItem.nama_kelas}</strong> pada
+                                    Tahun Ajaran{' '}
+                                    <strong>{classItem.tahun_ajaran}</strong>.
                                 </div>
                             </div>
                         )}
@@ -220,7 +282,11 @@ export default function ClassDetailModal({ isOpen, onClose, classItem, students 
 
                     {/* CLOSE BUTTON */}
                     <div className="flex justify-end border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                        <Button type="button" onClick={onClose} className="bg-indigo-600 text-white hover:bg-indigo-700">
+                        <Button
+                            type="button"
+                            onClick={onClose}
+                            className="bg-indigo-600 text-white hover:bg-indigo-700"
+                        >
                             Tutup
                         </Button>
                     </div>

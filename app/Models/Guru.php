@@ -16,7 +16,16 @@ class Guru extends Model
         'user_id',
         'nip',
         'no_hp',
+        'foto_profile',
     ];
+
+    protected $appends = ['foto_profile_url'];
+
+    public function getFotoProfileUrlAttribute()
+    {
+        return $this->foto_profile ? asset('storage/' . $this->foto_profile) : null;
+    }
+
 
     public function user(): BelongsTo
     {

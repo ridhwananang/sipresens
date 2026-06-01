@@ -16,6 +16,8 @@ class GuruResource extends JsonResource
             'nip' => $this->nip,
             'no_hp' => $this->no_hp,
             'wali_kelas' => $this->kelasWali ? $this->kelasWali->nama_kelas : null,
+            'foto_profile' => $this->foto_profile,
+            'foto_profile_url' => $this->foto_profile_url,
         ];
     }
 }

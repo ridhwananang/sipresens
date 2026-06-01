@@ -21,6 +21,8 @@ class SiswaResource extends JsonResource
             'jenis_kelamin' => $this->jenis_kelamin,
             'no_hp' => $this->no_hp,
             'status' => $this->status,
+            'foto_profile' => $this->foto_profile,
+            'foto_profile_url' => $this->foto_profile_url,
         ];
     }
 }

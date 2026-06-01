@@ -20,6 +20,7 @@ class StoreGuruRequest extends FormRequest
             'nip' => 'required|string|unique:gurus,nip|max:50',
             'no_hp' => 'nullable|string|max:20',
             'kelas_id' => 'nullable|exists:kelas,id',
+            'foto_profile' => 'nullable|image|max:2048|mimes:jpg,jpeg,png,webp',
         ];
     }
 }

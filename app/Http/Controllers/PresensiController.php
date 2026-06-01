@@ -96,13 +96,13 @@ class PresensiController extends Controller
     {
         Gate::authorize('create', [PengajuanIzin::class, $request->siswa_id]);
 
-        $this->presensiService->submitIzin($request->validated());
+        $this->presensiService->submitIzin($request->validated(), $request->file('bukti_foto'));
 
         return back()->with('success', 'Pengajuan izin berhasil dikirim.');
     }
 
     /**
-     * Verify a leave application (called by Guru or Admin).
+     * Verify a leave application (called by Admin only via this shared route).
      */
     public function verifikasiIzin(VerifikasiIzinRequest $request, $id)
     {
@@ -110,10 +110,16 @@ class PresensiController extends Controller
         
         Gate::authorize('verify', $izin);
 
-        $user = Auth::user();
+        $user   = Auth::user();
         $guruId = $user->guru ? $user->guru->id : null;
 
-        $this->presensiService->verifyIzin($id, $request->status, $user->id, $guruId);
+        $this->presensiService->verifyIzin(
+            $id,
+            $request->status,
+            $user->id,
+            $guruId,
+            $request->rejection_reason
+        );
 
         return back()->with('success', 'Status pengajuan izin berhasil diperbarui.');
     }

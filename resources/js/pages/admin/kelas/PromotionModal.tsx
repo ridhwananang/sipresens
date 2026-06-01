@@ -32,7 +32,12 @@ interface PromotionModalProps {
     students: StudentItem[];
 }
 
-export default function PromotionModal({ isOpen, onClose, classes, students }: PromotionModalProps) {
+export default function PromotionModal({
+    isOpen,
+    onClose,
+    classes,
+    students,
+}: PromotionModalProps) {
     if (!isOpen) return null;
 
     const [sourceClassId, setSourceClassId] = useState<string>('');
@@ -44,14 +49,14 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
 
     // List of active students in the selected source class
     const sourceClassStudents = students.filter(
-        (s) => s.kelas_id === Number(sourceClassId) && s.status === 'aktif'
+        (s) => s.kelas_id === Number(sourceClassId) && s.status === 'aktif',
     );
 
     // Filter students by search query
     const displayedStudents = sourceClassStudents.filter(
         (s) =>
             s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            s.nisn.includes(searchQuery)
+            s.nisn.includes(searchQuery),
     );
 
     // Reset student selections when class changes
@@ -68,7 +73,9 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
     // Handle student checkbox toggle
     const handleToggleStudent = (id: number) => {
         setSelectedStudentIds((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+            prev.includes(id)
+                ? prev.filter((item) => item !== id)
+                : [...prev, id],
         );
     };
 
@@ -118,14 +125,15 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
             {
                 student_ids: selectedStudentIds,
                 action: action,
-                target_kelas_id: action === 'promote' ? Number(targetClassId) : null,
+                target_kelas_id:
+                    action === 'promote' ? Number(targetClassId) : null,
             },
             {
                 onSuccess: () => {
                     toast.success(
                         action === 'promote'
                             ? 'Kenaikan kelas bertahap berhasil diproses!'
-                            : 'Proses kelulusan siswa selesai diproses!'
+                            : 'Proses kelulusan siswa selesai diproses!',
                     );
                     onClose();
                     // Reset state
@@ -138,7 +146,7 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                     toast.error(firstError || 'Gagal memproses perubahan.');
                 },
                 onFinish: () => setIsSubmitting(false),
-            }
+            },
         );
     };
 
@@ -159,19 +167,25 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                 </CardHeader>
 
                 <form onSubmit={handleSubmit}>
-                    <CardContent className="space-y-5 pt-4 max-h-[75vh] overflow-y-auto">
+                    <CardContent className="max-h-[75vh] space-y-5 overflow-y-auto pt-4">
                         {/* 1. KELAS ASAL & TINDAKAN */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div className="space-y-2">
-                                <Label htmlFor="source_class_id">Kelas Asal (Tahun Ajaran Aktif)</Label>
+                                <Label htmlFor="source_class_id">
+                                    Kelas Asal (Tahun Ajaran Aktif)
+                                </Label>
                                 <select
                                     id="source_class_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={sourceClassId}
-                                    onChange={(e) => setSourceClassId(e.target.value)}
+                                    onChange={(e) =>
+                                        setSourceClassId(e.target.value)
+                                    }
                                     required
                                 >
-                                    <option value="">Pilih Kelas Asal...</option>
+                                    <option value="">
+                                        Pilih Kelas Asal...
+                                    </option>
                                     {classes.map((c) => (
                                         <option key={c.id} value={c.id}>
                                             {c.nama_kelas} ({c.tahun_ajaran})
@@ -184,13 +198,23 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                 <Label htmlFor="action_type">Tindakan</Label>
                                 <select
                                     id="action_type"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={action}
-                                    onChange={(e) => setAction(e.target.value as 'promote' | 'graduate')}
+                                    onChange={(e) =>
+                                        setAction(
+                                            e.target.value as
+                                                | 'promote'
+                                                | 'graduate',
+                                        )
+                                    }
                                     required
                                 >
-                                    <option value="promote">Naikkan ke Kelas Lain</option>
-                                    <option value="graduate">Luluskan Siswa (Non-aktifkan)</option>
+                                    <option value="promote">
+                                        Naikkan ke Kelas Lain
+                                    </option>
+                                    <option value="graduate">
+                                        Luluskan Siswa (Non-aktifkan)
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -198,25 +222,37 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                         {/* 2. KELAS TUJUAN (Hanya untuk Kenaikan Kelas) */}
                         {action === 'promote' && (
                             <div className="space-y-2">
-                                <Label htmlFor="target_class_id">Kelas Tujuan (Tahun Ajaran Baru)</Label>
+                                <Label htmlFor="target_class_id">
+                                    Kelas Tujuan (Tahun Ajaran Baru)
+                                </Label>
                                 <select
                                     id="target_class_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100"
+                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
                                     value={targetClassId}
-                                    onChange={(e) => setTargetClassId(e.target.value)}
+                                    onChange={(e) =>
+                                        setTargetClassId(e.target.value)
+                                    }
                                     required={action === 'promote'}
                                 >
-                                    <option value="">Pilih Kelas Tujuan...</option>
+                                    <option value="">
+                                        Pilih Kelas Tujuan...
+                                    </option>
                                     {classes
-                                        .filter((c) => c.id !== Number(sourceClassId))
+                                        .filter(
+                                            (c) =>
+                                                c.id !== Number(sourceClassId),
+                                        )
                                         .map((c) => (
                                             <option key={c.id} value={c.id}>
-                                                {c.nama_kelas} ({c.tahun_ajaran})
+                                                {c.nama_kelas} ({c.tahun_ajaran}
+                                                )
                                             </option>
                                         ))}
                                 </select>
                                 <p className="text-xs text-neutral-400">
-                                    💡 Pastikan Anda telah membuat baris Kelas Baru dengan Tahun Ajaran baru terlebih dahulu.
+                                    💡 Pastikan Anda telah membuat baris Kelas
+                                    Baru dengan Tahun Ajaran baru terlebih
+                                    dahulu.
                                 </p>
                             </div>
                         )}
@@ -231,30 +267,38 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                             id="select_all"
                                             className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
                                             checked={
-                                                sourceClassStudents.length > 0 &&
-                                                selectedStudentIds.length === sourceClassStudents.length
+                                                sourceClassStudents.length >
+                                                    0 &&
+                                                selectedStudentIds.length ===
+                                                    sourceClassStudents.length
                                             }
                                             onChange={handleToggleSelectAll}
                                         />
-                                        <Label htmlFor="select_all" className="cursor-pointer font-bold">
-                                            Pilih Semua ({sourceClassStudents.length} Siswa)
+                                        <Label
+                                            htmlFor="select_all"
+                                            className="cursor-pointer font-bold"
+                                        >
+                                            Pilih Semua (
+                                            {sourceClassStudents.length} Siswa)
                                         </Label>
                                     </div>
 
                                     {/* Search Box */}
                                     <div className="relative w-full sm:w-64">
-                                        <Search className="absolute left-2.5 top-2.5 size-4 text-neutral-400" />
+                                        <Search className="absolute top-2.5 left-2.5 size-4 text-neutral-400" />
                                         <Input
                                             placeholder="Cari siswa..."
                                             value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            onChange={(e) =>
+                                                setSearchQuery(e.target.value)
+                                            }
                                             className="h-9 pl-9 text-xs"
                                         />
                                     </div>
                                 </div>
 
                                 {/* List Box */}
-                                <div className="max-h-60 overflow-y-auto rounded-lg border border-neutral-100 bg-white p-2 dark:border-neutral-800 dark:bg-neutral-950 divide-y divide-neutral-100 dark:divide-neutral-800">
+                                <div className="max-h-60 divide-y divide-neutral-100 overflow-y-auto rounded-lg border border-neutral-100 bg-white p-2 dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-950">
                                     {displayedStudents.length > 0 ? (
                                         displayedStudents.map((s) => (
                                             <div
@@ -265,8 +309,14 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                                     type="checkbox"
                                                     id={`std-${s.id}`}
                                                     className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
-                                                    checked={selectedStudentIds.includes(s.id)}
-                                                    onChange={() => handleToggleStudent(s.id)}
+                                                    checked={selectedStudentIds.includes(
+                                                        s.id,
+                                                    )}
+                                                    onChange={() =>
+                                                        handleToggleStudent(
+                                                            s.id,
+                                                        )
+                                                    }
                                                 />
                                                 <div className="flex flex-1 flex-col text-left">
                                                     <label
@@ -275,13 +325,16 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                                     >
                                                         {s.name}
                                                     </label>
-                                                    <span className="text-xs text-neutral-400">NISN: {s.nisn}</span>
+                                                    <span className="text-xs text-neutral-400">
+                                                        NISN: {s.nisn}
+                                                    </span>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
                                         <div className="py-8 text-center text-xs text-neutral-400">
-                                            Tidak ada siswa yang cocok atau kelas tidak memiliki siswa aktif.
+                                            Tidak ada siswa yang cocok atau
+                                            kelas tidak memiliki siswa aktif.
                                         </div>
                                     )}
                                 </div>
@@ -289,7 +342,9 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                 <div className="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400">
                                     <Sparkles className="size-4 shrink-0" />
                                     <span>
-                                        Siswa yang <strong>tidak dicentang</strong> akan tetap tinggal di kelas asal.
+                                        Siswa yang{' '}
+                                        <strong>tidak dicentang</strong> akan
+                                        tetap tinggal di kelas asal.
                                     </span>
                                 </div>
                             </div>
@@ -297,17 +352,30 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
 
                         {/* Warning/Guideline banner when graduate is chosen */}
                         {action === 'graduate' && sourceClassId && (
-                            <div className="flex gap-2.5 rounded-lg bg-rose-50 p-3 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400 border border-rose-100 dark:border-rose-900/40">
-                                <AlertCircle className="size-5 shrink-0 mt-0.5" />
+                            <div className="flex gap-2.5 rounded-lg border border-rose-100 bg-rose-50 p-3 text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-400">
+                                <AlertCircle className="mt-0.5 size-5 shrink-0" />
                                 <div className="text-left text-xs leading-relaxed">
-                                    <span className="font-bold">Peringatan:</span> Siswa yang diluluskan akan diubah statusnya menjadi <strong>non-aktif</strong>. Mereka tidak akan terhitung lagi di daftar presensi aktif sekolah dan akses masuk ke Portal Siswa/Wali mereka akan dimatikan secara aman.
+                                    <span className="font-bold">
+                                        Peringatan:
+                                    </span>{' '}
+                                    Siswa yang diluluskan akan diubah statusnya
+                                    menjadi <strong>non-aktif</strong>. Mereka
+                                    tidak akan terhitung lagi di daftar presensi
+                                    aktif sekolah dan akses masuk ke Portal
+                                    Siswa/Wali mereka akan dimatikan secara
+                                    aman.
                                 </div>
                             </div>
                         )}
 
                         {/* SUBMIT BUTTONS */}
                         <div className="flex justify-end gap-3 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                            <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={onClose}
+                                disabled={isSubmitting}
+                            >
                                 Batal
                             </Button>
                             <Button
@@ -324,13 +392,11 @@ export default function PromotionModal({ isOpen, onClose, classes, students }: P
                                         : 'bg-indigo-600 hover:bg-indigo-700'
                                 }`}
                             >
-                                {isSubmitting ? (
-                                    'Memproses...'
-                                ) : action === 'graduate' ? (
-                                    `Luluskan ${selectedStudentIds.length} Siswa`
-                                ) : (
-                                    `Naikkan ${selectedStudentIds.length} Siswa`
-                                )}
+                                {isSubmitting
+                                    ? 'Memproses...'
+                                    : action === 'graduate'
+                                      ? `Luluskan ${selectedStudentIds.length} Siswa`
+                                      : `Naikkan ${selectedStudentIds.length} Siswa`}
                             </Button>
                         </div>
                     </CardContent>
