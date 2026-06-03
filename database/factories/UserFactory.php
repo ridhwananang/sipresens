@@ -31,6 +31,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => 'siswa',
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
@@ -59,18 +60,18 @@ class UserFactory extends Factory
         ]);
     }
 
- public function configure(): static
-{
-    return $this->afterCreating(function (User $user) {
-        Siswa::create([
-            'user_id' => $user->id,
-            'nisn' => fake()->unique()->numerify('##########'),
-            'kelas_id' => \App\Models\Kelas::inRandomOrder()->value('id'),
-            'orangtua_id' => null,
-            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
-            'no_hp' => fake()->phoneNumber(),
-            'status' => 'aktif',
-        ]);
-    });
-}
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            Siswa::create([
+                'user_id' => $user->id,
+                'nisn' => fake()->unique()->numerify('##########'),
+                'kelas_id' => \App\Models\Kelas::inRandomOrder()->value('id') ?? \App\Models\Kelas::firstOrCreate(['nama_kelas' => 'X-A'])->id,
+                'orangtua_id' => null,
+                'jenis_kelamin' => fake()->randomElement(['L', 'P']),
+                'no_hp' => fake()->phoneNumber(),
+                'status' => 'aktif',
+            ]);
+        });
+    }
 }
