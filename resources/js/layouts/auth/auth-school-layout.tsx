@@ -125,7 +125,7 @@ export default function AuthSchoolLayout({ children }: AuthSchoolLayoutProps) {
                         {/* ── 3D School Icon ── */}
                         <div className="relative z-10 flex items-center justify-center p-6 sm:p-8 lg:p-10 lg:ml-8">
                             <img
-                                src="/images/school-icon.png"
+                                src="images/gsi.png"
                                 alt="Sekolah Pelita Bangsa Global Islamic School – 3D Icon"
                                 className="school-icon-float w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[360px] object-contain select-none"
                                 style={{
@@ -148,7 +148,7 @@ export default function AuthSchoolLayout({ children }: AuthSchoolLayoutProps) {
                         <div className="flex items-center gap-4 mb-9 login-fade-in">
                             {/* Students illustration */}
                             <img
-                                src="/images/students-icon.png"
+                                src="/images/school.png"
                                 alt="Students"
                                 className="h-16 w-auto object-contain flex-shrink-0 drop-shadow-md"
                                 draggable={false}

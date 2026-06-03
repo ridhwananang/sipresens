@@ -142,7 +142,7 @@ export default function Login({ status, canResetPassword }: Props) {
     return (
         <>
             <Head title="Log in – Sekolah Pelita Bangsa Global Islamic School" />
-            <PasskeyVerify />
+
 
             {/* Status banner (e.g. after password reset) */}
             {status && (
