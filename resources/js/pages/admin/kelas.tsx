@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash2, TrendingUp, Eye, BookOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, TrendingUp, Eye, BookOpen, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import KelasModal from './kelas/KelasModal';
@@ -82,197 +82,225 @@ export default function KelasPage({
         <div className="space-y-6 animate-fade-in text-left">
             <Head title="Data Kelas Akademik" />
 
-            {/* Header Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/60 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-pink-500/5 p-6 shadow-xs dark:border-zinc-800/80 dark:bg-gradient-to-br dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-pink-950/10">
-                <div className="absolute -right-10 -top-10 size-40 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
-                
-                <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1.5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black tracking-wider uppercase text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400">
-                            Data Akademik
-                        </span>
-                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-neutral-900 dark:text-neutral-50">
-                            <BookOpen className="size-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                            Data Kelas Akademik
-                        </h1>
-                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-neutral-500 dark:text-neutral-400">
-                            Kelola kelas akademik, penetapan Wali Kelas, dan atur kenaikan/kelulusan siswa secara bertahap.
-                        </p>
-                    </div>
-                </div>
-            </div>
+           {/* Header Card */}
+<div className="rounded-md border border-neutral-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+            <span className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+                Data Akademik
+            </span>
+            <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                <BookOpen className="size-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                Data Kelas Akademik
+            </h1>
+            <p className="max-w-2xl text-xs leading-relaxed text-neutral-400 dark:text-neutral-500">
+                Kelola kelas akademik, penetapan Wali Kelas, dan atur kenaikan/kelulusan siswa secara bertahap.
+            </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                <BookOpen className="size-3.5" />
+                {classes.length} Kelas
+            </span>
+        </div>
+    </div>
+</div>
 
-            {/* Toolbar */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white/40 dark:bg-zinc-950/20 p-4 rounded-2xl border border-neutral-200/40 dark:border-zinc-800/30">
-                <h2 className="text-lg font-black text-neutral-900 dark:text-neutral-50">Daftar Kelas</h2>
-                <div className="flex flex-wrap items-center gap-2.5">
-                    <ExportDropdown
-                        data={classes}
-                        columns={[
-                            { label: 'Nama Kelas', key: 'nama_kelas' },
-                            { label: 'Tahun Ajaran', key: 'tahun_ajaran' },
-                            { label: 'Wali Kelas', key: 'wali_kelas' },
-                            {
-                                label: 'Jumlah Siswa',
-                                key: (item) => `${item.siswa_count} Siswa`,
-                            },
-                        ]}
-                        title="Daftar Kelas Akademik Sipresens"
-                        filename="daftar_kelas"
-                    />
-                    <Button
-                        onClick={() => setIsPromotionOpen(true)}
-                        variant="outline"
-                        className="gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-900/40 dark:text-indigo-400 dark:hover:bg-indigo-950/20 rounded-2xl h-10 px-4 text-xs font-black cursor-pointer"
-                    >
-                        <TrendingUp className="size-4" /> Kenaikan Kelas Bertahap
-                    </Button>
-                    <Button
-                        onClick={openCreateModal}
-                        className="gap-2 bg-indigo-650 text-white hover:bg-indigo-700 rounded-2xl h-10 px-4 text-xs font-black cursor-pointer shadow-sm shadow-indigo-500/10"
-                    >
-                        <Plus className="size-4" /> Tambah Kelas
-                    </Button>
-                </div>
-            </div>
+{/* Toolbar */}
+<div className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex items-center gap-3">
+        <div className="h-7 w-[3px] rounded-full bg-indigo-500" />
+        <h2 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-neutral-100">
+            Daftar Kelas
+        </h2>
+        <span className="rounded-sm bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-zinc-400">
+            {classes.length} total
+        </span>
+    </div>
 
-            {/* Desktop Table View */}
-            <Card className="hidden md:block border border-neutral-200/60 bg-white rounded-3xl dark:border-neutral-800 dark:bg-neutral-950 overflow-hidden shadow-xs">
-                <CardContent className="p-0">
-                    <div className="relative overflow-x-auto">
-                        <table className="w-full text-left text-sm text-neutral-500 dark:text-neutral-400">
-                            <thead className="bg-neutral-50 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:bg-zinc-900/60 dark:text-neutral-500 border-b border-neutral-100 dark:border-neutral-900">
-                                <tr>
-                                    <th className="px-6 py-4">Nama Kelas</th>
-                                    <th className="px-6 py-4">Tahun Ajaran</th>
-                                    <th className="px-6 py-4">Wali Kelas</th>
-                                    <th className="px-6 py-4">Jumlah Siswa</th>
-                                    <th className="px-6 py-4 text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
-                                {classes.length > 0 ? (
-                                    classes.map((c) => (
-                                        <tr
-                                            key={c.id}
-                                            className="hover:bg-neutral-50/40 dark:hover:bg-zinc-900/20 transition-colors"
+    <div className="flex flex-wrap items-center gap-1.5">
+        {/* Divider */}
+        <div className="hidden h-5 w-px bg-neutral-200 dark:bg-zinc-700 sm:block" />
+
+        <ExportDropdown
+            data={classes}
+            columns={[
+                { label: 'Nama Kelas', key: 'nama_kelas' },
+                { label: 'Tahun Ajaran', key: 'tahun_ajaran' },
+                { label: 'Wali Kelas', key: 'wali_kelas' },
+                {
+                    label: 'Jumlah Siswa',
+                    key: (item) => `${item.siswa_count} Siswa`,
+                },
+            ]}
+            title="Daftar Kelas Akademik Sipresens"
+            filename="daftar_kelas"
+        />
+
+        <Button
+            onClick={() => setIsPromotionOpen(true)}
+            variant="outline"
+            className="h-8 gap-1.5 rounded-md border-neutral-200 px-3 text-xs font-medium text-neutral-600 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-indigo-800 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 cursor-pointer transition-colors duration-150"
+        >
+            <TrendingUp className="size-3.5" />
+            Kenaikan Kelas
+        </Button>
+
+        <Button
+            onClick={openCreateModal}
+            className="h-8 gap-1.5 rounded-md bg-indigo-600 px-3 text-xs font-medium text-white hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 cursor-pointer transition-colors duration-150 shadow-none"
+        >
+            <Plus className="size-3.5" />
+            Tambah Kelas
+        </Button>
+    </div>
+</div>
+
+{/* Desktop Table */}
+<Card className="hidden md:block overflow-hidden rounded-md border border-neutral-200 bg-white shadow-none dark:border-zinc-800 dark:bg-zinc-900">
+    <CardContent className="p-0">
+        <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+                <thead className="border-b border-neutral-200 bg-neutral-50 dark:border-zinc-800 dark:bg-zinc-800/50">
+                    <tr>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Nama Kelas</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Tahun Ajaran</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Wali Kelas</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Jumlah Siswa</th>
+                        <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800">
+                    {classes.length > 0 ? (
+                        classes.map((c) => (
+                            <tr
+                                key={c.id}
+                                className="group transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-zinc-800/50"
+                            >
+                                <td className="px-5 py-3.5 font-semibold text-neutral-900 dark:text-neutral-100">
+                                    <div className="flex items-center gap-2">
+                                        <div className="h-4 w-[2px] rounded-full bg-indigo-400 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
+                                        Kelas {c.nama_kelas}
+                                    </div>
+                                </td>
+                                <td className="px-5 py-3.5 text-neutral-500 dark:text-neutral-400">
+                                    {c.tahun_ajaran || '2025/2026'}
+                                </td>
+                                <td className="px-5 py-3.5 text-neutral-700 dark:text-neutral-300">
+                                    {c.wali_kelas}
+                                </td>
+                                <td className="px-5 py-3.5">
+                                    <span className="inline-flex items-center gap-1.5 rounded-sm bg-indigo-50 px-2 py-1 text-[11px] font-medium text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400">
+                                        <Users className="size-3" />
+                                        {c.siswa_count} Siswa
+                                    </span>
+                                </td>
+                                <td className="px-5 py-3.5">
+                                    <div className="flex justify-end gap-1">
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 cursor-pointer transition-colors duration-150"
+                                            onClick={() => {
+                                                setSelectedClass(c);
+                                                setIsDetailOpen(true);
+                                            }}
+                                            title="Lihat Daftar Siswa"
                                         >
-                                            <td className="px-6 py-4 font-black text-neutral-900 dark:text-neutral-100">
-                                                Kelas {c.nama_kelas}
-                                            </td>
-                                            <td className="px-6 py-4 font-semibold text-neutral-600 dark:text-neutral-355">
-                                                {c.tahun_ajaran || '2025/2026'}
-                                            </td>
-                                            <td className="px-6 py-4 font-semibold text-neutral-700 dark:text-neutral-300">
-                                                {c.wali_kelas}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-400">
-                                                    {c.siswa_count} Siswa
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 w-8 rounded-xl border-indigo-200 text-indigo-650 hover:bg-indigo-50 dark:border-indigo-900/40 dark:text-indigo-400 dark:hover:bg-indigo-950/20 cursor-pointer"
-                                                        onClick={() => {
-                                                            setSelectedClass(c);
-                                                            setIsDetailOpen(true);
-                                                        }}
-                                                        title="Lihat Daftar Siswa"
-                                                    >
-                                                        <Eye className="size-4" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 w-8 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-900 cursor-pointer"
-                                                        onClick={() =>
-                                                            openEditModal(c)
-                                                        }
-                                                    >
-                                                        <Pencil className="size-3.5" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-455 dark:hover:bg-rose-950/20 cursor-pointer"
-                                                        onClick={() =>
-                                                            handleDelete(c.id)
-                                                        }
-                                                    >
-                                                        <Trash2 className="size-3.5" />
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan={5}
-                                            className="py-12 text-center text-neutral-450 dark:text-neutral-500 font-medium"
+                                            <Eye className="size-3.5" />
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-zinc-700 dark:hover:text-neutral-200 cursor-pointer transition-colors duration-150"
+                                            onClick={() => openEditModal(c)}
+                                            title="Edit Kelas"
                                         >
-                                            Belum ada kelas terdaftar. Silakan tambahkan kelas baru.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </CardContent>
-            </Card>
+                                            <Pencil className="size-3.5" />
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-950/30 dark:hover:text-rose-400 cursor-pointer transition-colors duration-150"
+                                            onClick={() => handleDelete(c.id)}
+                                            title="Hapus Kelas"
+                                        >
+                                            <Trash2 className="size-3.5" />
+                                        </Button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={5} className="py-16 text-center">
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
+                                        <BookOpen className="size-6 text-neutral-400 dark:text-neutral-500" />
+                                    </div>
+                                    <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">Belum Ada Kelas</p>
+                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">Silakan tambahkan kelas baru.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    </CardContent>
+</Card>
 
-            {/* Mobile Card List View */}
-            <div className="space-y-4 md:hidden">
+            {/* Mobile Card List */}
+            <div className="space-y-3 md:hidden">
                 {classes.length > 0 ? (
                     classes.map((c) => (
                         <div
                             key={c.id}
-                            className="rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-xs transition-all duration-200 hover:border-indigo-200 dark:border-zinc-800/80 dark:bg-zinc-900/30"
+                            className="rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-sm transition-all duration-200 hover:border-indigo-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50"
                         >
-                            <div className="flex items-center justify-between pb-3 border-b border-neutral-100 dark:border-zinc-850">
-                                <div>
-                                    <h3 className="text-sm font-black text-neutral-900 dark:text-neutral-50">
-                                        Kelas {c.nama_kelas}
-                                    </h3>
-                                    <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500">
-                                        TA: {c.tahun_ajaran || '2025/2026'}
-                                    </p>
+                            <div className="flex items-start justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-950/40">
+                                        <BookOpen className="size-5 text-indigo-600 dark:text-indigo-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-black text-neutral-900 dark:text-neutral-50">
+                                            Kelas {c.nama_kelas}
+                                        </h3>
+                                        <p className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">
+                                            TA: {c.tahun_ajaran || '2025/2026'}
+                                        </p>
+                                    </div>
                                 </div>
-                                <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-black tracking-wider text-indigo-700 uppercase dark:bg-indigo-950/40 dark:text-indigo-400">
-                                    {c.siswa_count} Siswa
+                                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-black text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400">
+                                    <Users className="size-2.5" />
+                                    {c.siswa_count}
                                 </span>
                             </div>
 
-                            <div className="pt-3 pb-4">
-                                <p className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">
-                                    Wali Kelas
-                                </p>
-                                <p className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 mt-1">
+                            <div className="mt-3 border-t border-neutral-100 pt-3 dark:border-zinc-800/60">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-400">Wali Kelas</p>
+                                <p className="mt-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                                     {c.wali_kelas}
                                 </p>
                             </div>
 
-                            <div className="flex items-center justify-end gap-2 border-t border-neutral-100/60 pt-3 dark:border-zinc-850/60">
+                            <div className="mt-3 flex items-center justify-end gap-2 border-t border-neutral-100 pt-3 dark:border-zinc-800/60">
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-9 w-9 rounded-xl border-indigo-200 text-indigo-650 hover:bg-indigo-50 dark:border-indigo-900/40 dark:text-indigo-400 dark:hover:bg-indigo-950/20 cursor-pointer"
+                                    className="h-9 w-9 rounded-xl border-indigo-200 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-900/40 dark:text-indigo-400 cursor-pointer"
                                     onClick={() => {
                                         setSelectedClass(c);
                                         setIsDetailOpen(true);
                                     }}
-                                    title="Lihat Daftar Siswa"
                                 >
                                     <Eye className="size-4" />
                                 </Button>
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-9 w-9 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-900 cursor-pointer"
+                                    className="h-9 w-9 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-800 cursor-pointer"
                                     onClick={() => openEditModal(c)}
                                 >
                                     <Pencil className="size-4" />
@@ -280,7 +308,7 @@ export default function KelasPage({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-9 w-9 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-455 dark:hover:bg-rose-950/20 cursor-pointer"
+                                    className="h-9 w-9 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 cursor-pointer"
                                     onClick={() => handleDelete(c.id)}
                                 >
                                     <Trash2 className="size-4" />
@@ -289,23 +317,19 @@ export default function KelasPage({
                         </div>
                     ))
                 ) : (
-                    <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl border border-neutral-100 bg-white py-12 text-center dark:border-zinc-900 dark:bg-zinc-900/40">
-                        <div className="rounded-2xl bg-neutral-100 p-3 dark:bg-zinc-900">
-                            <BookOpen className="size-8 text-neutral-400 dark:text-neutral-600" />
+                    <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-neutral-100 bg-white py-14 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
+                        <div className="rounded-2xl bg-neutral-100 p-4 dark:bg-zinc-800">
+                            <BookOpen className="size-8 text-neutral-400 dark:text-neutral-500" />
                         </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-black text-neutral-800 dark:text-neutral-200">
-                                Belum Ada Kelas Terdaftar
-                            </p>
-                            <p className="mx-auto max-w-xs text-[10px] text-neutral-450 dark:text-neutral-500">
-                                Silakan tambahkan kelas baru menggunakan tombol di atas.
-                            </p>
+                        <div>
+                            <p className="text-xs font-black text-neutral-800 dark:text-neutral-200">Belum Ada Kelas Terdaftar</p>
+                            <p className="mt-0.5 text-[10px] text-neutral-400 dark:text-neutral-500">Tambahkan kelas baru menggunakan tombol di atas.</p>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Create / Edit Modal */}
+            {/* Modals */}
             <KelasModal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -315,8 +339,6 @@ export default function KelasPage({
                 editItem={editItem}
                 teachers={teachers}
             />
-
-            {/* Class Detail Modal */}
             <ClassDetailModal
                 isOpen={isDetailOpen}
                 onClose={() => {
@@ -326,8 +348,6 @@ export default function KelasPage({
                 classItem={selectedClass}
                 students={students}
             />
-
-            {/* Promotion Modal */}
             <PromotionModal
                 isOpen={isPromotionOpen}
                 onClose={() => setIsPromotionOpen(false)}

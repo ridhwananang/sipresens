@@ -150,258 +150,217 @@ export default function PromotionModal({
         );
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <Card className="w-full max-w-2xl transform rounded-2xl border border-neutral-200 bg-white shadow-2xl transition-all dark:border-neutral-800 dark:bg-neutral-950">
-                <CardHeader className="flex flex-row items-center justify-between border-b border-neutral-100 pb-4 dark:border-neutral-800">
-                    <CardTitle className="flex items-center gap-2 text-xl font-black text-neutral-900 dark:text-neutral-50">
-                        <TrendingUp className="size-6 text-indigo-600 dark:text-indigo-400" />
+return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <Card className="w-full max-w-2xl rounded-md border border-neutral-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+            
+            {/* Modal Header */}
+            <CardHeader className="flex flex-row items-center justify-between border-b border-neutral-200 px-5 py-4 dark:border-zinc-800">
+                <div className="flex items-center gap-3">
+                    <div className="h-5 w-[3px] rounded-full bg-indigo-500" />
+                    <CardTitle className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         Kenaikan Kelas & Kelulusan Bertahap
                     </CardTitle>
-                    <button
-                        onClick={onClose}
-                        className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-900 dark:hover:text-neutral-300"
-                    >
-                        <X className="size-5" />
-                    </button>
-                </CardHeader>
+                </div>
+                <button
+                    onClick={onClose}
+                    className="rounded-md p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-zinc-800 dark:hover:text-neutral-300 transition-colors duration-150"
+                >
+                    <X className="size-4" />
+                </button>
+            </CardHeader>
 
-                <form onSubmit={handleSubmit}>
-                    <CardContent className="max-h-[75vh] space-y-5 overflow-y-auto pt-4">
-                        {/* 1. KELAS ASAL & TINDAKAN */}
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="source_class_id">
-                                    Kelas Asal (Tahun Ajaran Aktif)
-                                </Label>
-                                <select
-                                    id="source_class_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
-                                    value={sourceClassId}
-                                    onChange={(e) =>
-                                        setSourceClassId(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <option value="">
-                                        Pilih Kelas Asal...
+            <form onSubmit={handleSubmit}>
+                <CardContent className="max-h-[75vh] space-y-4 overflow-y-auto px-5 py-4">
+
+                    {/* 1. KELAS ASAL & TINDAKAN */}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="source_class_id" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                                Kelas Asal (Tahun Ajaran Aktif)
+                            </Label>
+                            <select
+                                id="source_class_id"
+                                className="h-9 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                                value={sourceClassId}
+                                onChange={(e) => setSourceClassId(e.target.value)}
+                                required
+                            >
+                                <option value="">Pilih Kelas Asal...</option>
+                                {classes.map((c) => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.nama_kelas} ({c.tahun_ajaran})
                                     </option>
-                                    {classes.map((c) => (
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="action_type" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                                Tindakan
+                            </Label>
+                            <select
+                                id="action_type"
+                                className="h-9 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                                value={action}
+                                onChange={(e) => setAction(e.target.value as 'promote' | 'graduate')}
+                                required
+                            >
+                                <option value="promote">Naikkan ke Kelas Lain</option>
+                                <option value="graduate">Luluskan Siswa (Non-aktifkan)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* 2. KELAS TUJUAN */}
+                    {action === 'promote' && (
+                        <div className="space-y-1.5">
+                            <Label htmlFor="target_class_id" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                                Kelas Tujuan (Tahun Ajaran Baru)
+                            </Label>
+                            <select
+                                id="target_class_id"
+                                className="h-9 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                                value={targetClassId}
+                                onChange={(e) => setTargetClassId(e.target.value)}
+                                required={action === 'promote'}
+                            >
+                                <option value="">Pilih Kelas Tujuan...</option>
+                                {classes
+                                    .filter((c) => c.id !== Number(sourceClassId))
+                                    .map((c) => (
                                         <option key={c.id} value={c.id}>
                                             {c.nama_kelas} ({c.tahun_ajaran})
                                         </option>
                                     ))}
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="action_type">Tindakan</Label>
-                                <select
-                                    id="action_type"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
-                                    value={action}
-                                    onChange={(e) =>
-                                        setAction(
-                                            e.target.value as
-                                                | 'promote'
-                                                | 'graduate',
-                                        )
-                                    }
-                                    required
-                                >
-                                    <option value="promote">
-                                        Naikkan ke Kelas Lain
-                                    </option>
-                                    <option value="graduate">
-                                        Luluskan Siswa (Non-aktifkan)
-                                    </option>
-                                </select>
-                            </div>
+                            </select>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                Pastikan kelas baru dengan tahun ajaran baru sudah dibuat terlebih dahulu.
+                            </p>
                         </div>
+                    )}
 
-                        {/* 2. KELAS TUJUAN (Hanya untuk Kenaikan Kelas) */}
-                        {action === 'promote' && (
-                            <div className="space-y-2">
-                                <Label htmlFor="target_class_id">
-                                    Kelas Tujuan (Tahun Ajaran Baru)
-                                </Label>
-                                <select
-                                    id="target_class_id"
-                                    className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
-                                    value={targetClassId}
-                                    onChange={(e) =>
-                                        setTargetClassId(e.target.value)
-                                    }
-                                    required={action === 'promote'}
-                                >
-                                    <option value="">
-                                        Pilih Kelas Tujuan...
-                                    </option>
-                                    {classes
-                                        .filter(
-                                            (c) =>
-                                                c.id !== Number(sourceClassId),
-                                        )
-                                        .map((c) => (
-                                            <option key={c.id} value={c.id}>
-                                                {c.nama_kelas} ({c.tahun_ajaran}
-                                                )
-                                            </option>
-                                        ))}
-                                </select>
-                                <p className="text-xs text-neutral-400">
-                                    💡 Pastikan Anda telah membuat baris Kelas
-                                    Baru dengan Tahun Ajaran baru terlebih
-                                    dahulu.
-                                </p>
+                    {/* 3. DAFTAR SISWA */}
+                    {sourceClassId && (
+                        <div className="space-y-3 rounded-md border border-neutral-200 bg-neutral-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
+                            
+                            {/* Select All + Search */}
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        id="select_all"
+                                        className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
+                                        checked={
+                                            sourceClassStudents.length > 0 &&
+                                            selectedStudentIds.length === sourceClassStudents.length
+                                        }
+                                        onChange={handleToggleSelectAll}
+                                    />
+                                    <Label htmlFor="select_all" className="cursor-pointer text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                                        Pilih Semua ({sourceClassStudents.length} Siswa)
+                                    </Label>
+                                </div>
+                                <div className="relative w-full sm:w-56">
+                                    <Search className="absolute top-2.5 left-2.5 size-3.5 text-neutral-400" />
+                                    <Input
+                                        placeholder="Cari siswa..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="h-8 rounded-md border-neutral-200 pl-8 text-xs text-neutral-900 placeholder:text-neutral-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                                    />
+                                </div>
                             </div>
-                        )}
 
-                        {/* 3. DAFTAR SISWA KELAS ASAL */}
-                        {sourceClassId && (
-                            <div className="space-y-3 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4 dark:border-neutral-800 dark:bg-neutral-900/30">
-                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            id="select_all"
-                                            className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
-                                            checked={
-                                                sourceClassStudents.length >
-                                                    0 &&
-                                                selectedStudentIds.length ===
-                                                    sourceClassStudents.length
-                                            }
-                                            onChange={handleToggleSelectAll}
-                                        />
-                                        <Label
-                                            htmlFor="select_all"
-                                            className="cursor-pointer font-bold"
+                            {/* List Box */}
+                            <div className="max-h-56 divide-y divide-neutral-100 overflow-y-auto rounded-md border border-neutral-200 bg-white dark:divide-zinc-700 dark:border-zinc-700 dark:bg-zinc-900">
+                                {displayedStudents.length > 0 ? (
+                                    displayedStudents.map((s) => (
+                                        <div
+                                            key={s.id}
+                                            className="flex items-center gap-3 px-3 py-2.5 transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-zinc-800/60"
                                         >
-                                            Pilih Semua (
-                                            {sourceClassStudents.length} Siswa)
-                                        </Label>
-                                    </div>
-
-                                    {/* Search Box */}
-                                    <div className="relative w-full sm:w-64">
-                                        <Search className="absolute top-2.5 left-2.5 size-4 text-neutral-400" />
-                                        <Input
-                                            placeholder="Cari siswa..."
-                                            value={searchQuery}
-                                            onChange={(e) =>
-                                                setSearchQuery(e.target.value)
-                                            }
-                                            className="h-9 pl-9 text-xs"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* List Box */}
-                                <div className="max-h-60 divide-y divide-neutral-100 overflow-y-auto rounded-lg border border-neutral-100 bg-white p-2 dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-950">
-                                    {displayedStudents.length > 0 ? (
-                                        displayedStudents.map((s) => (
-                                            <div
-                                                key={s.id}
-                                                className="flex items-center gap-3 px-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    id={`std-${s.id}`}
-                                                    className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
-                                                    checked={selectedStudentIds.includes(
-                                                        s.id,
-                                                    )}
-                                                    onChange={() =>
-                                                        handleToggleStudent(
-                                                            s.id,
-                                                        )
-                                                    }
-                                                />
-                                                <div className="flex flex-1 flex-col text-left">
-                                                    <label
-                                                        htmlFor={`std-${s.id}`}
-                                                        className="cursor-pointer text-sm font-semibold text-neutral-900 dark:text-neutral-200"
-                                                    >
-                                                        {s.name}
-                                                    </label>
-                                                    <span className="text-xs text-neutral-400">
-                                                        NISN: {s.nisn}
-                                                    </span>
-                                                </div>
+                                            <input
+                                                type="checkbox"
+                                                id={`std-${s.id}`}
+                                                className="rounded border-neutral-300 text-indigo-600 focus:ring-indigo-500"
+                                                checked={selectedStudentIds.includes(s.id)}
+                                                onChange={() => handleToggleStudent(s.id)}
+                                            />
+                                            <div className="flex flex-1 flex-col">
+                                                <label htmlFor={`std-${s.id}`} className="cursor-pointer text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                                                    {s.name}
+                                                </label>
+                                                <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                                                    NISN: {s.nisn}
+                                                </span>
                                             </div>
-                                        ))
-                                    ) : (
-                                        <div className="py-8 text-center text-xs text-neutral-400">
-                                            Tidak ada siswa yang cocok atau
-                                            kelas tidak memiliki siswa aktif.
                                         </div>
-                                    )}
-                                </div>
-
-                                <div className="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400">
-                                    <Sparkles className="size-4 shrink-0" />
-                                    <span>
-                                        Siswa yang{' '}
-                                        <strong>tidak dicentang</strong> akan
-                                        tetap tinggal di kelas asal.
-                                    </span>
-                                </div>
+                                    ))
+                                ) : (
+                                    <div className="py-8 text-center text-xs text-neutral-500 dark:text-neutral-400">
+                                        Tidak ada siswa yang cocok atau kelas tidak memiliki siswa aktif.
+                                    </div>
+                                )}
                             </div>
-                        )}
 
-                        {/* Warning/Guideline banner when graduate is chosen */}
-                        {action === 'graduate' && sourceClassId && (
-                            <div className="flex gap-2.5 rounded-lg border border-rose-100 bg-rose-50 p-3 text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-400">
-                                <AlertCircle className="mt-0.5 size-5 shrink-0" />
-                                <div className="text-left text-xs leading-relaxed">
-                                    <span className="font-bold">
-                                        Peringatan:
-                                    </span>{' '}
-                                    Siswa yang diluluskan akan diubah statusnya
-                                    menjadi <strong>non-aktif</strong>. Mereka
-                                    tidak akan terhitung lagi di daftar presensi
-                                    aktif sekolah dan akses masuk ke Portal
-                                    Siswa/Wali mereka akan dimatikan secara
-                                    aman.
-                                </div>
+                            {/* Info */}
+                            <div className="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400">
+                                <Sparkles className="size-3.5 shrink-0" />
+                                <span>
+                                    Siswa yang <strong>tidak dicentang</strong> akan tetap tinggal di kelas asal.
+                                </span>
                             </div>
-                        )}
-
-                        {/* SUBMIT BUTTONS */}
-                        <div className="flex justify-end gap-3 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={onClose}
-                                disabled={isSubmitting}
-                            >
-                                Batal
-                            </Button>
-                            <Button
-                                type="submit"
-                                disabled={
-                                    isSubmitting ||
-                                    !sourceClassId ||
-                                    selectedStudentIds.length === 0 ||
-                                    (action === 'promote' && !targetClassId)
-                                }
-                                className={`gap-2 text-sm font-semibold text-white ${
-                                    action === 'graduate'
-                                        ? 'bg-rose-600 hover:bg-rose-700'
-                                        : 'bg-indigo-600 hover:bg-indigo-700'
-                                }`}
-                            >
-                                {isSubmitting
-                                    ? 'Memproses...'
-                                    : action === 'graduate'
-                                      ? `Luluskan ${selectedStudentIds.length} Siswa`
-                                      : `Naikkan ${selectedStudentIds.length} Siswa`}
-                            </Button>
                         </div>
-                    </CardContent>
-                </form>
-            </Card>
-        </div>
-    );
+                    )}
+
+                    {/* Warning Banner */}
+                    {action === 'graduate' && sourceClassId && (
+                        <div className="flex gap-2.5 rounded-md border border-rose-200 bg-rose-50 p-3 dark:border-rose-900/40 dark:bg-rose-950/20">
+                            <AlertCircle className="mt-0.5 size-4 shrink-0 text-rose-500 dark:text-rose-400" />
+                            <div className="text-xs leading-relaxed text-rose-700 dark:text-rose-400">
+                                <span className="font-semibold">Peringatan: </span>
+                                Siswa yang diluluskan akan diubah statusnya menjadi <strong>non-aktif</strong>. Akses Portal Siswa/Wali akan dinonaktifkan secara otomatis.
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Footer Actions */}
+                    <div className="flex justify-end gap-2 border-t border-neutral-200 pt-4 dark:border-zinc-800">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                            disabled={isSubmitting}
+                            className="h-8 rounded-md border-neutral-200 px-4 text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer"
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={
+                                isSubmitting ||
+                                !sourceClassId ||
+                                selectedStudentIds.length === 0 ||
+                                (action === 'promote' && !targetClassId)
+                            }
+                            className={`h-8 rounded-md px-4 text-xs font-medium text-white transition-colors duration-150 cursor-pointer ${
+                                action === 'graduate'
+                                    ? 'bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-500'
+                                    : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500'
+                            }`}
+                        >
+                            {isSubmitting
+                                ? 'Memproses...'
+                                : action === 'graduate'
+                                  ? `Luluskan ${selectedStudentIds.length} Siswa`
+                                  : `Naikkan ${selectedStudentIds.length} Siswa`}
+                        </Button>
+                    </div>
+
+                </CardContent>
+            </form>
+        </Card>
+    </div>
+);
 }

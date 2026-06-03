@@ -76,7 +76,7 @@ export default function AppLayout({
         return (
             <>
                 {/* ── DESKTOP ADMIN LAYOUT (Sidebar Dashboard, >= md) ── */}
-                <div className="hidden min-h-screen bg-neutral-50 md:block dark:bg-zinc-950">
+                <div className="admin-theme hidden min-h-screen bg-background text-foreground md:block">
                     <AppLayoutTemplate breadcrumbs={breadcrumbs}>
                         <div className="mx-auto w-full max-w-7xl px-6 py-6 transition-all duration-300">
                             {children}
@@ -678,6 +678,22 @@ export default function AppLayout({
                                 Jadwal
                             </span>
                         </Link>
+
+                        <Link
+                            href="/settings/profile"
+                            className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
+                                otIsProfile
+                                    ? 'font-bold text-violet-600 dark:text-violet-400'
+                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                            }`}
+                        >
+                            <User
+                                className={`size-5 transition-transform duration-300 ${otIsProfile ? 'scale-110' : ''}`}
+                            />
+                            <span className="text-[9px] tracking-wide">
+                                Profile
+                            </span>
+                        </Link>
                     </nav>
                 </div>
             </div>
@@ -689,19 +705,32 @@ export default function AppLayout({
     const grIsPresensi = url.startsWith('/presensi');
     const grIsIzin = url.startsWith('/izin');
     const grIsJadwal = url.startsWith('/jadwal');
+    const grIsProfile = url.startsWith('/settings');
+    const grShowBack =
+        url.startsWith('/settings/security') ||
+        url.startsWith('/settings/appearance');
+    const getGrBackUrl = () => {
+        if (
+            url.startsWith('/settings/security') ||
+            url.startsWith('/settings/appearance')
+        )
+            return '/settings/profile';
+        return '/dashboard';
+    };
 
     const getGrHeaderTitle = () => {
         if (grIsDashboard) return 'SIPRESENS';
         if (grIsPresensi) return 'Input Presensi';
         if (grIsIzin) return 'Verifikasi Izin';
         if (grIsJadwal) return 'Jadwal Mengajar';
+        if (grIsProfile) return 'Profil';
         return 'SIPRESENS';
     };
 
     return (
         <>
             {/* ── DESKTOP GURU LAYOUT (Sidebar Dashboard, >= md) ── */}
-            <div className="hidden min-h-screen bg-neutral-50 md:block dark:bg-zinc-950">
+            <div className="admin-theme hidden min-h-screen bg-background text-foreground md:block">
                 <AppLayoutTemplate breadcrumbs={breadcrumbs}>
                     <div className="mx-auto w-full max-w-7xl px-6 py-6 transition-all duration-300">
                         {children}
@@ -726,11 +755,20 @@ export default function AppLayout({
                     {/* Main Header */}
                     <header className="border-neutral-150/65 sticky top-0 z-40 flex items-center justify-between border-b bg-white/80 px-5 py-4 backdrop-blur-md transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
                         <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                                <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-violet-500 to-purple-500 text-sm font-black text-white shadow-md shadow-indigo-500/20">
-                                    SP
-                                </span>
-                            </div>
+                            {grShowBack ? (
+                                <Link
+                                    href={getGrBackUrl()}
+                                    className="rounded-full p-1.5 text-neutral-600 transition-all hover:bg-neutral-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                                >
+                                    <ArrowLeft className="size-5" />
+                                </Link>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-violet-500 to-purple-500 text-sm font-black text-white shadow-md shadow-indigo-500/20">
+                                        SP
+                                    </span>
+                                </div>
+                            )}
                             <h1 className="text-lg font-black tracking-tight text-neutral-900 dark:text-neutral-50">
                                 {getGrHeaderTitle()}
                             </h1>
@@ -819,6 +857,22 @@ export default function AppLayout({
                             />
                             <span className="text-[10px] tracking-wide">
                                 Jadwal
+                            </span>
+                        </Link>
+
+                        <Link
+                            href="/settings/profile"
+                            className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
+                                grIsProfile
+                                    ? 'font-bold text-indigo-600 dark:text-indigo-400'
+                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                            }`}
+                        >
+                            <User
+                                className={`size-5 transition-transform duration-300 ${grIsProfile ? 'scale-110' : ''}`}
+                            />
+                            <span className="text-[10px] tracking-wide">
+                                Profile
                             </span>
                         </Link>
                     </nav>

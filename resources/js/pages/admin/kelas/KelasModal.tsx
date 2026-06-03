@@ -68,94 +68,105 @@ export default function KelasModal({
 
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <Card className="w-full max-w-xl transform rounded-2xl border border-neutral-200 bg-white shadow-2xl transition-all dark:border-neutral-800 dark:bg-neutral-950">
-                <CardHeader>
-                    <CardTitle className="text-xl font-black text-neutral-900 dark:text-neutral-50">
+return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <Card className="w-full max-w-xl rounded-md border border-neutral-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+            
+            {/* Modal Header */}
+            <CardHeader className="border-b border-neutral-200 px-5 py-4 dark:border-zinc-800">
+                <div className="flex items-center gap-3">
+                    <div className="h-5 w-[3px] rounded-full bg-indigo-500" />
+                    <CardTitle className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         {editItem ? 'Ubah Kelas' : 'Tambah Kelas'}
                     </CardTitle>
-                </CardHeader>
-                <form onSubmit={handleSubmit}>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="nama_kelas">Nama Kelas</Label>
-                            <Input
-                                id="nama_kelas"
-                                placeholder="Contoh: XI-RPL"
-                                value={data.nama_kelas}
-                                onChange={(e) =>
-                                    setData('nama_kelas', e.target.value)
-                                }
-                                required
-                            />
-                            {errors.nama_kelas && (
-                                <p className="text-xs text-rose-500">
-                                    {errors.nama_kelas}
-                                </p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="tahun_ajaran">Tahun Ajaran</Label>
-                            <Input
-                                id="tahun_ajaran"
-                                placeholder="Contoh: 2025/2026"
-                                value={data.tahun_ajaran}
-                                onChange={(e) =>
-                                    setData('tahun_ajaran', e.target.value)
-                                }
-                                required
-                            />
-                            {errors.tahun_ajaran && (
-                                <p className="text-xs text-rose-500">
-                                    {errors.tahun_ajaran}
-                                </p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="wali_kelas_id">Wali Kelas</Label>
-                            <select
-                                id="wali_kelas_id"
-                                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
-                                value={data.wali_kelas_id}
-                                onChange={(e) =>
-                                    setData('wali_kelas_id', e.target.value)
-                                }
-                            >
-                                <option value="">Pilih Wali Kelas...</option>
-                                {teachers.map((t) => (
-                                    <option key={t.id} value={t.id}>
-                                        {t.name} (NIP: {t.nip})
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.wali_kelas_id && (
-                                <p className="text-xs text-rose-500">
-                                    {errors.wali_kelas_id}
-                                </p>
-                            )}
-                        </div>
+                </div>
+            </CardHeader>
 
-                        <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={onClose}
-                                disabled={processing}
-                            >
-                                Batal
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="bg-indigo-650 text-white hover:bg-indigo-700"
-                                disabled={processing}
-                            >
-                                {processing ? 'Menyimpan...' : 'Simpan'}
-                            </Button>
-                        </div>
-                    </CardContent>
-                </form>
-            </Card>
-        </div>
-    );
+            <form onSubmit={handleSubmit}>
+                <CardContent className="space-y-4 px-5 py-4">
+                    
+                    {/* Nama Kelas */}
+                    <div className="space-y-1.5">
+                        <Label htmlFor="nama_kelas" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                            Nama Kelas
+                        </Label>
+                        <Input
+                            id="nama_kelas"
+                            placeholder="Contoh: XI-RPL"
+                            value={data.nama_kelas}
+                            onChange={(e) => setData('nama_kelas', e.target.value)}
+                            required
+                            className="h-9 rounded-md border-neutral-200 bg-white text-sm text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                        />
+                        {errors.nama_kelas && (
+                            <p className="text-xs text-rose-500">{errors.nama_kelas}</p>
+                        )}
+                    </div>
+
+                    {/* Tahun Ajaran */}
+                    <div className="space-y-1.5">
+                        <Label htmlFor="tahun_ajaran" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                            Tahun Ajaran
+                        </Label>
+                        <Input
+                            id="tahun_ajaran"
+                            placeholder="Contoh: 2025/2026"
+                            value={data.tahun_ajaran}
+                            onChange={(e) => setData('tahun_ajaran', e.target.value)}
+                            required
+                            className="h-9 rounded-md border-neutral-200 bg-white text-sm text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                        />
+                        {errors.tahun_ajaran && (
+                            <p className="text-xs text-rose-500">{errors.tahun_ajaran}</p>
+                        )}
+                    </div>
+
+                    {/* Wali Kelas */}
+                    <div className="space-y-1.5">
+                        <Label htmlFor="wali_kelas_id" className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                            Wali Kelas
+                        </Label>
+                        <select
+                            id="wali_kelas_id"
+                            className="h-9 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100"
+                            value={data.wali_kelas_id}
+                            onChange={(e) => setData('wali_kelas_id', e.target.value)}
+                        >
+                            <option value="">Pilih Wali Kelas...</option>
+                            {teachers.map((t) => (
+                                <option key={t.id} value={t.id}>
+                                    {t.name} (NIP: {t.nip})
+                                </option>
+                            ))}
+                        </select>
+                        {errors.wali_kelas_id && (
+                            <p className="text-xs text-rose-500">{errors.wali_kelas_id}</p>
+                        )}
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="flex justify-end gap-2 border-t border-neutral-200 pt-4 dark:border-zinc-800">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                            disabled={processing}
+                            className="h-8 rounded-md border-neutral-200 px-4 text-xs font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer"
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={processing}
+                            className="h-8 rounded-md bg-indigo-600 px-4 text-xs font-medium text-white hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 cursor-pointer transition-colors duration-150"
+                        >
+                            {processing ? 'Menyimpan...' : 'Simpan'}
+                        </Button>
+                    </div>
+
+                </CardContent>
+            </form>
+        </Card>
+    </div>
+);
 }

@@ -141,3 +141,39 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Scoped Theme for Admin Desktop Command Center */
+.admin-theme {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #0f172a;
+    --sidebar-border: #e2e8f0;
+    --border: #e2e8f0;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
+}
+
+.dark .admin-theme {
+    --background: #0b1120;
+    --foreground: #ffffff;
+    --card: #141d2e;
+    --card-foreground: #ffffff;
+    --popover: #111827;
+    --popover-foreground: #ffffff;
+    --sidebar: #111827;
+    --sidebar-foreground: #ffffff;
+    --sidebar-border: #1e293b;
+    --border: #1e293b;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --accent: #1f2937;
+    --accent-foreground: #ffffff;
+}
+

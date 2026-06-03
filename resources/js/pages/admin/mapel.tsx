@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash2, BookOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, BookOpen,Search } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import MapelModal from './mapel/MapelModal';
@@ -16,9 +15,19 @@ interface MapelPageProps {
     mapels: MapelItem[];
 }
 
+const ICON_COLORS = [
+    { bg: 'bg-indigo-50 dark:bg-indigo-950/40', icon: 'text-indigo-600 dark:text-indigo-400', border: 'border-indigo-100 dark:border-indigo-900/30', hover: 'hover:border-indigo-200 dark:hover:border-indigo-800' },
+    { bg: 'bg-violet-50 dark:bg-violet-950/40', icon: 'text-violet-600 dark:text-violet-400', border: 'border-violet-100 dark:border-violet-900/30', hover: 'hover:border-violet-200 dark:hover:border-violet-800' },
+    { bg: 'bg-sky-50 dark:bg-sky-950/40', icon: 'text-sky-600 dark:text-sky-400', border: 'border-sky-100 dark:border-sky-900/30', hover: 'hover:border-sky-200 dark:hover:border-sky-800' },
+    { bg: 'bg-emerald-50 dark:bg-emerald-950/40', icon: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-100 dark:border-emerald-900/30', hover: 'hover:border-emerald-200 dark:hover:border-emerald-800' },
+    { bg: 'bg-amber-50 dark:bg-amber-950/40', icon: 'text-amber-600 dark:text-amber-400', border: 'border-amber-100 dark:border-amber-900/30', hover: 'hover:border-amber-200 dark:hover:border-amber-800' },
+    { bg: 'bg-rose-50 dark:bg-rose-950/40', icon: 'text-rose-600 dark:text-rose-400', border: 'border-rose-100 dark:border-rose-900/30', hover: 'hover:border-rose-200 dark:hover:border-rose-800' },
+];
+
 export default function MapelPage({ mapels }: MapelPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editItem, setEditItem] = useState<MapelItem | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -31,213 +40,165 @@ export default function MapelPage({ mapels }: MapelPageProps) {
     };
 
     const handleDelete = (id: number) => {
-        if (
-            !confirm(
-                'Apakah Anda yakin ingin menghapus mata pelajaran ini? Tindakan ini tidak dapat dibatalkan.',
-            )
-        )
+        if (!confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini? Tindakan ini tidak dapat dibatalkan.'))
             return;
-
         router.delete(`/admin/mapel/${id}`, {
             onSuccess: () => toast.success('Mata Pelajaran berhasil dihapus!'),
             onError: () => toast.error('Gagal menghapus mata pelajaran.'),
         });
     };
 
-    const [searchQuery, setSearchQuery] = useState('');
-
     const filteredMapels = mapels.filter((m) =>
         m.nama_mapel.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const emptyState = (
+        <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-neutral-200 bg-white py-16 text-center dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
+                <BookOpen className="size-6 text-neutral-400 dark:text-neutral-500" />
+            </div>
+            <div>
+                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    {searchQuery ? 'Mata Pelajaran Tidak Ditemukan' : 'Belum Ada Mata Pelajaran'}
+                </p>
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    {searchQuery ? `Tidak ada hasil untuk "${searchQuery}".` : 'Silakan tambahkan mata pelajaran baru.'}
+                </p>
+            </div>
+        </div>
+    );
+
     return (
-        <div className="space-y-6 animate-fade-in text-left">
+        <div className="space-y-4 text-left">
             <Head title="Data Mata Pelajaran" />
 
             {/* Header Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/60 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-pink-500/5 p-6 shadow-xs dark:border-zinc-800/80 dark:bg-gradient-to-br dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-pink-950/10">
-                <div className="absolute -right-10 -top-10 size-40 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
-                
-                <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1.5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black tracking-wider uppercase text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400">
+            <div className="rounded-md border border-neutral-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <span className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
                             Kurikulum
                         </span>
-                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-neutral-900 dark:text-neutral-50">
-                            <BookOpen className="size-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                            <BookOpen className="size-5 shrink-0 text-indigo-600 dark:text-indigo-400" />
                             Data Mata Pelajaran
                         </h1>
-                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-neutral-500 dark:text-neutral-400">
-                            Kelola daftar kurikulum mata pelajaran (mapel) yang aktif diajarkan di sekolah.
+                        <p className="max-w-2xl text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                            Kelola daftar kurikulum mata pelajaran yang aktif diajarkan di sekolah.
                         </p>
+                    </div>
+                    <div className="flex shrink-0 items-center">
+                        <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                            <BookOpen className="size-3.5" />
+                            {mapels.length} Mapel
+                        </span>
                     </div>
                 </div>
             </div>
 
-            {/* Toolbar & Search */}
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-white/40 dark:bg-zinc-950/20 p-4 rounded-2xl border border-neutral-200/40 dark:border-zinc-800/30">
-                <div className="relative flex-1 max-w-sm">
-                    <input
-                        type="text"
-                        placeholder="Cari mata pelajaran..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white/60 px-4 py-2 text-xs font-semibold text-neutral-900 placeholder-neutral-400 focus:border-indigo-550 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-neutral-100 dark:focus:border-indigo-500"
-                    />
+            {/* Toolbar */}
+            <div className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="h-7 w-[3px] rounded-full bg-indigo-500" />
+                    <h2 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-neutral-100">
+                        Daftar Mata Pelajaran
+                    </h2>
+                    <span className="rounded-sm bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-zinc-400">
+                        {filteredMapels.length} total
+                    </span>
                 </div>
-                <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-1.5">
+                    {/* Search */}
+                    <div className="relative">
+                        <Search className="absolute top-2 left-2.5 size-3.5 text-neutral-400" />
+                        <input
+                            type="text"
+                            placeholder="Cari mata pelajaran..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="h-8 w-48 rounded-md border border-neutral-200 bg-neutral-50 pl-8 pr-3 text-xs text-neutral-900 placeholder-neutral-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100 dark:placeholder-neutral-500"
+                        />
+                    </div>
+
+                    <div className="hidden h-5 w-px bg-neutral-200 dark:bg-zinc-700 sm:block" />
+
                     <ExportDropdown
                         data={filteredMapels}
-                        columns={[
-                            { label: 'Nama Mata Pelajaran', key: 'nama_mapel' },
-                        ]}
+                        columns={[{ label: 'Nama Mata Pelajaran', key: 'nama_mapel' }]}
                         title="Daftar Mata Pelajaran Sipresens"
                         filename="daftar_mapel"
                     />
+
                     <Button
                         onClick={openCreateModal}
-                        className="gap-2 bg-indigo-650 text-white hover:bg-indigo-700 rounded-2xl h-10 px-4 text-xs font-black cursor-pointer shadow-sm shadow-indigo-500/10"
+                        className="h-8 gap-1.5 rounded-md bg-indigo-600 px-3 text-xs font-medium text-white hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 cursor-pointer transition-colors duration-150 shadow-none"
                     >
-                        <Plus className="size-4" /> Tambah Mapel
+                        <Plus className="size-3.5" />
+                        Tambah Mapel
                     </Button>
                 </div>
             </div>
 
-            {/* Desktop View (Modern Card Grid / Table) */}
-            <div className="hidden md:block">
-                {filteredMapels.length > 0 ? (
-                    <Card className="max-w-3xl border border-neutral-200/60 bg-white rounded-3xl dark:border-neutral-800 dark:bg-neutral-950 overflow-hidden shadow-xs">
-                        <CardContent className="p-0">
-                            <table className="w-full text-left text-sm text-neutral-500 dark:text-neutral-400">
-                                <thead className="bg-neutral-50 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:bg-zinc-900/60 dark:text-neutral-500 border-b border-neutral-100 dark:border-neutral-900">
-                                    <tr>
-                                        <th className="w-20 px-6 py-4 text-center">No.</th>
-                                        <th className="px-6 py-4">Mata Pelajaran</th>
-                                        <th className="px-6 py-4 text-right">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
-                                    {filteredMapels.map((m, idx) => (
-                                        <tr
-                                            key={m.id}
-                                            className="hover:bg-neutral-50/40 dark:hover:bg-zinc-900/20 transition-colors"
-                                        >
-                                            <td className="px-6 py-4 text-center font-bold text-neutral-400 dark:text-neutral-600">
-                                                #{String(idx + 1).padStart(2, '0')}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-650 dark:bg-indigo-950/40 dark:text-indigo-400">
-                                                        <BookOpen className="size-4.5" />
-                                                    </span>
-                                                    <span className="font-black text-neutral-900 dark:text-neutral-100">
-                                                        {m.nama_mapel}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 w-8 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-900 cursor-pointer"
-                                                        onClick={() => openEditModal(m)}
-                                                    >
-                                                        <Pencil className="size-3.5" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-455 dark:hover:bg-rose-950/20 cursor-pointer"
-                                                        onClick={() => handleDelete(m.id)}
-                                                    >
-                                                        <Trash2 className="size-3.5" />
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </CardContent>
-                    </Card>
-                ) : (
-                    <div className="flex flex-col items-center justify-center space-y-4 rounded-3xl border border-neutral-100 bg-white py-16 text-center max-w-3xl dark:border-zinc-900 dark:bg-zinc-900/40">
-                        <div className="rounded-2xl bg-neutral-100 p-4 dark:bg-zinc-900">
-                            <BookOpen className="size-10 text-neutral-400 dark:text-neutral-605" />
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm font-black text-neutral-850 dark:text-neutral-200">
-                                Tidak Menemukan Mata Pelajaran
-                            </p>
-                            <p className="mx-auto max-w-xs text-xs text-neutral-400 dark:text-neutral-500">
-                                {searchQuery ? `Tidak ada mata pelajaran yang cocok dengan "${searchQuery}".` : 'Daftar kurikulum mata pelajaran masih kosong.'}
-                            </p>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Mobile View (Card List) */}
-            <div className="space-y-4 md:hidden">
-                {filteredMapels.length > 0 ? (
-                    filteredMapels.map((m, idx) => (
-                        <div
-                            key={m.id}
-                            className="rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-xs transition-all duration-200 hover:border-indigo-200 dark:border-zinc-800/80 dark:bg-zinc-900/30"
-                        >
-                            <div className="flex items-center justify-between pb-3 border-b border-neutral-100 dark:border-zinc-850">
-                                <div className="flex items-center gap-3">
-                                    <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-650 dark:bg-indigo-950/40 dark:text-indigo-400">
-                                        <BookOpen className="size-4.5" />
+            {/* Card Grid */}
+            {filteredMapels.length > 0 ? (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {filteredMapels.map((m, idx) => {
+                        const color = ICON_COLORS[idx % ICON_COLORS.length];
+                        return (
+                            <div
+                                key={m.id}
+                                className={`group relative rounded-md border bg-white p-4 transition-all duration-150 hover:shadow-sm dark:bg-zinc-900 ${color.border} ${color.hover}`}
+                            >
+                                {/* Top row */}
+                                <div className="flex items-start justify-between">
+                                    <div className={`flex size-10 items-center justify-center rounded-md ${color.bg}`}>
+                                        <BookOpen className={`size-5 ${color.icon}`} />
+                                    </div>
+                                    <span className="rounded-sm bg-neutral-100 px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-neutral-400">
+                                        #{String(idx + 1).padStart(2, '0')}
                                     </span>
-                                    <h3 className="text-sm font-black text-neutral-900 dark:text-neutral-50">
+                                </div>
+
+                                {/* Mapel name */}
+                                <div className="mt-3">
+                                    <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                                         {m.nama_mapel}
                                     </h3>
+                                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                        Mata Pelajaran
+                                    </p>
                                 </div>
-                                <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500">
-                                    #{idx + 1}
-                                </span>
-                            </div>
 
-                            <div className="flex items-center justify-end gap-2 pt-3">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-9 w-9 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-900 cursor-pointer"
-                                    onClick={() => openEditModal(m)}
-                                >
-                                    <Pencil className="size-4" />
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-9 w-9 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-455 dark:hover:bg-rose-950/20 cursor-pointer"
-                                    onClick={() => handleDelete(m.id)}
-                                >
-                                    <Trash2 className="size-4" />
-                                </Button>
+                                {/* Actions */}
+                                <div className="mt-3 flex items-center justify-end gap-1 border-t border-neutral-100 pt-3 dark:border-zinc-800">
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-zinc-800 dark:hover:text-neutral-200 cursor-pointer transition-colors duration-150"
+                                        onClick={() => openEditModal(m)}
+                                        title="Edit Mata Pelajaran"
+                                    >
+                                        <Pencil className="size-3.5" />
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-950/30 dark:hover:text-rose-400 cursor-pointer transition-colors duration-150"
+                                        onClick={() => handleDelete(m.id)}
+                                        title="Hapus Mata Pelajaran"
+                                    >
+                                        <Trash2 className="size-3.5" />
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl border border-neutral-100 bg-white py-12 text-center dark:border-zinc-900 dark:bg-zinc-900/40">
-                        <div className="rounded-2xl bg-neutral-100 p-3 dark:bg-zinc-900">
-                            <BookOpen className="size-8 text-neutral-400 dark:text-neutral-600" />
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-black text-neutral-800 dark:text-neutral-200">
-                                Tidak Menemukan Mata Pelajaran
-                            </p>
-                            <p className="mx-auto max-w-xs text-[10px] text-neutral-450 dark:text-neutral-500">
-                                {searchQuery ? `Tidak ada hasil pencarian untuk "${searchQuery}".` : 'Mata pelajaran belum terdaftar.'}
-                            </p>
-                        </div>
-                    </div>
-                )}
-            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                emptyState
+            )}
 
-            {/* Mapel Modal */}
+            {/* Modal */}
             <MapelModal
                 isOpen={isModalOpen}
                 onClose={() => {

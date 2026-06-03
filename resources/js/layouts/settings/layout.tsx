@@ -34,8 +34,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     const role = auth.user?.role;
     const { isCurrentOrParentUrl } = useCurrentUrl();
 
-    // If role is siswa, bypass the desktop settings layout to show a clean standalone mobile hub!
-    if (role === 'siswa') {
+    // If role is siswa, orangtua, or guru, bypass the desktop settings layout to show a clean standalone mobile hub / responsive profile page!
+    if (role === 'siswa' || role === 'orangtua' || role === 'guru') {
         return <div className="animate-fade-in pb-4">{children}</div>;
     }
 

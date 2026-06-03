@@ -40,7 +40,9 @@ class HandleInertiaRequests extends Middleware
             if ($user->role === 'siswa') {
                 $user->load(['siswa.kelas']);
             } elseif ($user->role === 'guru') {
-                $user->load(['guru']);
+                $user->load(['guru.kelasWali']);
+            } elseif ($user->role === 'orangtua') {
+                $user->load(['orangTua.anak.user', 'orangTua.anak.kelas']);
             }
         }
 

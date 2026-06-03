@@ -215,7 +215,7 @@ export default function InputPresensi({
             ) : (
                 <>
                     {/* ── MOBILE: Touch-Friendly Card per Student (< md) ── */}
-                    <div className="block space-y-4 md:hidden">
+                    <div className="block space-y-4 pb-2 md:hidden">
                         {students.map((stud) => {
                             const current = localAttendance[stud.id] || {
                                 status: 'belum',
@@ -528,8 +528,8 @@ export default function InputPresensi({
                         </div>
                     </div>
 
-                    {/* ── Floating Premium Glassmorphic Summary Bar ── */}
-                    <div className="sticky bottom-4 z-40 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-neutral-200/60 bg-white/80 p-4 shadow-xl backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
+                    {/* ── Rangkuman Sesi + Simpan — flows normally on mobile, sticky on md+ ── */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-neutral-200/60 bg-white/80 p-4 shadow-xl backdrop-blur-md md:sticky md:bottom-4 md:z-40 dark:border-zinc-800/80 dark:bg-zinc-950/80">
                         {/* Summary breakdown stats */}
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="text-neutral-450 text-[10px] font-black tracking-widest uppercase dark:text-neutral-500">
