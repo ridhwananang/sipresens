@@ -12,6 +12,7 @@ use App\Services\DashboardService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PresensiController extends Controller
@@ -90,7 +91,9 @@ class PresensiController extends Controller
                         'jenis' => $izin->jenis_izin,
                         'alasan' => $izin->alasan,
                         'bukti_url' => $izin->bukti_foto
-                                        ? asset('storage/'.$izin->bukti_foto)
+                                        ? (!empty(config('filesystems.disks.s3.bucket'))
+                                            ? Storage::disk('s3')->url($izin->bukti_foto)
+                                            : Storage::disk('public')->url($izin->bukti_foto))
                                         : null,
                     ];
                 } else {

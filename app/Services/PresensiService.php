@@ -143,7 +143,8 @@ class PresensiService
     {
         $buktiFotoPath = null;
         if ($file && $file->isValid()) {
-            $buktiFotoPath = $file->store('bukti-izin', 'public');
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            $buktiFotoPath = $file->store('bukti-izin', $disk);
         }
 
         return PengajuanIzin::create([

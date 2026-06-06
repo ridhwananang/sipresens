@@ -13,9 +13,14 @@ class PengajuanIzinResource extends JsonResource
         // Build full URL for bukti_foto
         $buktiFotoUrl = null;
         if ($this->bukti_foto) {
-            $buktiFotoUrl = Storage::disk('public')->exists($this->bukti_foto)
-                ? Storage::disk('public')->url($this->bukti_foto)
-                : null;
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            if ($disk === 's3') {
+                $buktiFotoUrl = Storage::disk('s3')->url($this->bukti_foto);
+            } else {
+                $buktiFotoUrl = Storage::disk('public')->exists($this->bukti_foto)
+                    ? Storage::disk('public')->url($this->bukti_foto)
+                    : null;
+            }
         }
 
         $siswa = $this->whenLoaded('siswa') ?? $this->siswa;
