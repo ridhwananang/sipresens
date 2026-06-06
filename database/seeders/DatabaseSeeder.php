@@ -2,15 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\OrangTua;
-use App\Models\Siswa;
 use App\Models\Presensi;
+use App\Models\Siswa;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -128,12 +128,12 @@ class DatabaseSeeder extends Seeder
 
         while ($daysCount < 5) {
             // Skip weekends
-            if (!$currentDate->isWeekend()) {
+            if (! $currentDate->isWeekend()) {
                 // Siswa 1 (Ananda Susilo)
                 // Let's make Siswa 1 mostly present, one day sick
                 $status1 = ($daysCount === 2) ? 'sakit' : 'hadir';
                 $ket1 = ($daysCount === 2) ? 'Demam tinggi' : 'Hadir tepat waktu';
-                
+
                 Presensi::create([
                     'siswa_id' => $siswa1->id,
                     'status' => $status1,

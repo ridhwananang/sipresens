@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\Contracts\PasskeyUser;
@@ -34,17 +35,17 @@ class User extends Authenticatable implements PasskeyUser
         ];
     }
 
-    public function guru(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function guru(): HasOne
     {
         return $this->hasOne(Guru::class);
     }
 
-    public function siswa(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function siswa(): HasOne
     {
         return $this->hasOne(Siswa::class);
     }
 
-    public function orangTua(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function orangTua(): HasOne
     {
         return $this->hasOne(OrangTua::class);
     }

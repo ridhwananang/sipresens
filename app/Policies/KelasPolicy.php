@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Kelas;
+use App\Models\User;
 
 class KelasPolicy
 {
@@ -12,11 +12,24 @@ class KelasPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 
     public function viewAny(User $user): bool
     {
+        return false;
+    }
+
+    public function view(User $user, Kelas $kelas): bool
+    {
+        // Admin already handled by before()
+        if ($user->role === 'guru') {
+            return $user->guru 
+                && $user->guru->kelasWali 
+                && $user->guru->kelasWali->id === $kelas->id;
+        }
+
         return false;
     }
 

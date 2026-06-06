@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PresensiService;
-use App\Http\Requests\Presensi\StorePresensiRequest;
 use App\Http\Requests\Presensi\StoreIzinRequest;
+use App\Http\Requests\Presensi\StorePresensiRequest;
 use App\Http\Requests\Presensi\VerifikasiIzinRequest;
-use App\Models\Presensi;
+use App\Models\Jadwal;
 use App\Models\PengajuanIzin;
+use App\Models\Presensi;
+use App\Services\PresensiService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -23,16 +25,16 @@ class PresensiController extends Controller
     /**
      * Polymorphic dispatch for presence taking (Guru only).
      */
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
         if ($user->role === 'guru') {
-            return app(\App\Http\Controllers\Guru\PresensiController::class)->index($request);
+            return app(Guru\PresensiController::class)->index($request);
         }
 
         abort(403, 'Akses ditolak.');
@@ -44,9 +46,9 @@ class PresensiController extends Controller
     public function storePresensi(StorePresensiRequest $request)
     {
         $user = Auth::user();
-        
+
         // Admins can log attendance, but if it is a Guru, ensure they have a profile
-        if ($user->role === 'guru' && !$user->guru) {
+        if ($user->role === 'guru' && ! $user->guru) {
             return back()->withErrors(['message' => 'Akun Guru Anda tidak terhubung dengan profil Guru.']);
         }
 
@@ -56,17 +58,17 @@ class PresensiController extends Controller
         $selectedDate = $request->tanggal;
         $selectedJadwalId = $request->jadwal_id;
 
-        if ($user->role === 'guru' && !$selectedJadwalId) {
+        if ($user->role === 'guru' && ! $selectedJadwalId) {
             return back()->withErrors(['message' => 'Jadwal pelajaran wajib dipilih untuk merekam presensi.']);
         }
 
         if ($selectedJadwalId) {
-            $jadwal = \App\Models\Jadwal::findOrFail($selectedJadwalId);
-            
+            $jadwal = Jadwal::findOrFail($selectedJadwalId);
+
             if ($user->role === 'guru' && $jadwal->guru_id !== $guruId) {
                 return back()->withErrors(['message' => 'Anda tidak memiliki hak untuk merekam presensi pada jadwal ini.']);
             }
-            
+
             // Snap date check
             $correctDate = $this->presensiService->getDateForDayName($jadwal->hari, $selectedDate);
             if ($selectedDate !== $correctDate) {
@@ -74,7 +76,7 @@ class PresensiController extends Controller
             }
 
             // Sesi arrival check
-            if (!$this->presensiService->hasSessionArrived($jadwal, $selectedDate)) {
+            if (! $this->presensiService->hasSessionArrived($jadwal, $selectedDate)) {
                 return back()->withErrors(['message' => 'Waktu sesi presensi untuk jadwal ini belum tiba.']);
             }
         }
@@ -107,10 +109,10 @@ class PresensiController extends Controller
     public function verifikasiIzin(VerifikasiIzinRequest $request, $id)
     {
         $izin = PengajuanIzin::findOrFail($id);
-        
+
         Gate::authorize('verify', $izin);
 
-        $user   = Auth::user();
+        $user = Auth::user();
         $guruId = $user->guru ? $user->guru->id : null;
 
         $this->presensiService->verifyIzin(

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\Guru;
-use App\Models\Kelas;
 use App\Http\Requests\Admin\StoreGuruRequest;
 use App\Http\Requests\Admin\UpdateGuruRequest;
 use App\Http\Resources\GuruResource;
 use App\Http\Resources\KelasResource;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class GuruController extends Controller
@@ -36,7 +37,7 @@ class GuruController extends Controller
 
         return Inertia::render('admin/guru', [
             'teachers' => $teachers,
-            'classes' => $classes
+            'classes' => $classes,
         ]);
     }
 
@@ -65,7 +66,7 @@ class GuruController extends Controller
 
         if ($request->hasFile('foto_profile')) {
             if ($guru->foto_profile) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($guru->foto_profile);
+                Storage::disk('public')->delete($guru->foto_profile);
             }
             $path = $request->file('foto_profile')->store('profile/guru', 'public');
             $validated['foto_profile'] = $path;
@@ -82,7 +83,7 @@ class GuruController extends Controller
         Gate::authorize('delete', $guru);
 
         if ($guru->foto_profile) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($guru->foto_profile);
+            Storage::disk('public')->delete($guru->foto_profile);
         }
 
         $this->adminService->deleteGuru($id);

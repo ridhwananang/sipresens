@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\Siswa;
-use App\Models\Kelas;
-use App\Models\OrangTua;
 use App\Http\Requests\Admin\StoreSiswaRequest;
 use App\Http\Requests\Admin\UpdateSiswaRequest;
-use App\Http\Resources\SiswaResource;
 use App\Http\Resources\KelasResource;
 use App\Http\Resources\OrangTuaResource;
+use App\Http\Resources\SiswaResource;
+use App\Models\Kelas;
+use App\Models\OrangTua;
+use App\Models\Siswa;
+use App\Services\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SiswaController extends Controller
@@ -44,7 +45,7 @@ class SiswaController extends Controller
         return Inertia::render('admin/siswa', [
             'students' => $students,
             'classes' => $classes,
-            'parents' => $parents
+            'parents' => $parents,
         ]);
     }
 
@@ -73,7 +74,7 @@ class SiswaController extends Controller
 
         if ($request->hasFile('foto_profile')) {
             if ($siswa->foto_profile) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($siswa->foto_profile);
+                Storage::disk('public')->delete($siswa->foto_profile);
             }
             $path = $request->file('foto_profile')->store('profile/siswa', 'public');
             $validated['foto_profile'] = $path;
@@ -90,7 +91,7 @@ class SiswaController extends Controller
         Gate::authorize('delete', $siswa);
 
         if ($siswa->foto_profile) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($siswa->foto_profile);
+            Storage::disk('public')->delete($siswa->foto_profile);
         }
 
         $this->adminService->deleteSiswa($id);
@@ -113,8 +114,8 @@ class SiswaController extends Controller
             $validated['action']
         );
 
-        $msg = $validated['action'] === 'promote' 
-            ? 'Kenaikan kelas bertahap berhasil diproses!' 
+        $msg = $validated['action'] === 'promote'
+            ? 'Kenaikan kelas bertahap berhasil diproses!'
             : 'Kelulusan siswa berhasil diproses!';
 
         return back()->with('success', $msg);

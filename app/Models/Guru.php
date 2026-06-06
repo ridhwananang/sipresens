@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Guru extends Model
 {
@@ -23,9 +23,8 @@ class Guru extends Model
 
     public function getFotoProfileUrlAttribute()
     {
-        return $this->foto_profile ? asset('storage/' . $this->foto_profile) : null;
+        return $this->foto_profile ? asset('storage/'.$this->foto_profile) : null;
     }
-
 
     public function user(): BelongsTo
     {

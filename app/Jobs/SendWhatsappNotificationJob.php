@@ -14,6 +14,7 @@ class SendWhatsappNotificationJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected string $phoneNumber;
+
     protected string $message;
 
     /**

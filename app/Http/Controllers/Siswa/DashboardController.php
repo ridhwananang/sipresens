@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
+use App\Models\Presensi;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\Presensi;
-use App\Models\Jadwal;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $siswa = $user->siswa;
-        if (!$siswa) {
+        if (! $siswa) {
             abort(403, 'Akun Siswa tidak terhubung dengan data Siswa.');
         }
 
@@ -94,6 +94,7 @@ class DashboardController extends Controller
         // 6. Map today's schedule list with attendance status
         $jadwalList = $jadwalHariIni->map(function ($j) use ($presensiHariIni) {
             $presensi = $presensiHariIni->get($j->id);
+
             return [
                 'id' => $j->id,
                 'waktu' => $j->waktu,
@@ -131,4 +132,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

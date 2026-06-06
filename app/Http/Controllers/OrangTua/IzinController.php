@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\OrangTua;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PengajuanIzinResource;
+use App\Models\PengajuanIzin;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\Siswa;
-use App\Models\PengajuanIzin;
-use App\Http\Resources\PengajuanIzinResource;
 
 class IzinController extends Controller
 {
@@ -16,7 +16,7 @@ class IzinController extends Controller
     {
         $user = Auth::user();
         $ortu = $user->orangTua;
-        if (!$ortu) {
+        if (! $ortu) {
             abort(403, 'Akun Orang Tua tidak terhubung dengan data Orang Tua.');
         }
 

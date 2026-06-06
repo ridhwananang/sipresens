@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PengajuanIzinResource;
+use App\Models\PengajuanIzin;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\PengajuanIzin;
-use App\Http\Resources\PengajuanIzinResource;
 
 class IzinController extends Controller
 {
@@ -14,7 +14,7 @@ class IzinController extends Controller
     {
         $user = Auth::user();
         $siswa = $user->siswa;
-        if (!$siswa) {
+        if (! $siswa) {
             abort(403, 'Akun Siswa tidak terhubung dengan data Siswa.');
         }
 

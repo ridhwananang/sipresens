@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\PengajuanIzin;
 use App\Models\Siswa;
+use App\Models\User;
 
 class PengajuanIzinPolicy
 {
@@ -24,10 +24,11 @@ class PengajuanIzinPolicy
         }
 
         if ($user->role === 'orangtua') {
-            if (!$user->orangTua) {
+            if (! $user->orangTua) {
                 return false;
             }
             $anakIds = Siswa::where('orangtua_id', $user->orangTua->id)->pluck('id')->toArray();
+
             return in_array($siswaId, $anakIds);
         }
 
@@ -45,19 +46,19 @@ class PengajuanIzinPolicy
         }
 
         $guru = $user->guru;
-        if (!$guru) {
+        if (! $guru) {
             return false;
         }
 
         // Guru must have a homeroom class (kelasWali) to verify
         $kelasWali = $guru->kelasWali;
-        if (!$kelasWali) {
+        if (! $kelasWali) {
             return false;
         }
 
         // The leave request's student must belong to the wali kelas's class
         $izinSiswa = $izin->siswa;
-        if (!$izinSiswa) {
+        if (! $izinSiswa) {
             return false;
         }
 

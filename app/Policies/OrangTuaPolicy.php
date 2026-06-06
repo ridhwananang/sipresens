@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\OrangTua;
+use App\Models\User;
 
 class OrangTuaPolicy
 {
@@ -12,6 +12,7 @@ class OrangTuaPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 

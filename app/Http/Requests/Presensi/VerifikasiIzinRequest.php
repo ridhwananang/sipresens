@@ -14,7 +14,7 @@ class VerifikasiIzinRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'           => 'required|in:disetujui,ditolak',
+            'status' => 'required|in:disetujui,ditolak',
             'rejection_reason' => 'required_if:status,ditolak|nullable|string|max:500',
         ];
     }

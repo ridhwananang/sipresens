@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Siswa;
+use App\Models\User;
 
 class SiswaPolicy
 {
@@ -12,6 +12,7 @@ class SiswaPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 

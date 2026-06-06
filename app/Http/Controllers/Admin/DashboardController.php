@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $stats = $this->dashboardService->getAdminStatsOnly();
 
         return Inertia::render('admin/dashboard', [
-            'stats' => $stats
+            'stats' => $stats,
         ]);
     }
 }

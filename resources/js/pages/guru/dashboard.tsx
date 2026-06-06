@@ -8,7 +8,9 @@ import {
     Play,
     Sparkles,
     AlertCircle,
-    ChevronRight
+    ChevronRight,
+    ClipboardList,
+    CheckCircle2,
 } from 'lucide-react';
 import { TodayScheduleItem } from '../dashboard/guru/JadwalHariIni';
 
@@ -238,28 +240,60 @@ export default function GuruDashboard({
 
                     {/* WALI KELAS AREA ACCESS */}
                     {hasKelasWali && (
-                        <div
-                            className="group flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-violet-500/20 bg-white dark:bg-[#141D2E] p-5 shadow-xs transition-all duration-250 hover:bg-violet-50/20 dark:hover:bg-[#141D2E]/80"
-                            onClick={() => router.get('/izin')}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className="shrink-0 rounded-lg bg-violet-500/10 p-3 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400">
-                                    <AlertCircle className="size-5" />
+                        <div className="space-y-2">
+                            <h3 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                Akses Wali Kelas — {kelas_wali.nama}
+                            </h3>
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                {/* Card 1: Verifikasi Izin */}
+                                <div
+                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-violet-500/20 bg-white dark:bg-[#141D2E] p-4 shadow-xs transition-all duration-250 hover:border-violet-400/40 hover:bg-violet-50/20 dark:hover:bg-violet-900/5"
+                                    onClick={() => router.get('/izin')}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="shrink-0 rounded-lg bg-violet-500/10 p-2.5 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400 transition-colors group-hover:bg-violet-500/20">
+                                            <CheckCircle2 className="size-4" />
+                                        </div>
+                                        <div className="space-y-0.5 text-left">
+                                            <p className="text-xs font-bold text-neutral-900 dark:text-white">
+                                                Verifikasi Izin & Sakit
+                                            </p>
+                                            <p className="text-[10px] leading-relaxed font-medium text-neutral-500 dark:text-neutral-450">
+                                                Tinjau & setujui pengajuan izin siswa kelas {kelas_wali.nama}.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="shrink-0 rounded-lg border border-neutral-200/60 bg-neutral-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
+                                        <ChevronRight className="size-3.5 text-neutral-500 dark:text-neutral-400" />
+                                    </div>
                                 </div>
-                                <div className="space-y-1 text-left">
-                                    <p className="text-sm font-bold text-neutral-900 dark:text-white">
-                                        Akses Wali Kelas ({kelas_wali.nama})
-                                    </p>
-                                    <p className="text-neutral-500 text-[10.5px] leading-relaxed font-medium dark:text-neutral-450">
-                                        Tinjau dan berikan verifikasi/persetujuan untuk pengajuan izin atau sakit dari siswa kelas binaan Anda.
-                                    </p>
+
+                                {/* Card 2: Rekap Absensi Kelas */}
+                                <div
+                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-indigo-500/20 bg-white dark:bg-[#141D2E] p-4 shadow-xs transition-all duration-250 hover:border-indigo-400/40 hover:bg-indigo-50/20 dark:hover:bg-indigo-900/5"
+                                    onClick={() => router.get(`/admin/kelas/${kelas_wali.id}/absensi`)}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="shrink-0 rounded-lg bg-indigo-500/10 p-2.5 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400 transition-colors group-hover:bg-indigo-500/20">
+                                            <ClipboardList className="size-4" />
+                                        </div>
+                                        <div className="space-y-0.5 text-left">
+                                            <p className="text-xs font-bold text-neutral-900 dark:text-white">
+                                                Rekap Absensi Kelas
+                                            </p>
+                                            <p className="text-[10px] leading-relaxed font-medium text-neutral-500 dark:text-neutral-450">
+                                                Lihat rekap harian & statistik kehadiran kelas {kelas_wali.nama}.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="shrink-0 rounded-lg border border-neutral-200/60 bg-neutral-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
+                                        <ChevronRight className="size-3.5 text-neutral-500 dark:text-neutral-400" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="shrink-0 rounded-lg border border-neutral-200/60 bg-neutral-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
-                                <ChevronRight className="size-4 text-neutral-500 dark:text-neutral-400" />
                             </div>
                         </div>
                     )}
+
                 </div>
 
                 {/* ── Right Column: Sesi / Jadwal Hari Ini (Col span 1) ── */}

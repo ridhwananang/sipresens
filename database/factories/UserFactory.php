@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Kelas;
+use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\Siswa;
 
 /**
  * @extends Factory<User>
@@ -66,7 +67,7 @@ class UserFactory extends Factory
             Siswa::create([
                 'user_id' => $user->id,
                 'nisn' => fake()->unique()->numerify('##########'),
-                'kelas_id' => \App\Models\Kelas::inRandomOrder()->value('id') ?? \App\Models\Kelas::firstOrCreate(['nama_kelas' => 'X-A'])->id,
+                'kelas_id' => Kelas::inRandomOrder()->value('id') ?? Kelas::firstOrCreate(['nama_kelas' => 'X-A'])->id,
                 'orangtua_id' => null,
                 'jenis_kelamin' => fake()->randomElement(['L', 'P']),
                 'no_hp' => fake()->phoneNumber(),

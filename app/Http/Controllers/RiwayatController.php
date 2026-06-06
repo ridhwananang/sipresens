@@ -14,15 +14,15 @@ class RiwayatController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
         switch ($user->role) {
             case 'siswa':
-                return app(\App\Http\Controllers\Siswa\RiwayatController::class)->index($request);
+                return app(Siswa\RiwayatController::class)->index($request);
             case 'orangtua':
-                return app(\App\Http\Controllers\OrangTua\RiwayatController::class)->index($request);
+                return app(OrangTua\RiwayatController::class)->index($request);
             default:
                 abort(403, 'Akses ditolak.');
         }

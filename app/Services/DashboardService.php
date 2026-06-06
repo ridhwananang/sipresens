@@ -2,23 +2,23 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Models\Siswa;
-use App\Models\Guru;
-use App\Models\Kelas;
-use App\Models\OrangTua;
-use App\Models\Presensi;
-use App\Models\PengajuanIzin;
-use App\Models\Mapel;
-use App\Models\Jadwal;
-use App\Http\Resources\KelasResource;
 use App\Http\Resources\GuruResource;
-use App\Http\Resources\SiswaResource;
-use App\Http\Resources\OrangTuaResource;
-use App\Http\Resources\PresensiResource;
-use App\Http\Resources\PengajuanIzinResource;
-use App\Http\Resources\MapelResource;
 use App\Http\Resources\JadwalResource;
+use App\Http\Resources\KelasResource;
+use App\Http\Resources\MapelResource;
+use App\Http\Resources\OrangTuaResource;
+use App\Http\Resources\PengajuanIzinResource;
+use App\Http\Resources\PresensiResource;
+use App\Http\Resources\SiswaResource;
+use App\Models\Guru;
+use App\Models\Jadwal;
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Models\OrangTua;
+use App\Models\PengajuanIzin;
+use App\Models\Presensi;
+use App\Models\Siswa;
+use App\Models\User;
 use Carbon\Carbon;
 
 class DashboardService
@@ -26,7 +26,7 @@ class DashboardService
     public function getAdminStatsOnly(): array
     {
         $today = Carbon::today()->toDateString();
-        
+
         $totalSiswa = Siswa::count();
         $totalGuru = Guru::count();
         $totalKelas = Kelas::count();
@@ -37,7 +37,7 @@ class DashboardService
         $sakitToday = $presensiToday->where('status', 'sakit')->count();
         $izinToday = $presensiToday->where('status', 'izin')->count();
         $alpaToday = $presensiToday->where('status', 'alpa')->count();
-        
+
         $belumPresensiToday = max(0, $totalSiswa - $presensiToday->count());
 
         return [
@@ -55,7 +55,7 @@ class DashboardService
     public function getAdminDashboardData(): array
     {
         $today = Carbon::today()->toDateString();
-        
+
         $totalSiswa = Siswa::count();
         $totalGuru = Guru::count();
         $totalKelas = Kelas::count();
@@ -66,7 +66,7 @@ class DashboardService
         $sakitToday = $presensiToday->where('status', 'sakit')->count();
         $izinToday = $presensiToday->where('status', 'izin')->count();
         $alpaToday = $presensiToday->where('status', 'alpa')->count();
-        
+
         $belumPresensiToday = max(0, $totalSiswa - $presensiToday->count());
 
         // Use Resources to map structures cleanly
@@ -118,21 +118,21 @@ class DashboardService
     public function getGuruDashboardData(User $user, ?int $selectedJadwalId = null, ?string $selectedDate = null): array
     {
         $guru = $user->guru;
-        if (!$guru) {
+        if (! $guru) {
             abort(403, 'Akun Guru tidak terhubung dengan data Guru.');
         }
 
         $kelasWali = $guru->kelasWali;
         $today = $selectedDate ?: Carbon::today()->toDateString();
-        
+
         // Retrieve all schedules for this teacher
         $schedules = Jadwal::where('guru_id', $guru->id)->with(['mapel', 'kelas'])->get();
         $jadwals = JadwalResource::collection($schedules)->resolve();
-        
+
         $activeJadwal = null;
         if ($selectedJadwalId) {
             $activeJadwal = $schedules->firstWhere('id', $selectedJadwalId);
-        } else if ($schedules->count() > 0) {
+        } elseif ($schedules->count() > 0) {
             $activeJadwal = $schedules->first();
         }
 
@@ -149,9 +149,9 @@ class DashboardService
         if ($activeJadwal) {
             $kelasId = $activeJadwal->kelas_id;
             $kelasNama = $activeJadwal->kelas->nama_kelas;
-            
+
             $students = Siswa::where('kelas_id', $kelasId)->with('user')->get();
-            
+
             $presensiDb = Presensi::where('tanggal', $today)
                 ->where('jadwal_id', $activeJadwal->id)
                 ->whereIn('siswa_id', $students->pluck('id'))
@@ -161,7 +161,7 @@ class DashboardService
             foreach ($students as $siswa) {
                 $status = isset($presensiDb[$siswa->id]) ? $presensiDb[$siswa->id]->status : 'belum';
                 $keterangan = isset($presensiDb[$siswa->id]) ? $presensiDb[$siswa->id]->keterangan : '';
-                
+
                 $studentList[] = [
                     'id' => $siswa->id,
                     'name' => $siswa->user->name,
@@ -176,7 +176,7 @@ class DashboardService
         // 2. Load Wali Kelas Sidebar Data (decoupled from active schedule!)
         if ($kelasWali) {
             $studentsWali = Siswa::where('kelas_id', $kelasWali->id)->get();
-            
+
             $pendingIzin = PengajuanIzinResource::collection(
                 PengajuanIzin::whereIn('siswa_id', $studentsWali->pluck('id'))
                     ->where('status', 'pending')
@@ -186,7 +186,7 @@ class DashboardService
 
             $startOfWeek = Carbon::parse($today)->startOfWeek()->toDateString();
             $endOfWeek = Carbon::parse($today)->endOfWeek()->toDateString();
-            
+
             // Show all subject attendance history for Wali Kelas class students
             $history = PresensiResource::collection(
                 Presensi::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
@@ -195,12 +195,12 @@ class DashboardService
                     ->orderBy('tanggal', 'desc')
                     ->get()
             )->resolve();
-        } else if ($activeJadwal) {
+        } elseif ($activeJadwal) {
             // Fallback for non-Wali Kelas teachers: show history for active schedule
             $studentsSchedule = Siswa::where('kelas_id', $activeJadwal->kelas_id)->get();
             $startOfWeek = Carbon::parse($today)->startOfWeek()->toDateString();
             $endOfWeek = Carbon::parse($today)->endOfWeek()->toDateString();
-            
+
             $history = PresensiResource::collection(
                 Presensi::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
                     ->where('jadwal_id', $activeJadwal->id)
@@ -222,14 +222,14 @@ class DashboardService
             'Saturday' => 'Sabtu',
             'Sunday' => 'Minggu',
         ];
-        
+
         $currentDayName = $daysInIndonesian[Carbon::today()->format('l')] ?? 'Senin';
-        
+
         $todaySchedules = Jadwal::where('guru_id', $guru->id)
             ->where('hari', $currentDayName)
             ->with(['mapel', 'kelas'])
             ->get();
-            
+
         $jadwalHariIni = JadwalResource::collection($todaySchedules)->resolve();
 
         $allClasses = Kelas::all()->map(function ($k) {
@@ -267,25 +267,25 @@ class DashboardService
     public function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
     {
         $today = Carbon::today()->toDateString();
-        
+
         if ($dateString < $today) {
             return true;
         }
-        
+
         if ($dateString > $today) {
             return false;
         }
-        
+
         try {
             $waktu = $jadwal->waktu;
             $parts = explode('-', $waktu);
             $startPart = trim($parts[0]);
-            
+
             $startPart = str_replace('.', ':', $startPart);
-            
+
             $startTime = Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
             $now = Carbon::now('Asia/Jakarta');
-            
+
             return $now->format('H:i') >= $startTime->format('H:i');
         } catch (\Exception $e) {
             return true;
@@ -307,14 +307,14 @@ class DashboardService
         $targetDayIndex = $daysMap[$dayName] ?? 1;
         $baseDate = Carbon::parse($relativeToDate);
         $monday = $baseDate->startOfWeek();
-        
+
         return $monday->addDays($targetDayIndex - 1)->toDateString();
     }
 
     public function getSiswaDashboardData(User $user): array
     {
         $siswa = $user->siswa;
-        if (!$siswa) {
+        if (! $siswa) {
             abort(403, 'Akun Siswa tidak terhubung dengan data Siswa.');
         }
 
@@ -364,7 +364,7 @@ class DashboardService
     public function getOrangTuaDashboardData(User $user): array
     {
         $ortu = $user->orangTua;
-        if (!$ortu) {
+        if (! $ortu) {
             abort(403, 'Akun Orang Tua tidak terhubung dengan data Orang Tua.');
         }
 

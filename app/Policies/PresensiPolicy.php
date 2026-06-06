@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
+use App\Models\Jadwal;
 use App\Models\Siswa;
+use App\Models\User;
 
 class PresensiPolicy
 {
@@ -12,6 +13,7 @@ class PresensiPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 
@@ -20,15 +22,15 @@ class PresensiPolicy
         if ($user->role === 'guru') {
             $guru = $user->guru;
             $siswa = Siswa::find($siswaId);
-            if (!$guru || !$siswa) {
+            if (! $guru || ! $siswa) {
                 return false;
             }
-            
+
             if ($guru->kelasWali && $siswa->kelas_id === $guru->kelasWali->id) {
                 return true;
             }
 
-            $hasSchedule = \App\Models\Jadwal::where('guru_id', $guru->id)
+            $hasSchedule = Jadwal::where('guru_id', $guru->id)
                 ->where('kelas_id', $siswa->kelas_id)
                 ->exists();
 

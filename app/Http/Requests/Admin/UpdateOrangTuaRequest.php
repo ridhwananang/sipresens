@@ -20,7 +20,7 @@ class UpdateOrangTuaRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$userId,
             'password' => 'nullable|string|min:8',
             'no_hp' => 'nullable|string|max:20',
             'jenis_kelamin' => 'required|in:L,P',

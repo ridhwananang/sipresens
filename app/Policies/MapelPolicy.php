@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Mapel;
+use App\Models\User;
 
 class MapelPolicy
 {
@@ -12,6 +12,7 @@ class MapelPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 

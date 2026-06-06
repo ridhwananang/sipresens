@@ -14,17 +14,17 @@ class JadwalController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
         switch ($user->role) {
             case 'guru':
-                return app(\App\Http\Controllers\Guru\JadwalController::class)->index($request);
+                return app(Guru\JadwalController::class)->index($request);
             case 'siswa':
-                return app(\App\Http\Controllers\Siswa\JadwalController::class)->index($request);
+                return app(Siswa\JadwalController::class)->index($request);
             case 'orangtua':
-                return app(\App\Http\Controllers\OrangTua\JadwalController::class)->index($request);
+                return app(OrangTua\JadwalController::class)->index($request);
             default:
                 abort(403, 'Akses ditolak.');
         }

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\OrangTua;
 use App\Http\Requests\Admin\StoreOrangTuaRequest;
 use App\Http\Requests\Admin\UpdateOrangTuaRequest;
 use App\Http\Resources\OrangTuaResource;
+use App\Models\OrangTua;
+use App\Models\Siswa;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -28,7 +29,7 @@ class OrangTuaController extends Controller
             OrangTua::with(['user', 'anak.user', 'anak.kelas'])->get()
         )->resolve();
 
-        $students = \App\Models\Siswa::with('user', 'kelas')->get()->map(function ($s) {
+        $students = Siswa::with('user', 'kelas')->get()->map(function ($s) {
             return [
                 'id' => $s->id,
                 'name' => $s->user ? $s->user->name : '',
@@ -40,7 +41,7 @@ class OrangTuaController extends Controller
 
         return Inertia::render('admin/orangtua', [
             'parents' => $parents,
-            'students' => $students
+            'students' => $students,
         ]);
     }
 

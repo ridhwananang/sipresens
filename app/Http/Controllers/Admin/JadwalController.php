@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\Jadwal;
-use App\Models\Mapel;
-use App\Models\Guru;
-use App\Models\Kelas;
 use App\Http\Requests\Admin\StoreJadwalRequest;
 use App\Http\Requests\Admin\UpdateJadwalRequest;
-use App\Http\Resources\JadwalResource;
-use App\Http\Resources\MapelResource;
 use App\Http\Resources\GuruResource;
+use App\Http\Resources\JadwalResource;
 use App\Http\Resources\KelasResource;
+use App\Http\Resources\MapelResource;
+use App\Models\Guru;
+use App\Models\Jadwal;
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -50,7 +50,7 @@ class JadwalController extends Controller
             'jadwals' => $jadwals,
             'mapels' => $mapels,
             'teachers' => $teachers,
-            'classes' => $classes
+            'classes' => $classes,
         ]);
     }
 

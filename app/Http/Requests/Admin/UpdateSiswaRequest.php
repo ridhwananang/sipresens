@@ -20,9 +20,9 @@ class UpdateSiswaRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$userId,
             'password' => 'nullable|string|min:8',
-            'nisn' => 'required|string|max:50|unique:siswas,nisn,' . $id,
+            'nisn' => 'required|string|max:50|unique:siswas,nisn,'.$id,
             'kelas_id' => 'required|exists:kelas,id',
             'orangtua_id' => 'nullable|exists:orang_tuas,id',
             'jenis_kelamin' => 'required|in:L,P',

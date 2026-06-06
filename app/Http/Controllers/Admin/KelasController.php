@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\Kelas;
-use App\Models\Guru;
-use App\Models\Siswa;
 use App\Http\Requests\Admin\StoreKelasRequest;
 use App\Http\Requests\Admin\UpdateKelasRequest;
-use App\Http\Resources\KelasResource;
 use App\Http\Resources\GuruResource;
+use App\Http\Resources\KelasResource;
 use App\Http\Resources\SiswaResource;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\Siswa;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -43,7 +43,7 @@ class KelasController extends Controller
         return Inertia::render('admin/kelas', [
             'classes' => $classes,
             'teachers' => $teachers,
-            'students' => $students
+            'students' => $students,
         ]);
     }
 

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Inertia\Inertia;
-use App\Models\Jadwal;
 use App\Http\Resources\JadwalResource;
+use App\Models\Jadwal;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $guru = $user->guru;
 
-        if (!$guru) {
+        if (! $guru) {
             abort(403, 'Akun Guru tidak terhubung dengan data Guru.');
         }
 
@@ -37,7 +37,7 @@ class DashboardController extends Controller
             ->where('hari', $currentDayName)
             ->with(['mapel', 'kelas'])
             ->get();
-            
+
         $jadwalHariIni = JadwalResource::collection($todaySchedules)->resolve();
 
         return Inertia::render('guru/dashboard', [

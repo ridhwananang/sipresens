@@ -26,9 +26,8 @@ class Siswa extends Model
 
     public function getFotoProfileUrlAttribute()
     {
-        return $this->foto_profile ? asset('storage/' . $this->foto_profile) : null;
+        return $this->foto_profile ? asset('storage/'.$this->foto_profile) : null;
     }
-
 
     public function user(): BelongsTo
     {

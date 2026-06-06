@@ -19,10 +19,11 @@ class WhatsappService
 
         // Safeguard: If Fonnte token is not set, log it instead of failing (Simulation Mode)
         if (empty($token) || $token === 'isi_token_api_dari_fonnte_anda') {
-            Log::info("=== SIMULASI WHATSAPP GATEWAY (TOKEN BELUM DIATUR) ===");
-            Log::info("Tujuan: " . $formattedTarget);
-            Log::info("Pesan:\n" . $message);
-            Log::info("=====================================================");
+            Log::info('=== SIMULASI WHATSAPP GATEWAY (TOKEN BELUM DIATUR) ===');
+            Log::info('Tujuan: '.$formattedTarget);
+            Log::info("Pesan:\n".$message);
+            Log::info('=====================================================');
+
             return true;
         }
 
@@ -37,13 +38,16 @@ class WhatsappService
 
             if ($response->successful()) {
                 Log::info("Notifikasi WhatsApp sukses terkirim ke {$formattedTarget}");
+
                 return true;
             }
 
-            Log::error("Gagal mengirim WhatsApp ke {$formattedTarget}: " . $response->body());
+            Log::error("Gagal mengirim WhatsApp ke {$formattedTarget}: ".$response->body());
+
             return false;
         } catch (\Exception $e) {
-            Log::error("Exception saat mengirim WhatsApp ke {$formattedTarget}: " . $e->getMessage());
+            Log::error("Exception saat mengirim WhatsApp ke {$formattedTarget}: ".$e->getMessage());
+
             return false;
         }
     }
@@ -58,9 +62,9 @@ class WhatsappService
 
         // Handle variations
         if (str_starts_with($number, '0')) {
-            $number = '62' . substr($number, 1);
+            $number = '62'.substr($number, 1);
         } elseif (str_starts_with($number, '8')) {
-            $number = '62' . $number;
+            $number = '62'.$number;
         }
 
         return $number;

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
@@ -97,39 +99,53 @@
     --sidebar-ring: oklch(0.87 0 0);
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   DARK MODE — Navy Blue Command Center Theme
+   ═══════════════════════════════════════════════════════════════════ */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    /* ── Core surfaces ── */
+    --background: #0B1120;
+    --foreground: #FFFFFF;
+    --card: #111C34;
+    --card-foreground: #FFFFFF;
+    --popover: #111C34;
+    --popover-foreground: #FFFFFF;
+
+    /* ── Interactive ── */
+    --primary: #FFFFFF;
+    --primary-foreground: #0B1120;
+    --secondary: #141F3A;
+    --secondary-foreground: #E5E7EB;
+    --muted: #141F3A;
+    --muted-foreground: #94A3B8;
+    --accent: #141F3A;
+    --accent-foreground: #E5E7EB;
+
+    /* ── Semantic ── */
     --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
+    --destructive-foreground: #EF4444;
+
+    /* ── Borders ── */
+    --border: rgba(255, 255, 255, 0.06);
+    --input: #141F3A;
+    --ring: rgba(99, 102, 241, 0.35);
+
+    /* ── Charts ── */
     --chart-1: oklch(0.488 0.243 264.376);
     --chart-2: oklch(0.696 0.17 162.48);
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
     --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+
+    /* ── Sidebar (navy blue) ── */
+    --sidebar: #0d1526;
+    --sidebar-foreground: #FFFFFF;
+    --sidebar-primary: #FFFFFF;
+    --sidebar-primary-foreground: #0B1120;
+    --sidebar-accent: #162040;
+    --sidebar-accent-foreground: #E5E7EB;
+    --sidebar-border: #1e2d4a;
+    --sidebar-ring: rgba(99, 102, 241, 0.35);
 }
 
 @layer base {
@@ -141,6 +157,64 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DARK MODE — Global Zinc/Neutral → Navy Blue Remapping
+   Overrides hardcoded Tailwind zinc/neutral dark utilities so every
+   component gains navy-blue surfaces without touching component files.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Page / outer wrapper backgrounds ── */
+.dark .dark\:bg-neutral-900,
+.dark .dark\:bg-zinc-900 { background-color: #0F172A !important; }
+
+.dark .dark\:bg-neutral-950,
+.dark .dark\:bg-zinc-950 { background-color: #0B1120 !important; }
+
+.dark .dark\:bg-neutral-800,
+.dark .dark\:bg-zinc-800 { background-color: #111C34 !important; }
+
+.dark .dark\:bg-neutral-700,
+.dark .dark\:bg-zinc-700 { background-color: #141F3A !important; }
+
+/* ── Translucent overlays used in glassmorphism headers/navbars ── */
+.dark .dark\:bg-zinc-950\/80 { background-color: rgba(11, 17, 32, 0.80) !important; }
+.dark .dark\:bg-zinc-950\/95 { background-color: rgba(11, 17, 32, 0.95) !important; }
+.dark .dark\:bg-zinc-900\/20 { background-color: rgba(15, 23, 42, 0.20) !important; }
+.dark .dark\:bg-zinc-900\/40 { background-color: rgba(15, 23, 42, 0.40) !important; }
+
+/* ── Border colours ── */
+.dark .dark\:border-zinc-800,
+.dark .dark\:border-neutral-800 { border-color: rgba(255, 255, 255, 0.06) !important; }
+
+.dark .dark\:border-zinc-900,
+.dark .dark\:border-neutral-900 { border-color: rgba(255, 255, 255, 0.06) !important; }
+
+.dark .dark\:border-zinc-900\/60 { border-color: rgba(255, 255, 255, 0.04) !important; }
+
+/* ── Scrollbar thumb ── */
+.dark .dark\:scrollbar-thumb-zinc-800 { scrollbar-color: #1e2d4a transparent; }
+
+/* ── Text colours ── */
+.dark .dark\:text-zinc-300,
+.dark .dark\:text-neutral-300 { color: #E5E7EB !important; }
+
+.dark .dark\:text-zinc-400,
+.dark .dark\:text-neutral-400 { color: #CBD5E1 !important; }
+
+.dark .dark\:text-zinc-500,
+.dark .dark\:text-neutral-500 { color: #94A3B8 !important; }
+
+/* ── Hover states ── */
+.dark .dark\:hover\:bg-zinc-800:hover { background-color: #141F3A !important; }
+.dark .dark\:hover\:bg-zinc-900:hover { background-color: #0F172A !important; }
+.dark .dark\:hover\:text-neutral-300:hover,
+.dark .dark\:hover\:text-zinc-300:hover { color: #E5E7EB !important; }
+
+/* ── Mobile sheet / bottom drawer overlays ── */
+.dark [class*="dark:bg-zinc-950"] { background-color: #0B1120 !important; }
+
+/* ─────────────────────────────────────────────────────────────────── */
 
 /* Scoped Theme for Admin Desktop Command Center */
 .admin-theme {
@@ -161,23 +235,22 @@
 }
 
 .dark .admin-theme {
-    --background: #0b1120;
-    --foreground: #ffffff;
-    --card: #141d2e;
-    --card-foreground: #ffffff;
-    --popover: #111827;
-    --popover-foreground: #ffffff;
-    --sidebar: #111827;
-    --sidebar-foreground: #ffffff;
-    --sidebar-border: #1e293b;
-    --border: #1e293b;
-    --muted: #1f2937;
-    --muted-foreground: #9ca3af;
-    --accent: #1f2937;
-    --accent-foreground: #ffffff;
+    --background: #0B1120;
+    --foreground: #FFFFFF;
+    --card: #111C34;
+    --card-foreground: #FFFFFF;
+    --popover: #111C34;
+    --popover-foreground: #FFFFFF;
+    --sidebar: #0d1526;
+    --sidebar-foreground: #FFFFFF;
+    --sidebar-border: #1e2d4a;
+    --border: rgba(255, 255, 255, 0.06);
+    --muted: #141F3A;
+    --muted-foreground: #94A3B8;
+    --accent: #141F3A;
+    --accent-foreground: #E5E7EB;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* Jika Anda menggunakan Tailwind CSS v4, tambahkan konfigurasi font ke tema: */
 @theme {

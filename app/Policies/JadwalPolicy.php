@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Jadwal;
+use App\Models\User;
 
 class JadwalPolicy
 {
@@ -12,6 +12,7 @@ class JadwalPolicy
         if ($user->role === 'admin') {
             return true;
         }
+
         return null;
     }
 

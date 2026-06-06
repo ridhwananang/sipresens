@@ -6,7 +6,6 @@ import { Plus, Pencil, Trash2, TrendingUp, Eye, BookOpen, Users } from 'lucide-r
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import KelasModal from './kelas/KelasModal';
-import ClassDetailModal from './kelas/ClassDetailModal';
 import PromotionModal from './kelas/PromotionModal';
 
 interface KelasItem {
@@ -202,8 +201,7 @@ export default function KelasPage({
                                             variant="ghost"
                                             className="h-7 w-7 rounded-sm text-neutral-400 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400 cursor-pointer transition-colors duration-150"
                                             onClick={() => {
-                                                setSelectedClass(c);
-                                                setIsDetailOpen(true);
+                                                router.get(`/admin/kelas/${c.id}/detail`);
                                             }}
                                             title="Lihat Daftar Siswa"
                                         >
@@ -291,8 +289,7 @@ export default function KelasPage({
                                     variant="outline"
                                     className="h-9 w-9 rounded-xl border-indigo-200 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-900/40 dark:text-indigo-400 cursor-pointer"
                                     onClick={() => {
-                                        setSelectedClass(c);
-                                        setIsDetailOpen(true);
+                                        router.get(`/admin/kelas/${c.id}/detail`);
                                     }}
                                 >
                                     <Eye className="size-4" />
@@ -338,15 +335,6 @@ export default function KelasPage({
                 }}
                 editItem={editItem}
                 teachers={teachers}
-            />
-            <ClassDetailModal
-                isOpen={isDetailOpen}
-                onClose={() => {
-                    setIsDetailOpen(false);
-                    setSelectedClass(null);
-                }}
-                classItem={selectedClass}
-                students={students}
             />
             <PromotionModal
                 isOpen={isPromotionOpen}

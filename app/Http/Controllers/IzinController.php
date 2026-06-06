@@ -14,17 +14,17 @@ class IzinController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
         switch ($user->role) {
             case 'guru':
-                return app(\App\Http\Controllers\Guru\IzinController::class)->index($request);
+                return app(Guru\IzinController::class)->index($request);
             case 'siswa':
-                return app(\App\Http\Controllers\Siswa\IzinController::class)->index($request);
+                return app(Siswa\IzinController::class)->index($request);
             case 'orangtua':
-                return app(\App\Http\Controllers\OrangTua\IzinController::class)->index($request);
+                return app(OrangTua\IzinController::class)->index($request);
             default:
                 abort(403, 'Akses ditolak.');
         }

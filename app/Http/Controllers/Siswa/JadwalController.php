@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\JadwalResource;
+use App\Models\Jadwal;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\Jadwal;
-use App\Http\Resources\JadwalResource;
 
 class JadwalController extends Controller
 {
@@ -14,7 +14,7 @@ class JadwalController extends Controller
     {
         $user = Auth::user();
         $siswa = $user->siswa;
-        if (!$siswa) {
+        if (! $siswa) {
             abort(403, 'Akun Siswa tidak terhubung dengan data Siswa.');
         }
 

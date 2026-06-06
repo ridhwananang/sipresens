@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\PengajuanIzin;
 use App\Http\Resources\PengajuanIzinResource;
+use App\Models\PengajuanIzin;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -33,16 +33,16 @@ class IzinController extends Controller
 
         // Summary counts for dashboard
         $counts = [
-            'all'       => PengajuanIzin::count(),
-            'pending'   => PengajuanIzin::where('status', 'pending')->count(),
+            'all' => PengajuanIzin::count(),
+            'pending' => PengajuanIzin::where('status', 'pending')->count(),
             'disetujui' => PengajuanIzin::where('status', 'disetujui')->count(),
-            'ditolak'   => PengajuanIzin::where('status', 'ditolak')->count(),
+            'ditolak' => PengajuanIzin::where('status', 'ditolak')->count(),
         ];
 
         return Inertia::render('admin/izin', [
-            'izin_list'     => $izinList,
+            'izin_list' => $izinList,
             'status_filter' => $statusFilter,
-            'counts'        => $counts,
+            'counts' => $counts,
         ]);
     }
 }

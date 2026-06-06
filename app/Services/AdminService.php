@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\Guru;
-use App\Models\Kelas;
-use App\Models\Siswa;
-use App\Models\OrangTua;
-use App\Models\Mapel;
 use App\Models\Jadwal;
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Models\OrangTua;
+use App\Models\Siswa;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,12 +34,14 @@ class AdminService
             'tahun_ajaran' => $data['tahun_ajaran'],
             'wali_kelas_id' => $data['wali_kelas_id'] ?? null,
         ]);
+
         return $kelas;
     }
 
     public function deleteKelas(int $id): bool
     {
         $kelas = Kelas::findOrFail($id);
+
         return $kelas->delete();
     }
 
@@ -63,7 +65,7 @@ class AdminService
                 'foto_profile' => $data['foto_profile'] ?? null,
             ]);
 
-            if (!empty($data['kelas_id'])) {
+            if (! empty($data['kelas_id'])) {
                 Kelas::where('id', $data['kelas_id'])->update(['wali_kelas_id' => $guru->id]);
             }
 
@@ -82,7 +84,7 @@ class AdminService
                 'email' => $data['email'],
             ];
 
-            if (!empty($data['password'])) {
+            if (! empty($data['password'])) {
                 $userUpdate['password'] = Hash::make($data['password']);
             }
 
@@ -102,7 +104,7 @@ class AdminService
             // Clear old class assignment
             Kelas::where('wali_kelas_id', $guru->id)->update(['wali_kelas_id' => null]);
 
-            if (!empty($data['kelas_id'])) {
+            if (! empty($data['kelas_id'])) {
                 Kelas::where('id', $data['kelas_id'])->update(['wali_kelas_id' => $guru->id]);
             }
         });
@@ -113,6 +115,7 @@ class AdminService
     public function deleteGuru(int $id): bool
     {
         $guru = Guru::findOrFail($id);
+
         // Deleting the user will cascade delete the guru
         return $guru->user->delete();
     }
@@ -154,7 +157,7 @@ class AdminService
                 'email' => $data['email'],
             ];
 
-            if (!empty($data['password'])) {
+            if (! empty($data['password'])) {
                 $userUpdate['password'] = Hash::make($data['password']);
             }
 
@@ -182,6 +185,7 @@ class AdminService
     public function deleteSiswa(int $id): bool
     {
         $siswa = Siswa::findOrFail($id);
+
         return $siswa->user->delete();
     }
 
@@ -204,7 +208,7 @@ class AdminService
                 'jenis_kelamin' => $data['jenis_kelamin'],
             ]);
 
-            if (!empty($data['siswa_ids'])) {
+            if (! empty($data['siswa_ids'])) {
                 Siswa::whereIn('id', $data['siswa_ids'])->update(['orangtua_id' => $ortu->id]);
             }
 
@@ -223,7 +227,7 @@ class AdminService
                 'email' => $data['email'],
             ];
 
-            if (!empty($data['password'])) {
+            if (! empty($data['password'])) {
                 $userUpdate['password'] = Hash::make($data['password']);
             }
 
@@ -237,7 +241,7 @@ class AdminService
             // Clear old children of this parent
             Siswa::where('orangtua_id', $ortu->id)->update(['orangtua_id' => null]);
 
-            if (!empty($data['siswa_ids'])) {
+            if (! empty($data['siswa_ids'])) {
                 Siswa::whereIn('id', $data['siswa_ids'])->update(['orangtua_id' => $ortu->id]);
             }
         });
@@ -248,6 +252,7 @@ class AdminService
     public function deleteOrangTua(int $id): bool
     {
         $ortu = OrangTua::findOrFail($id);
+
         return $ortu->user->delete();
     }
 
@@ -267,12 +272,14 @@ class AdminService
         $mapel->update([
             'nama_mapel' => $data['nama_mapel'],
         ]);
+
         return $mapel;
     }
 
     public function deleteMapel(int $id): bool
     {
         $mapel = Mapel::findOrFail($id);
+
         return $mapel->delete();
     }
 
@@ -300,12 +307,14 @@ class AdminService
             'hari' => $data['hari'],
             'waktu' => $data['waktu'],
         ]);
+
         return $jadwal;
     }
 
     public function deleteJadwal(int $id): bool
     {
         $jadwal = Jadwal::findOrFail($id);
+
         return $jadwal->delete();
     }
 
@@ -315,12 +324,12 @@ class AdminService
             if ($action === 'graduate') {
                 // Ubah status siswa menjadi non-aktif (Lulus)
                 Siswa::whereIn('id', $studentIds)->update([
-                    'status' => 'non-aktif'
+                    'status' => 'non-aktif',
                 ]);
             } else {
                 // Pindahkan kelas siswa terpilih ke kelas baru
                 Siswa::whereIn('id', $studentIds)->update([
-                    'kelas_id' => $targetKelasId
+                    'kelas_id' => $targetKelasId,
                 ]);
             }
         });

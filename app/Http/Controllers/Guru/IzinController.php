@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use App\Services\PresensiService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Inertia\Inertia;
-use App\Models\Siswa;
-use App\Models\PengajuanIzin;
-use App\Models\Presensi;
 use App\Http\Resources\PengajuanIzinResource;
 use App\Http\Resources\PresensiResource;
+use App\Models\PengajuanIzin;
+use App\Models\Presensi;
+use App\Models\Siswa;
+use App\Services\PresensiService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class IzinController extends Controller
 {
@@ -27,13 +27,13 @@ class IzinController extends Controller
     {
         $user = Auth::user();
         $guru = $user->guru;
-        if (!$guru) {
+        if (! $guru) {
             abort(403, 'Akun Guru tidak terhubung dengan data Guru.');
         }
 
         $kelasWali = $guru->kelasWali;
-        $izinList  = [];
-        $history   = [];
+        $izinList = [];
+        $history = [];
 
         if ($kelasWali) {
             $studentsWali = Siswa::where('kelas_id', $kelasWali->id)->get();
@@ -46,9 +46,9 @@ class IzinController extends Controller
                     ->get()
             )->resolve();
 
-            $today       = Carbon::today()->toDateString();
+            $today = Carbon::today()->toDateString();
             $startOfWeek = Carbon::parse($today)->startOfWeek()->toDateString();
-            $endOfWeek   = Carbon::parse($today)->endOfWeek()->toDateString();
+            $endOfWeek = Carbon::parse($today)->endOfWeek()->toDateString();
 
             $history = PresensiResource::collection(
                 Presensi::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
@@ -61,11 +61,11 @@ class IzinController extends Controller
 
         return Inertia::render('guru/izin', [
             'kelas_wali' => [
-                'id'   => $kelasWali ? $kelasWali->id : null,
+                'id' => $kelasWali ? $kelasWali->id : null,
                 'nama' => $kelasWali ? $kelasWali->nama_kelas : '',
             ],
             'pending_izin' => $izinList,
-            'history'      => $history,
+            'history' => $history,
         ]);
     }
 
@@ -77,7 +77,7 @@ class IzinController extends Controller
         $user = Auth::user();
         $guru = $user->guru;
 
-        if (!$guru || !$guru->kelasWali) {
+        if (! $guru || ! $guru->kelasWali) {
             abort(403, 'Hanya Wali Kelas yang dapat menyetujui pengajuan izin.');
         }
 
@@ -107,7 +107,7 @@ class IzinController extends Controller
         $user = Auth::user();
         $guru = $user->guru;
 
-        if (!$guru || !$guru->kelasWali) {
+        if (! $guru || ! $guru->kelasWali) {
             abort(403, 'Hanya Wali Kelas yang dapat menolak pengajuan izin.');
         }
 

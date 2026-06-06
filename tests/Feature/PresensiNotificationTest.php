@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\User;
+use App\Jobs\SendWhatsappNotificationJob;
 use App\Models\Kelas;
 use App\Models\OrangTua;
 use App\Models\Siswa;
-use App\Jobs\SendWhatsappNotificationJob;
+use App\Models\User;
 use App\Services\PresensiService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -47,7 +47,7 @@ test('tidak mengirim notifikasi whatsapp jika status kehadiran adalah hadir', fu
         'status' => 'aktif',
     ]);
 
-    $service = new PresensiService();
+    $service = new PresensiService;
 
     // Act: Record 'hadir' attendance
     $service->recordPresensi([
@@ -96,7 +96,7 @@ test('mengirim notifikasi whatsapp jika status kehadiran adalah alfa, sakit, ata
         'status' => 'aktif',
     ]);
 
-    $service = new PresensiService();
+    $service = new PresensiService;
 
     // Act: Record 'alfa' attendance
     $service->recordPresensi([
@@ -106,7 +106,7 @@ test('mengirim notifikasi whatsapp jika status kehadiran adalah alfa, sakit, ata
     ], null);
 
     // Assert: SendWhatsappNotificationJob was pushed with correct details
-    Queue::assertPushed(SendWhatsappNotificationJob::class, function ($job) use ($orangTua) {
+    Queue::assertPushed(SendWhatsappNotificationJob::class, function ($job) {
         return str_contains($job->getPhoneNumber(), '08123456789') && str_contains($job->getMessage(), 'ALFA');
     });
 });

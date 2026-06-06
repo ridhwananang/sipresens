@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\AdminService;
-use App\Models\Mapel;
 use App\Http\Requests\Admin\StoreMapelRequest;
 use App\Http\Requests\Admin\UpdateMapelRequest;
 use App\Http\Resources\MapelResource;
+use App\Models\Mapel;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -29,7 +29,7 @@ class MapelController extends Controller
         )->resolve();
 
         return Inertia::render('admin/mapel', [
-            'mapels' => $mapels
+            'mapels' => $mapels,
         ]);
     }
 

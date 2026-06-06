@@ -1,9 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\KelasAbsensiController;
+use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\MapelController;
+use App\Http\Controllers\Admin\OrangTuaController;
+use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IzinController;
+use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\PresensiController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RiwayatController;
+use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -14,25 +22,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin-only Routes — read-only for izin (no approve/reject)
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-        Route::resource('kelas', App\Http\Controllers\Admin\KelasController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::resource('guru', App\Http\Controllers\Admin\GuruController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::resource('siswa', App\Http\Controllers\Admin\SiswaController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::post('promote-students', [App\Http\Controllers\Admin\SiswaController::class, 'promote'])->name('promote-students');
-        Route::resource('orangtua', App\Http\Controllers\Admin\OrangTuaController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::resource('mapel', App\Http\Controllers\Admin\MapelController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('guru', GuruController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::post('promote-students', [SiswaController::class, 'promote'])->name('promote-students');
+        Route::resource('orangtua', OrangTuaController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('mapel', MapelController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('jadwal', App\Http\Controllers\Admin\JadwalController::class)->only(['index', 'store', 'update', 'destroy']);
         // Admin: view-only izin management
         Route::get('izin', [App\Http\Controllers\Admin\IzinController::class, 'index'])->name('izin.index');
     });
 
+    // Shared Admin and Wali Kelas (Guru) Routes
+    Route::middleware('role:admin,guru')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('kelas/{kelas}/detail', [KelasAbsensiController::class, 'showDetailKelas'])->name('kelas.detail');
+        Route::get('kelas/{kelas}/absensi', [KelasAbsensiController::class, 'showAbsensiKelas'])->name('kelas.absensi');
+        Route::get('kelas/{kelas}/absensi/detail-harian', [KelasAbsensiController::class, 'getAbsensiDetailHarian'])->name('kelas.absensi.detail-harian');
+        Route::get('kelas/{kelas}/absensi/export/excel', [KelasAbsensiController::class, 'exportAbsensiKelasExcel'])->name('kelas.absensi.export.excel');
+        Route::get('kelas/{kelas}/absensi/export/pdf', [KelasAbsensiController::class, 'exportAbsensiKelasPdf'])->name('kelas.absensi.export.pdf');
+        Route::get('kelas/{kelas}/absensi/cetak', [KelasAbsensiController::class, 'cetakAbsensiKelas'])->name('kelas.absensi.cetak');
+        Route::get('kelas/{kelas}/absensi/siswa/{siswa}', [KelasAbsensiController::class, 'showAbsensiSiswa'])->name('kelas.absensi.siswa');
+        Route::get('kelas/{kelas}/absensi/siswa/{siswa}/export/excel', [KelasAbsensiController::class, 'exportAbsensiSiswaExcel'])->name('kelas.absensi.siswa.export.excel');
+        Route::get('kelas/{kelas}/absensi/siswa/{siswa}/export/pdf', [KelasAbsensiController::class, 'exportAbsensiSiswaPdf'])->name('kelas.absensi.siswa.export.pdf');
+        Route::get('kelas/{kelas}/absensi/siswa/{siswa}/cetak', [KelasAbsensiController::class, 'cetakAbsensiSiswa'])->name('kelas.absensi.siswa.cetak');
+    });
+
     // Polymorphic Routes for Guru, Siswa, Orang Tua (shared role-free URLs)
     Route::middleware('role:guru,siswa,orangtua')->group(function () {
-        Route::get('izin', [App\Http\Controllers\IzinController::class, 'index'])->name('izin.index');
+        Route::get('izin', [IzinController::class, 'index'])->name('izin.index');
         Route::post('izin', [PresensiController::class, 'storeIzin'])->name('izin.store');
         Route::post('izin/{id}/verifikasi', [PresensiController::class, 'verifikasiIzin'])->name('izin.verifikasi');
 
-        Route::get('jadwal', [App\Http\Controllers\JadwalController::class, 'index'])->name('jadwal.index');
-        Route::get('riwayat', [App\Http\Controllers\RiwayatController::class, 'index'])->name('riwayat');
+        Route::get('jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+        Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat');
 
         Route::get('presensi', [PresensiController::class, 'index'])->name('presensi.index');
         Route::post('presensi', [PresensiController::class, 'storePresensi'])->name('presensi.store');
