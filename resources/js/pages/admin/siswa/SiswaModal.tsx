@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -84,23 +84,21 @@ export default function SiswaModal({
 
         if (editItem) {
             // Spoofing PUT using POST to support file uploads in PHP
-            import('@inertiajs/react').then(({ router }) => {
-                router.post(
-                    url,
-                    {
-                        _method: 'PUT',
-                        ...data,
+            router.post(
+                url,
+                {
+                    _method: 'PUT',
+                    ...data,
+                },
+                {
+                    onSuccess: () => {
+                        toast.success('Data Siswa berhasil diperbarui!');
+                        onClose();
                     },
-                    {
-                        onSuccess: () => {
-                            toast.success('Data Siswa berhasil diperbarui!');
-                            onClose();
-                        },
-                        onError: () =>
-                            toast.error('Gagal memperbarui data siswa.'),
-                    },
-                );
-            });
+                    onError: () =>
+                        toast.error('Gagal memperbarui data siswa.'),
+                },
+            );
         } else {
             post(url, {
                 onSuccess: () => {

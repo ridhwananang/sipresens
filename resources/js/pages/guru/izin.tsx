@@ -16,7 +16,7 @@ import {
     CalendarDays,
     MessageSquare,
     User,
-    Send
+    Send,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
@@ -65,12 +65,10 @@ export default function GuruIzin({
     const teacherName = auth?.user?.name || 'Guru';
     const teacherAvatar = auth?.user?.avatar;
 
-    // View state: 'dashboard' | 'menunggu' | 'ditolak' | 'riwayat'
     const [view, setView] = useState<
         'dashboard' | 'menunggu' | 'ditolak' | 'riwayat'
     >('dashboard');
 
-    // Search and Filter states
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState<'all' | 'sakit' | 'izin'>(
         'all',
@@ -111,8 +109,8 @@ export default function GuruIzin({
     // Helper functions
     const getStudentInitials = (name: string) => {
         if (!name) {
-return '?';
-}
+            return '?';
+        }
 
         return name
             .split(' ')
@@ -226,8 +224,8 @@ return '?';
     // Actions
     const handleApprove = (id: number, name: string) => {
         if (processing) {
-return;
-}
+            return;
+        }
 
         setProcessing(id);
         router.post(
@@ -247,8 +245,8 @@ return;
 
     const handleReject = (id: number, name: string) => {
         if (!rejectionReason.trim() || processing) {
-return;
-}
+            return;
+        }
 
         setProcessing(id);
         router.post(
@@ -970,375 +968,602 @@ return;
                     )}
 
                     {activeRequest && (
-                    <div className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center">
-                        <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-xs"
-                        onClick={closeBottomSheet}
-                        />
-
-                        <div className="animate-slide-up relative flex max-h-[calc(100svh-80px)] w-full flex-col overflow-hidden rounded-t-[28px] border-t border-neutral-200 bg-white shadow-2xl md:max-w-2xl lg:max-w-4xl dark:border-zinc-800 dark:bg-zinc-950">
-
-                        {/* Drag handle */}
-                        <div className="absolute top-2.5 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-neutral-300 dark:bg-zinc-700" />
-
-                        {/* Header */}
-                        <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-5 pt-6 pb-3.5 dark:border-zinc-900">
-                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                            Detail Pengajuan
-                            </span>
-                            <div className="flex items-center gap-2">
-                            {activeRequest.status === 'pending' && (
-                                <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-400">
-                                <Clock className="size-3 animate-pulse" /> Menunggu
-                                </span>
-                            )}
-                            {activeRequest.status === 'disetujui' && (
-                                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400">
-                                <CheckCircle2 className="size-3" /> Disetujui
-                                </span>
-                            )}
-                            {activeRequest.status === 'ditolak' && (
-                                <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[10px] font-bold text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-400">
-                                <XCircle className="size-3" /> Ditolak
-                                </span>
-                            )}
-                            <button
+                        <div className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center">
+                            <div
+                                className="absolute inset-0 bg-black/60 backdrop-blur-xs"
                                 onClick={closeBottomSheet}
-                                className="cursor-pointer rounded-full border border-neutral-200 bg-neutral-50 p-1.5 text-neutral-500 transition-all hover:bg-neutral-100 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400"
-                            >
-                                <X className="size-4" />
-                            </button>
-                            </div>
-                        </div>
+                            />
 
-                        {/* Scrollable Body — pb harus cukup untuk action bar + bottom nav */}
-                        <div className="scrollbar-thin flex-1 overflow-y-auto pb-24 md:pb-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3">
+                            <div className="animate-slide-up relative flex max-h-[calc(100svh-80px)] w-full flex-col overflow-hidden rounded-t-[28px] border-t border-neutral-200 bg-white shadow-2xl md:max-w-2xl lg:max-w-4xl dark:border-zinc-800 dark:bg-zinc-950">
+                                {/* Drag handle */}
+                                <div className="absolute top-2.5 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-neutral-300 dark:bg-zinc-700" />
 
-                            {/* ─── Main Column ─── */}
-                            <div className="md:col-span-2 md:border-r md:border-neutral-100 md:dark:border-zinc-900">
-
-                                {/* Student identity */}
-                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
-                                <div className="flex items-center gap-3.5 rounded-2xl border border-neutral-150/70 bg-neutral-50 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/40">
-                                    {renderAvatar(activeRequest.name, null, 'size-12')}
-                                    <div className="flex-1 space-y-0.5">
-                                    <h3 className="text-sm font-black leading-tight text-neutral-900 dark:text-neutral-100">
-                                        {activeRequest.name}
-                                    </h3>
-                                    <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500">
-                                        Kelas {activeRequest.kelas ?? '—'}
-                                    </p>
-                                    {activeRequest.orangtua_name && (
-                                        <div className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400">
-                                        <User className="size-2.5" />
-                                        Wali: <span className="font-bold text-neutral-700 dark:text-neutral-300">{activeRequest.orangtua_name}</span>
-                                        </div>
-                                    )}
-                                    </div>
-                                    <span className={`self-start rounded-lg px-2.5 py-1 text-[10px] font-black tracking-wider uppercase ${
-                                    activeRequest.jenis_izin === 'sakit'
-                                        ? 'border border-sky-100 bg-sky-50 text-sky-700 dark:border-sky-900/40 dark:bg-sky-950/20 dark:text-sky-400'
-                                        : 'border border-indigo-100 bg-indigo-50 text-indigo-700 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                    }`}>
-                                    {activeRequest.jenis_izin === 'sakit' ? '🤒 Sakit' : '📝 Izin'}
+                                {/* Header */}
+                                <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-5 pt-6 pb-3.5 dark:border-zinc-900">
+                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                                        Detail Pengajuan
                                     </span>
-                                </div>
-                                </div>
-
-                                {/* Date range */}
-                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
-                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                    Rentang Tanggal & Durasi
-                                </p>
-                                <div className="flex items-center gap-3 rounded-xl border border-neutral-150/60 bg-neutral-50/60 px-4 py-3 dark:border-zinc-800/50 dark:bg-zinc-900/20">
-                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/30">
-                                    <Calendar className="size-4 text-indigo-500" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                    <p className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">Tanggal</p>
-                                    <p className="mt-0.5 text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                                        {activeRequest.tanggal_mulai === activeRequest.tanggal_selesai
-                                        ? formatDateLong(activeRequest.tanggal_mulai)
-                                        : `${formatDateLong(activeRequest.tanggal_mulai)} – ${formatDateLong(activeRequest.tanggal_selesai)}`}
-                                    </p>
-                                    </div>
-                                    <span className="shrink-0 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-[10px] font-bold text-indigo-700 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-400">
-                                    {getDurationDays(activeRequest.tanggal_mulai, activeRequest.tanggal_selesai)}
-                                    </span>
-                                </div>
-                                </div>
-
-                                {/* Reason */}
-                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
-                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                    Alasan Pengajuan
-                                </p>
-                                <div className="rounded-xl border border-neutral-150/50 bg-neutral-50/50 p-4 dark:border-zinc-800/50 dark:bg-zinc-900/20">
-                                    <p className="border-l-2 border-neutral-300 pl-3 text-xs leading-relaxed font-medium text-neutral-600 italic dark:border-zinc-600 dark:text-neutral-400">
-                                    "{activeRequest.alasan}"
-                                    </p>
-                                    <p className="mt-2 flex items-center gap-1 text-[10px] text-neutral-400 dark:text-neutral-600">
-                                    <MessageSquare className="size-3" />
-                                    Ditulis oleh wali murid
-                                    </p>
-                                </div>
-                                </div>
-
-                                {/* Evidence photo — SELALU tampil di mobile jika ada */}
-                                {activeRequest.bukti_foto && (
-                                <div className="border-b border-neutral-100 p-5 md:hidden dark:border-zinc-900">
-                                    <div className="mb-3 flex items-center justify-between">
-                                    <p className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                        Bukti Pendukung
-                                    </p>
-                                    <button
-                                        onClick={() => setLightboxSrc(activeRequest.bukti_foto!)}
-                                        className="inline-flex cursor-pointer items-center gap-1 text-[10px] font-bold text-indigo-600 hover:underline dark:text-indigo-400"
-                                    >
-                                        <ZoomIn className="size-3" /> Perbesar
-                                    </button>
-                                    </div>
-                                    <div
-                                    onClick={() => setLightboxSrc(activeRequest.bukti_foto!)}
-                                    className="group relative h-48 w-full cursor-pointer overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-800"
-                                    >
-                                    <img
-                                        src={activeRequest.bukti_foto}
-                                        alt="Bukti"
-                                        className="h-full w-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/30">
-                                        <ZoomIn className="size-6 text-white opacity-0 transition-opacity group-hover:opacity-100" />
-                                    </div>
-                                    </div>
-                                </div>
-                                )}
-
-                                {/* Submission meta — tampil di mobile, tersembunyi di desktop (ada di sidebar) */}
-                                <div className="border-b border-neutral-100 p-5 md:hidden dark:border-zinc-900">
-                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                    Info Pengajuan
-                                </p>
-                                <div className="rounded-xl border border-neutral-150/50 bg-neutral-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/20">
-                                    {[
-                                    { label: 'ID Pengajuan', value: `#${activeRequest.id}` },
-                                    { label: 'Jenis', value: activeRequest.jenis_izin === 'sakit' ? 'Sakit' : 'Izin' },
-                                    { label: 'Tanggal', value: formatDateRange(activeRequest.tanggal_mulai, activeRequest.tanggal_selesai) },
-                                    { label: 'Durasi', value: getDurationDays(activeRequest.tanggal_mulai, activeRequest.tanggal_selesai) },
-                                    ].map(({ label, value }, i, arr) => (
-                                    <div
-                                        key={label}
-                                        className={`flex items-center justify-between gap-3 px-4 py-3 ${i < arr.length - 1 ? 'border-b border-neutral-100 dark:border-zinc-800/60' : ''}`}
-                                    >
-                                        <span className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500 shrink-0">{label}</span>
-                                        <span className="text-right text-xs font-semibold text-neutral-700 dark:text-neutral-300">{value}</span>
-                                    </div>
-                                    ))}
-                                </div>
-
-                                {/* Mobile action buttons below info pengajuan */}
-                                {activeRequest.status === 'pending' && !isRejecting && (
-                                    <div className="mt-5 flex gap-3">
-                                    <button
-                                        type="button"
-                                        disabled={processing === activeRequest.id}
-                                        onClick={() => { setIsRejecting(true); setRejectionReason(''); }}
-                                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-rose-200 py-3 text-xs font-bold text-rose-600 transition-all hover:bg-rose-50 active:scale-95 disabled:opacity-50 dark:border-rose-900/40 dark:text-rose-400"
-                                    >
-                                        <X className="size-3.5" /> Tolak
-                                    </button>
-                                    <button
-                                        type="button"
-                                        disabled={processing === activeRequest.id}
-                                        onClick={() => handleApprove(activeRequest.id, activeRequest.name)}
-                                        className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
-                                    >
-                                        {processing === activeRequest.id ? 'Memproses...' : (
-                                        <><CheckCircle2 className="size-3.5" /> Setujui</>
-                                        )}
-                                    </button>
-                                    </div>
-                                )}
-                                </div>
-
-                                {/* Rejection callout */}
-                                {activeRequest.status === 'ditolak' && activeRequest.rejection_reason && (
-                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
-                                    <div className="flex items-start gap-3 rounded-xl border border-rose-100/60 bg-rose-50/40 p-4 dark:border-rose-900/30 dark:bg-rose-950/10">
-                                    <AlertTriangle className="mt-0.5 size-4 shrink-0 text-rose-500" />
-                                    <div>
-                                        <p className="text-[10px] font-black tracking-wider text-rose-700 uppercase dark:text-rose-400">
-                                        Catatan Penolakan
-                                        </p>
-                                        <p className="mt-1 text-xs leading-relaxed text-rose-700 dark:text-rose-300">
-                                        {activeRequest.rejection_reason}
-                                        </p>
-                                    </div>
-                                    </div>
-                                </div>
-                                )}
-
-                                {/* Rejection form */}
-                                {isRejecting && (
-                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
-                                    <div className="space-y-4 rounded-xl border border-rose-200/50 bg-rose-50/20 p-4 dark:border-rose-900/30 dark:bg-rose-950/5">
                                     <div className="flex items-center gap-2">
-                                        <XCircle className="size-4 text-rose-500" />
-                                        <p className="text-xs font-black text-neutral-800 dark:text-neutral-100">
-                                        Alasan Penolakan
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="mb-2 text-[9px] font-black tracking-wider text-neutral-400 uppercase">Pilihan Cepat</p>
-                                        <div className="flex flex-wrap gap-1.5">
-                                        {presets.map((preset, i) => (
-                                            <button
-                                            key={i}
-                                            type="button"
-                                            onClick={() => setRejectionReason(preset)}
-                                            className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-all ${
-                                                rejectionReason === preset
-                                                ? 'border-rose-500 bg-rose-500 text-white'
-                                                : 'border-neutral-200 bg-white text-neutral-600 hover:border-rose-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400'
-                                            }`}
-                                            >
-                                            {preset}
-                                            </button>
-                                        ))}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p className="mb-2 text-[9px] font-black tracking-wider text-neutral-400 uppercase">Tulis Alasan Lain</p>
-                                        <textarea
-                                        rows={3}
-                                        placeholder="Tulis detail alasan untuk wali murid..."
-                                        value={rejectionReason}
-                                        onChange={(e) => setRejectionReason(e.target.value)}
-                                        className="w-full resize-none rounded-xl border border-neutral-200 bg-white p-3 text-xs font-medium text-neutral-800 outline-none focus:ring-1 focus:ring-rose-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
-                                        />
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <button
-                                        type="button"
-                                        onClick={() => setIsRejecting(false)}
-                                        className="flex-1 cursor-pointer rounded-xl border border-neutral-200 bg-white py-2 text-xs font-bold text-neutral-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400"
-                                        >
-                                        Batal
-                                        </button>
-                                        <button
-                                        type="button"
-                                        disabled={!rejectionReason.trim() || processing === activeRequest.id}
-                                        onClick={() => handleReject(activeRequest.id, activeRequest.name)}
-                                        className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-rose-600 py-2 text-xs font-bold text-white disabled:opacity-50"
-                                        >
-                                        {processing === activeRequest.id ? 'Mengirim...' : (
-                                            <><Send className="size-3.5" /> Kirim Penolakan</>
+                                        {activeRequest.status === 'pending' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-400">
+                                                <Clock className="size-3 animate-pulse" />{' '}
+                                                Menunggu
+                                            </span>
                                         )}
+                                        {activeRequest.status ===
+                                            'disetujui' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                                <CheckCircle2 className="size-3" />{' '}
+                                                Disetujui
+                                            </span>
+                                        )}
+                                        {activeRequest.status === 'ditolak' && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[10px] font-bold text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-400">
+                                                <XCircle className="size-3" />{' '}
+                                                Ditolak
+                                            </span>
+                                        )}
+                                        <button
+                                            onClick={closeBottomSheet}
+                                            className="cursor-pointer rounded-full border border-neutral-200 bg-neutral-50 p-1.5 text-neutral-500 transition-all hover:bg-neutral-100 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400"
+                                        >
+                                            <X className="size-4" />
                                         </button>
                                     </div>
-                                    </div>
-                                </div>
-                                )}
-                            </div>
-
-                            {/* ─── Sidebar desktop only ─── */}
-                            <aside className="hidden md:block md:col-span-1">
-                                <div className="divide-y divide-neutral-100 dark:divide-zinc-900">
-                                <div className="p-5">
-                                    <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                    Info Pengajuan
-                                    </p>
-                                    <div className="space-y-2.5">
-                                    {[
-                                        { label: 'ID Pengajuan', value: `#${activeRequest.id}` },
-                                        { label: 'Jenis', value: activeRequest.jenis_izin === 'sakit' ? 'Sakit' : 'Izin' },
-                                        { label: 'Tanggal', value: formatDateRange(activeRequest.tanggal_mulai, activeRequest.tanggal_selesai) },
-                                        { label: 'Durasi', value: getDurationDays(activeRequest.tanggal_mulai, activeRequest.tanggal_selesai) },
-                                    ].map(({ label, value }) => (
-                                        <div key={label} className="flex items-start justify-between gap-3">
-                                        <span className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500 shrink-0">{label}</span>
-                                        <span className="text-right text-xs font-semibold text-neutral-700 dark:text-neutral-300">{value}</span>
-                                        </div>
-                                    ))}
-                                    </div>
                                 </div>
 
-                                {activeRequest.bukti_foto && (
-                                    <div className="p-5">
-                                    <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                        Foto Bukti
-                                    </p>
-                                    <div
-                                        onClick={() => setLightboxSrc(activeRequest.bukti_foto!)}
-                                        className="group relative cursor-pointer overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-800"
-                                    >
-                                        <img src={activeRequest.bukti_foto} alt="preview" className="w-full object-cover" />
-                                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/25">
-                                        <ZoomIn className="size-5 text-white opacity-0 transition-opacity group-hover:opacity-100" />
-                                        </div>
-                                    </div>
-                                    </div>
-                                )}
+                                {/* Scrollable Body — pb harus cukup untuk action bar + bottom nav */}
+                                <div className="flex-1 scrollbar-thin overflow-y-auto pb-24 md:pb-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3">
+                                        {/* ─── Main Column ─── */}
+                                        <div className="md:col-span-2 md:border-r md:border-neutral-100 md:dark:border-zinc-900">
+                                            {/* Student identity */}
+                                            <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
+                                                <div className="border-neutral-150/70 flex items-center gap-3.5 rounded-2xl border bg-neutral-50 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/40">
+                                                    {renderAvatar(
+                                                        activeRequest.name,
+                                                        null,
+                                                        'size-12',
+                                                    )}
+                                                    <div className="flex-1 space-y-0.5">
+                                                        <h3 className="text-sm leading-tight font-black text-neutral-900 dark:text-neutral-100">
+                                                            {activeRequest.name}
+                                                        </h3>
+                                                        <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500">
+                                                            Kelas{' '}
+                                                            {activeRequest.kelas ??
+                                                                '—'}
+                                                        </p>
+                                                        {activeRequest.orangtua_name && (
+                                                            <div className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400">
+                                                                <User className="size-2.5" />
+                                                                Wali:{' '}
+                                                                <span className="font-bold text-neutral-700 dark:text-neutral-300">
+                                                                    {
+                                                                        activeRequest.orangtua_name
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <span
+                                                        className={`self-start rounded-lg px-2.5 py-1 text-[10px] font-black tracking-wider uppercase ${
+                                                            activeRequest.jenis_izin ===
+                                                            'sakit'
+                                                                ? 'border border-sky-100 bg-sky-50 text-sky-700 dark:border-sky-900/40 dark:bg-sky-950/20 dark:text-sky-400'
+                                                                : 'border border-indigo-100 bg-indigo-50 text-indigo-700 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                                        }`}
+                                                    >
+                                                        {activeRequest.jenis_izin ===
+                                                        'sakit'
+                                                            ? '🤒 Sakit'
+                                                            : '📝 Izin'}
+                                                    </span>
+                                                </div>
+                                            </div>
 
-                                <div className="p-5">
-                                    <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
-                                    Riwayat Status
-                                    </p>
-                                    <div className="space-y-3">
-                                    <div className="flex items-start gap-2.5">
-                                        <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-indigo-400" />
-                                        <div>
-                                        <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">Pengajuan dikirim</p>
-                                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500">{formatDateLong(activeRequest.tanggal_mulai)}</p>
+                                            {/* Date range */}
+                                            <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
+                                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                    Rentang Tanggal & Durasi
+                                                </p>
+                                                <div className="border-neutral-150/60 flex items-center gap-3 rounded-xl border bg-neutral-50/60 px-4 py-3 dark:border-zinc-800/50 dark:bg-zinc-900/20">
+                                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/30">
+                                                        <Calendar className="size-4 text-indigo-500" />
+                                                    </div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                            Tanggal
+                                                        </p>
+                                                        <p className="mt-0.5 text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                                            {activeRequest.tanggal_mulai ===
+                                                            activeRequest.tanggal_selesai
+                                                                ? formatDateLong(
+                                                                      activeRequest.tanggal_mulai,
+                                                                  )
+                                                                : `${formatDateLong(activeRequest.tanggal_mulai)} – ${formatDateLong(activeRequest.tanggal_selesai)}`}
+                                                        </p>
+                                                    </div>
+                                                    <span className="shrink-0 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-[10px] font-bold text-indigo-700 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-400">
+                                                        {getDurationDays(
+                                                            activeRequest.tanggal_mulai,
+                                                            activeRequest.tanggal_selesai,
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {/* Reason */}
+                                            <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
+                                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                    Alasan Pengajuan
+                                                </p>
+                                                <div className="border-neutral-150/50 rounded-xl border bg-neutral-50/50 p-4 dark:border-zinc-800/50 dark:bg-zinc-900/20">
+                                                    <p className="border-l-2 border-neutral-300 pl-3 text-xs leading-relaxed font-medium text-neutral-600 italic dark:border-zinc-600 dark:text-neutral-400">
+                                                        "{activeRequest.alasan}"
+                                                    </p>
+                                                    <p className="mt-2 flex items-center gap-1 text-[10px] text-neutral-400 dark:text-neutral-600">
+                                                        <MessageSquare className="size-3" />
+                                                        Ditulis oleh wali murid
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Evidence photo — SELALU tampil di mobile jika ada */}
+                                            {activeRequest.bukti_foto && (
+                                                <div className="border-b border-neutral-100 p-5 md:hidden dark:border-zinc-900">
+                                                    <div className="mb-3 flex items-center justify-between">
+                                                        <p className="text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                            Bukti Pendukung
+                                                        </p>
+                                                        <button
+                                                            onClick={() =>
+                                                                setLightboxSrc(
+                                                                    activeRequest.bukti_foto!,
+                                                                )
+                                                            }
+                                                            className="inline-flex cursor-pointer items-center gap-1 text-[10px] font-bold text-indigo-600 hover:underline dark:text-indigo-400"
+                                                        >
+                                                            <ZoomIn className="size-3" />{' '}
+                                                            Perbesar
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        onClick={() =>
+                                                            setLightboxSrc(
+                                                                activeRequest.bukti_foto!,
+                                                            )
+                                                        }
+                                                        className="group relative h-48 w-full cursor-pointer overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-800"
+                                                    >
+                                                        <img
+                                                            src={
+                                                                activeRequest.bukti_foto
+                                                            }
+                                                            alt="Bukti"
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/30">
+                                                            <ZoomIn className="size-6 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Submission meta — tampil di mobile, tersembunyi di desktop (ada di sidebar) */}
+                                            <div className="border-b border-neutral-100 p-5 md:hidden dark:border-zinc-900">
+                                                <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                    Info Pengajuan
+                                                </p>
+                                                <div className="border-neutral-150/50 rounded-xl border bg-neutral-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/20">
+                                                    {[
+                                                        {
+                                                            label: 'ID Pengajuan',
+                                                            value: `#${activeRequest.id}`,
+                                                        },
+                                                        {
+                                                            label: 'Jenis',
+                                                            value:
+                                                                activeRequest.jenis_izin ===
+                                                                'sakit'
+                                                                    ? 'Sakit'
+                                                                    : 'Izin',
+                                                        },
+                                                        {
+                                                            label: 'Tanggal',
+                                                            value: formatDateRange(
+                                                                activeRequest.tanggal_mulai,
+                                                                activeRequest.tanggal_selesai,
+                                                            ),
+                                                        },
+                                                        {
+                                                            label: 'Durasi',
+                                                            value: getDurationDays(
+                                                                activeRequest.tanggal_mulai,
+                                                                activeRequest.tanggal_selesai,
+                                                            ),
+                                                        },
+                                                    ].map(
+                                                        (
+                                                            { label, value },
+                                                            i,
+                                                            arr,
+                                                        ) => (
+                                                            <div
+                                                                key={label}
+                                                                className={`flex items-center justify-between gap-3 px-4 py-3 ${i < arr.length - 1 ? 'border-b border-neutral-100 dark:border-zinc-800/60' : ''}`}
+                                                            >
+                                                                <span className="shrink-0 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                                    {label}
+                                                                </span>
+                                                                <span className="text-right text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                                                                    {value}
+                                                                </span>
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </div>
+
+                                                {/* Mobile action buttons below info pengajuan */}
+                                                {activeRequest.status ===
+                                                    'pending' &&
+                                                    !isRejecting && (
+                                                        <div className="mt-5 flex gap-3">
+                                                            <button
+                                                                type="button"
+                                                                disabled={
+                                                                    processing ===
+                                                                    activeRequest.id
+                                                                }
+                                                                onClick={() => {
+                                                                    setIsRejecting(
+                                                                        true,
+                                                                    );
+                                                                    setRejectionReason(
+                                                                        '',
+                                                                    );
+                                                                }}
+                                                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-rose-200 py-3 text-xs font-bold text-rose-600 transition-all hover:bg-rose-50 active:scale-95 disabled:opacity-50 dark:border-rose-900/40 dark:text-rose-400"
+                                                            >
+                                                                <X className="size-3.5" />{' '}
+                                                                Tolak
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                disabled={
+                                                                    processing ===
+                                                                    activeRequest.id
+                                                                }
+                                                                onClick={() =>
+                                                                    handleApprove(
+                                                                        activeRequest.id,
+                                                                        activeRequest.name,
+                                                                    )
+                                                                }
+                                                                className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
+                                                            >
+                                                                {processing ===
+                                                                activeRequest.id ? (
+                                                                    'Memproses...'
+                                                                ) : (
+                                                                    <>
+                                                                        <CheckCircle2 className="size-3.5" />{' '}
+                                                                        Setujui
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                            </div>
+
+                                            {/* Rejection callout */}
+                                            {activeRequest.status ===
+                                                'ditolak' &&
+                                                activeRequest.rejection_reason && (
+                                                    <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
+                                                        <div className="flex items-start gap-3 rounded-xl border border-rose-100/60 bg-rose-50/40 p-4 dark:border-rose-900/30 dark:bg-rose-950/10">
+                                                            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-rose-500" />
+                                                            <div>
+                                                                <p className="text-[10px] font-black tracking-wider text-rose-700 uppercase dark:text-rose-400">
+                                                                    Catatan
+                                                                    Penolakan
+                                                                </p>
+                                                                <p className="mt-1 text-xs leading-relaxed text-rose-700 dark:text-rose-300">
+                                                                    {
+                                                                        activeRequest.rejection_reason
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                            {/* Rejection form */}
+                                            {isRejecting && (
+                                                <div className="border-b border-neutral-100 p-5 dark:border-zinc-900">
+                                                    <div className="space-y-4 rounded-xl border border-rose-200/50 bg-rose-50/20 p-4 dark:border-rose-900/30 dark:bg-rose-950/5">
+                                                        <div className="flex items-center gap-2">
+                                                            <XCircle className="size-4 text-rose-500" />
+                                                            <p className="text-xs font-black text-neutral-800 dark:text-neutral-100">
+                                                                Alasan Penolakan
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="mb-2 text-[9px] font-black tracking-wider text-neutral-400 uppercase">
+                                                                Pilihan Cepat
+                                                            </p>
+                                                            <div className="flex flex-wrap gap-1.5">
+                                                                {presets.map(
+                                                                    (
+                                                                        preset,
+                                                                        i,
+                                                                    ) => (
+                                                                        <button
+                                                                            key={
+                                                                                i
+                                                                            }
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                setRejectionReason(
+                                                                                    preset,
+                                                                                )
+                                                                            }
+                                                                            className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-all ${
+                                                                                rejectionReason ===
+                                                                                preset
+                                                                                    ? 'border-rose-500 bg-rose-500 text-white'
+                                                                                    : 'border-neutral-200 bg-white text-neutral-600 hover:border-rose-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400'
+                                                                            }`}
+                                                                        >
+                                                                            {
+                                                                                preset
+                                                                            }
+                                                                        </button>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <p className="mb-2 text-[9px] font-black tracking-wider text-neutral-400 uppercase">
+                                                                Tulis Alasan
+                                                                Lain
+                                                            </p>
+                                                            <textarea
+                                                                rows={3}
+                                                                placeholder="Tulis detail alasan untuk wali murid..."
+                                                                value={
+                                                                    rejectionReason
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setRejectionReason(
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                                className="w-full resize-none rounded-xl border border-neutral-200 bg-white p-3 text-xs font-medium text-neutral-800 outline-none focus:ring-1 focus:ring-rose-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                                            />
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    setIsRejecting(
+                                                                        false,
+                                                                    )
+                                                                }
+                                                                className="flex-1 cursor-pointer rounded-xl border border-neutral-200 bg-white py-2 text-xs font-bold text-neutral-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400"
+                                                            >
+                                                                Batal
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                disabled={
+                                                                    !rejectionReason.trim() ||
+                                                                    processing ===
+                                                                        activeRequest.id
+                                                                }
+                                                                onClick={() =>
+                                                                    handleReject(
+                                                                        activeRequest.id,
+                                                                        activeRequest.name,
+                                                                    )
+                                                                }
+                                                                className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-rose-600 py-2 text-xs font-bold text-white disabled:opacity-50"
+                                                            >
+                                                                {processing ===
+                                                                activeRequest.id ? (
+                                                                    'Mengirim...'
+                                                                ) : (
+                                                                    <>
+                                                                        <Send className="size-3.5" />{' '}
+                                                                        Kirim
+                                                                        Penolakan
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
+
+                                        {/* ─── Sidebar desktop only ─── */}
+                                        <aside className="hidden md:col-span-1 md:block">
+                                            <div className="divide-y divide-neutral-100 dark:divide-zinc-900">
+                                                <div className="p-5">
+                                                    <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                        Info Pengajuan
+                                                    </p>
+                                                    <div className="space-y-2.5">
+                                                        {[
+                                                            {
+                                                                label: 'ID Pengajuan',
+                                                                value: `#${activeRequest.id}`,
+                                                            },
+                                                            {
+                                                                label: 'Jenis',
+                                                                value:
+                                                                    activeRequest.jenis_izin ===
+                                                                    'sakit'
+                                                                        ? 'Sakit'
+                                                                        : 'Izin',
+                                                            },
+                                                            {
+                                                                label: 'Tanggal',
+                                                                value: formatDateRange(
+                                                                    activeRequest.tanggal_mulai,
+                                                                    activeRequest.tanggal_selesai,
+                                                                ),
+                                                            },
+                                                            {
+                                                                label: 'Durasi',
+                                                                value: getDurationDays(
+                                                                    activeRequest.tanggal_mulai,
+                                                                    activeRequest.tanggal_selesai,
+                                                                ),
+                                                            },
+                                                        ].map(
+                                                            ({
+                                                                label,
+                                                                value,
+                                                            }) => (
+                                                                <div
+                                                                    key={label}
+                                                                    className="flex items-start justify-between gap-3"
+                                                                >
+                                                                    <span className="shrink-0 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                                        {label}
+                                                                    </span>
+                                                                    <span className="text-right text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                                                                        {value}
+                                                                    </span>
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {activeRequest.bukti_foto && (
+                                                    <div className="p-5">
+                                                        <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                            Foto Bukti
+                                                        </p>
+                                                        <div
+                                                            onClick={() =>
+                                                                setLightboxSrc(
+                                                                    activeRequest.bukti_foto!,
+                                                                )
+                                                            }
+                                                            className="group relative cursor-pointer overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-800"
+                                                        >
+                                                            <img
+                                                                src={
+                                                                    activeRequest.bukti_foto
+                                                                }
+                                                                alt="preview"
+                                                                className="w-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/25">
+                                                                <ZoomIn className="size-5 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                <div className="p-5">
+                                                    <p className="mb-3 text-[10px] font-black tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                                        Riwayat Status
+                                                    </p>
+                                                    <div className="space-y-3">
+                                                        <div className="flex items-start gap-2.5">
+                                                            <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-indigo-400" />
+                                                            <div>
+                                                                <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                                                                    Pengajuan
+                                                                    dikirim
+                                                                </p>
+                                                                <p className="text-[10px] text-neutral-400 dark:text-neutral-500">
+                                                                    {formatDateLong(
+                                                                        activeRequest.tanggal_mulai,
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        {activeRequest.status !==
+                                                            'pending' && (
+                                                            <div className="flex items-start gap-2.5">
+                                                                <div
+                                                                    className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${activeRequest.status === 'disetujui' ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                                                                />
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                                                                        {activeRequest.status ===
+                                                                        'disetujui'
+                                                                            ? 'Disetujui'
+                                                                            : 'Ditolak'}
+                                                                    </p>
+                                                                    <p className="text-[10px] text-neutral-400 dark:text-neutral-500">
+                                                                        Oleh
+                                                                        wali
+                                                                        kelas
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aside>
                                     </div>
-                                    {activeRequest.status !== 'pending' && (
-                                        <div className="flex items-start gap-2.5">
-                                        <div className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${activeRequest.status === 'disetujui' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
-                                        <div>
-                                            <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                                            {activeRequest.status === 'disetujui' ? 'Disetujui' : 'Ditolak'}
-                                            </p>
-                                            <p className="text-[10px] text-neutral-400 dark:text-neutral-500">Oleh wali kelas</p>
-                                        </div>
+                                </div>
+
+                                {/* ─── STICKY ACTION BAR ─── */}
+                                {/* ─── ACTION BAR — shrink-0, BUKAN absolute ─── */}
+                                {activeRequest.status === 'pending' &&
+                                    !isRejecting && (
+                                        <div className="hidden shrink-0 gap-3 border-t border-neutral-100 bg-white/95 px-5 py-3.5 backdrop-blur-md md:flex dark:border-zinc-900/60 dark:bg-zinc-950/95">
+                                            <button
+                                                type="button"
+                                                disabled={
+                                                    processing ===
+                                                    activeRequest.id
+                                                }
+                                                onClick={() => {
+                                                    setIsRejecting(true);
+                                                    setRejectionReason('');
+                                                }}
+                                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-rose-200 py-3 text-xs font-bold text-rose-600 transition-all hover:bg-rose-50 active:scale-95 disabled:opacity-50 dark:border-rose-900/40 dark:text-rose-400"
+                                            >
+                                                <X className="size-3.5" /> Tolak
+                                            </button>
+                                            <button
+                                                type="button"
+                                                disabled={
+                                                    processing ===
+                                                    activeRequest.id
+                                                }
+                                                onClick={() =>
+                                                    handleApprove(
+                                                        activeRequest.id,
+                                                        activeRequest.name,
+                                                    )
+                                                }
+                                                className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
+                                            >
+                                                {processing ===
+                                                activeRequest.id ? (
+                                                    'Memproses...'
+                                                ) : (
+                                                    <>
+                                                        <CheckCircle2 className="size-3.5" />{' '}
+                                                        Setujui Pengajuan
+                                                    </>
+                                                )}
+                                            </button>
                                         </div>
                                     )}
-                                    </div>
-                                </div>
-                                </div>
-                            </aside>
-
                             </div>
                         </div>
-
-                        {/* ─── STICKY ACTION BAR ─── */}
-                    {/* ─── ACTION BAR — shrink-0, BUKAN absolute ─── */}
-                    {activeRequest.status === 'pending' && !isRejecting && (
-                        <div className="shrink-0 hidden md:flex gap-3 border-t border-neutral-100 bg-white/95 px-5 py-3.5 backdrop-blur-md dark:border-zinc-900/60 dark:bg-zinc-950/95">
-                        <button
-                            type="button"
-                            disabled={processing === activeRequest.id}
-                            onClick={() => { setIsRejecting(true); setRejectionReason(''); }}
-                            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-rose-200 py-3 text-xs font-bold text-rose-600 transition-all hover:bg-rose-50 active:scale-95 disabled:opacity-50 dark:border-rose-900/40 dark:text-rose-400"
-                        >
-                            <X className="size-3.5" /> Tolak
-                        </button>
-                        <button
-                            type="button"
-                            disabled={processing === activeRequest.id}
-                            onClick={() => handleApprove(activeRequest.id, activeRequest.name)}
-                            className="flex flex-[2] cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
-                        >
-                            {processing === activeRequest.id ? 'Memproses...' : (
-                            <><CheckCircle2 className="size-3.5" /> Setujui Pengajuan</>
-                            )}
-                        </button>
-                        </div>
-                    )}
-
-                        </div>
-                    </div>
                     )}
 
                     {/* FULLSCREEN LIGHTBOX FOR IMAGES */}
