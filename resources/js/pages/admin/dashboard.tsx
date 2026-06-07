@@ -44,15 +44,15 @@ export default function Dashboard({ stats }: DashboardProps) {
             <Head title="Portal Admin" />
 
             {/* ── Welcome Banner ── */}
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-200/50 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-6 shadow-xs sm:p-8">
+            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
                 {/* Visual accent dot pattern */}
                 <div className="absolute right-0 top-0 h-full w-1/3 opacity-20 pointer-events-none" 
                      style={{
                        backgroundImage: 'radial-gradient(var(--border) 1px, transparent 0)',
                        backgroundSize: '16px 16px',
                      }}
-                />
-                
+                 />
+                 
                 <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     {/* Left: Greeting & System Badge */}
                     <div className="space-y-3">
@@ -61,48 +61,48 @@ export default function Dashboard({ stats }: DashboardProps) {
                                 <Shield className="size-3" />
                                 Operations Command
                             </span>
-                            <span className="inline-flex items-center gap-1 rounded-md bg-neutral-100 dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-semibold text-neutral-650 dark:text-neutral-400">
+                            <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 dark:bg-zinc-800 px-2.5 py-1 text-[10px] font-semibold text-slate-600 dark:text-neutral-400">
                                 SIPRESENS
                             </span>
                         </div>
-
+ 
                         <div>
-                            <h1 className="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-3xl">
+                            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
                                 {getGreeting()},{' '}
                                 <span className="text-[#6366F1] dark:text-[#818CF8]">{firstName}!</span>
                             </h1>
-                            <p className="mt-1 text-sm font-medium text-neutral-500 dark:text-neutral-450">
+                            <p className="mt-1 text-sm font-medium text-slate-600 dark:text-neutral-455">
                                 {getTodayDate()}
                             </p>
                         </div>
-
-                        <p className="max-w-xl text-xs font-medium leading-relaxed text-neutral-555 dark:text-neutral-400">
+ 
+                        <p className="max-w-xl text-xs font-medium leading-relaxed text-slate-700 dark:text-neutral-400">
                             Kelola data akademik, akun pengguna, dan tinjau performa kehadiran
                             harian sekolah secara instan dari pusat kendali operasi.
                         </p>
                     </div>
-
+ 
                     {/* Right: Quick system stats overview chips */}
                     <div className="flex flex-wrap gap-2.5 md:flex-col md:items-end">
-                        <div className="inline-flex items-center gap-3 rounded-xl border border-neutral-100 bg-neutral-50/50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-neutral-50 dark:hover:bg-[#111827]/60">
-                            <GraduationCap className="size-4 text-[#6366F1] dark:text-[#818CF8]" />
+                        <div className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 transition-all hover:bg-slate-100 dark:hover:bg-[#111827]/60">
+                            <GraduationCap className="size-4 text-[#6366F1] dark:text-[#818AF8]" />
                             <div className="text-left">
-                                <p className="text-[9px] font-bold text-neutral-400 dark:text-neutral-505 uppercase tracking-widest">Guru Pengampu</p>
-                                <p className="text-base font-black leading-none text-neutral-800 dark:text-neutral-100 mt-0.5">{stats.total_guru}</p>
+                                <p className="text-[9px] font-bold text-slate-650 dark:text-neutral-505 uppercase tracking-widest">Guru Pengampu</p>
+                                <p className="text-base font-black leading-none text-slate-900 dark:text-neutral-100 mt-0.5">{stats.total_guru}</p>
                             </div>
                         </div>
-                        <div className="inline-flex items-center gap-3 rounded-xl border border-neutral-100 bg-neutral-50/50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-neutral-50 dark:hover:bg-[#111827]/60">
+                        <div className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 transition-all hover:bg-slate-100 dark:hover:bg-[#111827]/60">
                             <Users className="size-4 text-violet-500 dark:text-violet-400" />
                             <div className="text-left">
-                                <p className="text-[9px] font-bold text-neutral-400 dark:text-neutral-550 uppercase tracking-widest">Siswa Terdaftar</p>
-                                <p className="text-base font-black leading-none text-neutral-800 dark:text-neutral-100 mt-0.5">{stats.total_siswa}</p>
+                                <p className="text-[9px] font-bold text-slate-650 dark:text-neutral-550 uppercase tracking-widest">Siswa Terdaftar</p>
+                                <p className="text-base font-black leading-none text-slate-900 dark:text-neutral-100 mt-0.5">{stats.total_siswa}</p>
                             </div>
                         </div>
-                        <div className="inline-flex items-center gap-3 rounded-xl border border-neutral-100 bg-neutral-50/50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 backdrop-blur-sm transition-all hover:bg-neutral-50 dark:hover:bg-[#111827]/60">
+                        <div className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 dark:border-zinc-800/30 dark:bg-[#111827]/40 px-4 py-2.5 transition-all hover:bg-slate-100 dark:hover:bg-[#111827]/60">
                             <BookOpen className="size-4 text-emerald-500 dark:text-emerald-400" />
                             <div className="text-left">
-                                <p className="text-[9px] font-bold text-neutral-400 dark:text-neutral-550 uppercase tracking-widest">Kelas Aktif</p>
-                                <p className="text-base font-black leading-none text-neutral-800 dark:text-neutral-100 mt-0.5">{stats.total_kelas}</p>
+                                <p className="text-[9px] font-bold text-slate-650 dark:text-neutral-550 uppercase tracking-widest">Kelas Aktif</p>
+                                <p className="text-base font-black leading-none text-slate-900 dark:text-neutral-100 mt-0.5">{stats.total_kelas}</p>
                             </div>
                         </div>
                     </div>

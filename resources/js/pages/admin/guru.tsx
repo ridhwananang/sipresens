@@ -98,23 +98,23 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
             <Head title="Data Guru Pengajar" />
 
             {/* Header Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/60 bg-gradient-to-br from-violet-500/10 via-indigo-500/5 to-blue-500/5 p-6 shadow-sm dark:border-zinc-800/80 dark:from-violet-950/30 dark:via-indigo-950/20 dark:to-blue-950/10">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-violet-500/10 via-indigo-500/5 to-blue-500/5 p-6 shadow-sm dark:border-zinc-800/80 dark:from-violet-950/30 dark:via-indigo-950/20 dark:to-blue-950/10">
                 <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-500/5" />
                 <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1.5">
                         <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-black tracking-wider uppercase text-violet-700 dark:bg-violet-950/30 dark:text-violet-400">
                             Manajemen Pengguna
                         </span>
-                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 dark:text-neutral-50">
                             <GraduationCap className="size-7 text-violet-600 dark:text-violet-400 shrink-0" />
                             Data Guru Pengajar
                         </h1>
-                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-neutral-500 dark:text-neutral-400">
+                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-slate-600 dark:text-neutral-400">
                             Kelola profil data staf pengajar, NIP, kontak, serta penetapan tugas wali kelas.
                         </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                        <span className="inline-flex items-center gap-1.5 rounded-2xl border border-violet-200/60 bg-white/80 px-3 py-1.5 text-[11px] font-black text-violet-700 shadow-sm dark:border-violet-800/60 dark:bg-violet-950/30 dark:text-violet-400">
+                        <span className="inline-flex items-center gap-1.5 rounded-2xl border border-violet-200 bg-white px-3 py-1.5 text-[11px] font-black text-violet-700 shadow-sm dark:border-violet-800/60 dark:bg-violet-950/30 dark:text-violet-400">
                             <GraduationCap className="size-3.5" />
                             {teachers.length} Guru
                         </span>
@@ -123,15 +123,15 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
             </div>
 
             {/* Toolbar */}
-            <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/40 bg-white/60 p-4 backdrop-blur-sm dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
                 <div className="relative flex-1 max-w-sm">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                     <input
                         type="text"
                         placeholder="Cari guru, NIP, atau email..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white/80 pl-9 pr-4 py-2 text-xs font-semibold text-neutral-900 placeholder-neutral-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
+                        className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
                     />
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -157,30 +157,30 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
             </div>
 
             {/* Desktop Table */}
-            <Card className="hidden md:block overflow-hidden rounded-3xl border border-neutral-200/60 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <Card className="hidden md:block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
-                            <thead className="sticky top-0 z-10 border-b border-neutral-100 bg-neutral-50 dark:border-zinc-800 dark:bg-zinc-900">
+                            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900">
                                 <tr>
-                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Nama Lengkap</th>
-                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">NIP</th>
-                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">No. HP</th>
-                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Status Wali</th>
-                                    <th className="px-6 py-3.5 text-right text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Aksi</th>
+                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-550 uppercase dark:text-neutral-500">Nama Lengkap</th>
+                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-550 uppercase dark:text-neutral-500">NIP</th>
+                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-550 uppercase dark:text-neutral-500">No. HP</th>
+                                    <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-550 uppercase dark:text-neutral-500">Status Wali</th>
+                                    <th className="px-6 py-3.5 text-right text-[10px] font-black tracking-widest text-slate-550 uppercase dark:text-neutral-500">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800/60">
+                            <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
                                 {filteredTeachers.length > 0 ? (
                                     filteredTeachers.map((t) => (
-                                        <tr key={t.id} className="transition-colors hover:bg-violet-50/20 dark:hover:bg-violet-950/10">
+                                        <tr key={t.id} className="transition-colors hover:bg-violet-50/50 dark:hover:bg-violet-950/10">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
                                                     {t.foto ? (
                                                         <img
                                                             src={t.foto}
                                                             alt={t.name}
-                                                            className="size-11 rounded-2xl object-cover ring-2 ring-neutral-100 dark:ring-zinc-800"
+                                                            className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800"
                                                         />
                                                     ) : (
                                                         <span className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(t.id)} text-sm font-black text-white shadow-sm`}>
@@ -188,38 +188,38 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                                                         </span>
                                                     )}
                                                     <div>
-                                                        <p className="font-black text-neutral-900 dark:text-neutral-100">{t.name}</p>
-                                                        <p className="text-[11px] text-neutral-400 dark:text-neutral-500">{t.email}</p>
+                                                        <p className="font-black text-slate-900 dark:text-neutral-100">{t.name}</p>
+                                                        <p className="text-[11px] text-slate-600 dark:text-neutral-500">{t.email}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 font-mono text-xs font-semibold text-neutral-600 dark:text-neutral-400">
+                                            <td className="px-6 py-4 font-mono text-xs font-semibold text-slate-700 dark:text-neutral-400">
                                                 {t.nip}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">
-                                                    <Phone className="size-3.5 text-neutral-400" />
+                                                <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-neutral-400">
+                                                    <Phone className="size-3.5 text-slate-400" />
                                                     {t.no_hp || '—'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 {isWaliKelas(t) ? (
                                                     <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-black text-violet-700 dark:bg-violet-950/30 dark:text-violet-400">
-                                                        <span className="size-1.5 rounded-full bg-violet-500" />
+                                                        <span className="size-1.5 rounded-full bg-violet-505" />
                                                         Wali {t.wali_kelas}
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-semibold text-neutral-500 dark:bg-zinc-800/60 dark:text-neutral-500">
+                                                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:bg-zinc-800/60 dark:text-neutral-500">
                                                         Pengajar
                                                     </span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-end gap-1.5">
-                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(t)}>
+                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(t)}>
                                                         <Pencil className="size-3.5" />
                                                     </Button>
-                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 dark:hover:bg-rose-950/20 cursor-pointer" onClick={() => handleDelete(t.id)}>
+                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-250 text-rose-600 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 dark:hover:bg-rose-950/20 cursor-pointer" onClick={() => handleDelete(t.id)}>
                                                         <Trash2 className="size-3.5" />
                                                     </Button>
                                                 </div>

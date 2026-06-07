@@ -239,7 +239,7 @@ export default function SiswaRiwayatPage({
             </div>
 
             {/* SECTION 1: FULL JADWAL SENIN - MINGGU */}
-            <div className="rounded-3xl border border-neutral-200/60 bg-white p-5 text-left shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900">
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
                 <div className="mb-4 flex flex-col gap-1">
                     <div className="text-neutral-850 flex items-center gap-1.5 dark:text-neutral-200">
                         <Calendar className="size-4.5 text-indigo-500" />
@@ -261,7 +261,7 @@ export default function SiswaRiwayatPage({
                         <select
                             value={filters.hari}
                             onChange={(e) => handleDaySelect(e.target.value)}
-                            className="w-full cursor-pointer appearance-none rounded-2xl border border-neutral-200 bg-neutral-50 px-3.5 py-3 pr-10 text-xs font-bold text-neutral-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                            className="w-full cursor-pointer appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 pr-10 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                         >
                             {days.map((day) => (
                                 <option key={day} value={day}>
@@ -294,9 +294,9 @@ export default function SiswaRiwayatPage({
                         </p>
                     </div>
                 ) : (
-                    <div className="border-neutral-150 overflow-hidden rounded-2xl border dark:border-zinc-800/80">
+                    <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-zinc-800/80">
                         <table className="w-full table-fixed text-left text-[11px]">
-                            <thead className="dark:text-neutral-450 border-neutral-150 border-b bg-neutral-50 font-black text-neutral-500 dark:border-zinc-800 dark:bg-zinc-950">
+                            <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 font-black dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-450">
                                 <tr>
                                     <th className="w-[25%] px-3 py-2.5 text-center text-[8px] font-extrabold tracking-wider uppercase">
                                         Jam
@@ -309,11 +309,11 @@ export default function SiswaRiwayatPage({
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800">
+                            <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                                 {jadwal.map((j) => (
                                     <tr
                                         key={j.id}
-                                        className="transition-colors hover:bg-neutral-50/50 dark:hover:bg-zinc-900/10"
+                                        className="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-900/10"
                                     >
                                         <td className="text-indigo-650 px-3 py-3 text-center font-mono text-[9px] font-black select-all dark:text-indigo-400">
                                             {j.waktu}
@@ -333,7 +333,7 @@ export default function SiswaRiwayatPage({
             </div>
 
             {/* SECTION 2: FILTER BULAN DAN TAHUN */}
-            <div className="space-y-4 rounded-3xl border border-neutral-200/60 bg-white p-5 text-left shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900">
+            <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
                 <div className="text-neutral-850 dark:text-neutral-250 flex items-center gap-1.5">
                     <Clock className="size-4.5 text-indigo-500" />
                     <h3 className="text-sm font-black text-neutral-800 dark:text-neutral-200">
@@ -350,7 +350,7 @@ export default function SiswaRiwayatPage({
                             <select
                                 value={filters.bulan}
                                 onChange={handleMonthChange}
-                                className="w-full cursor-pointer appearance-none rounded-2xl border border-neutral-200 bg-neutral-50 px-3.5 py-3 pr-10 text-xs font-bold text-neutral-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                className="w-full cursor-pointer appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 pr-10 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                             >
                                 {Object.entries(indonesianMonths).map(
                                     ([num, name]) => (
@@ -374,7 +374,7 @@ export default function SiswaRiwayatPage({
                             <select
                                 value={filters.tahun}
                                 onChange={handleYearChange}
-                                className="w-full cursor-pointer appearance-none rounded-2xl border border-neutral-200 bg-neutral-50 px-3.5 py-3 pr-10 text-xs font-bold text-neutral-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                className="w-full cursor-pointer appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3 pr-10 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                             >
                                 {years.map((yr) => (
                                     <option key={yr} value={yr}>
@@ -398,7 +398,7 @@ export default function SiswaRiwayatPage({
                         className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-300 active:scale-95 ${
                             selectedStatus === 'hadir'
                                 ? getStatusColors('hadir').cardActive
-                                : 'border-neutral-200/50 bg-neutral-50/50 text-neutral-500 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
+                                : 'border-slate-200 bg-white text-slate-700 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
                         }`}
                     >
                         <div
@@ -427,7 +427,7 @@ export default function SiswaRiwayatPage({
                         className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-300 active:scale-95 ${
                             selectedStatus === 'izin'
                                 ? getStatusColors('izin').cardActive
-                                : 'border-neutral-200/50 bg-neutral-50/50 text-neutral-500 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
+                                : 'border-slate-200 bg-white text-slate-700 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
                         }`}
                     >
                         <div
@@ -456,7 +456,7 @@ export default function SiswaRiwayatPage({
                         className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-300 active:scale-95 ${
                             selectedStatus === 'sakit'
                                 ? getStatusColors('sakit').cardActive
-                                : 'border-neutral-200/50 bg-neutral-50/50 text-neutral-500 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
+                                : 'border-slate-200 bg-white text-slate-700 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
                         }`}
                     >
                         <div
@@ -485,7 +485,7 @@ export default function SiswaRiwayatPage({
                         className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-300 active:scale-95 ${
                             selectedStatus === 'alpa'
                                 ? getStatusColors('alpa').cardActive
-                                : 'border-neutral-200/50 bg-neutral-50/50 text-neutral-500 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
+                                : 'border-slate-200 bg-white text-slate-700 dark:border-zinc-800/60 dark:bg-zinc-950/30 dark:text-neutral-400'
                         }`}
                     >
                         <div
@@ -518,7 +518,7 @@ export default function SiswaRiwayatPage({
                             Detail Kehadiran
                         </h3>
                     </div>
-                    <span className="text-neutral-450 rounded-full border border-neutral-200/50 bg-neutral-100 px-2.5 py-1 text-[10px] font-black dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-neutral-500">
+                    <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-black text-slate-500 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-neutral-500">
                         {filteredHistory.length} Catatan{' '}
                         {getStatusLabel(selectedStatus)}
                     </span>
@@ -526,14 +526,14 @@ export default function SiswaRiwayatPage({
 
                 {/* Empty State / Detail List */}
                 {history.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-neutral-200/60 bg-white p-8 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900">
+                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
                         <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-neutral-500">
                             Belum ada data absensi pada periode yang dipilih.
                         </p>
                     </div>
                 ) : filteredHistory.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-neutral-200/60 bg-white p-8 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900">
+                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
                         <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-neutral-500">
                             Tidak ada data {getStatusLabel(selectedStatus)} pada
@@ -547,7 +547,7 @@ export default function SiswaRiwayatPage({
                             return (
                                 <div
                                     key={row.id}
-                                    className="relative overflow-hidden rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-xs transition-transform duration-200 active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900"
+                                    className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-transform duration-200 active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900"
                                 >
                                     {/* Left colored border */}
                                     <div
@@ -598,7 +598,7 @@ export default function SiswaRiwayatPage({
                                         </div>
 
                                         {/* Keterangan */}
-                                        <div className="border-neutral-150 flex flex-col gap-1 rounded-2xl border bg-neutral-50 p-3 text-[10px] dark:border-zinc-900 dark:bg-zinc-950/40">
+                                        <div className="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[10px] dark:border-zinc-900 dark:bg-zinc-950/40">
                                             <span className="dark:text-neutral-550 text-[8px] font-bold tracking-wider text-neutral-400 uppercase">
                                                 Catatan / Keterangan
                                             </span>

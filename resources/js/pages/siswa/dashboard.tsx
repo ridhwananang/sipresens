@@ -80,10 +80,10 @@ export default function SiswaDashboard({
                 <span className="self-start rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black tracking-wider text-indigo-600 uppercase dark:bg-indigo-950/30 dark:text-indigo-400">
                     Dashboard Siswa
                 </span>
-                <h1 className="mt-2 text-xl font-black text-neutral-800 dark:text-neutral-200">
+                <h1 className="mt-2 text-xl font-black text-slate-900 dark:text-neutral-200">
                     Halo, {siswa_name}!
                 </h1>
-                <p className="text-neutral-450 dark:text-neutral-550 text-[11px] font-medium">
+                <p className="text-slate-600 dark:text-neutral-550 text-[11px] font-medium">
                     Kelas Anda:{' '}
                     <strong className="font-bold text-indigo-600 dark:text-indigo-400">
                         {kelas_name}
@@ -184,13 +184,13 @@ export default function SiswaDashboard({
                         </div>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-neutral-100 bg-white p-8 text-center dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center dark:border-zinc-900 dark:bg-zinc-900/40 shadow-sm">
                         <Clock className="size-10 animate-pulse stroke-neutral-300 dark:stroke-zinc-800" />
                         <div className="space-y-0.5">
-                            <p className="dark:text-neutral-250 text-xs font-black text-neutral-800">
+                            <p className="dark:text-neutral-250 text-xs font-black text-slate-900">
                                 Tidak Ada Kelas
                             </p>
-                            <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500">
+                            <p className="text-[10px] font-medium text-slate-600 dark:text-neutral-550">
                                 Belum ada jadwal pelajaran yang sedang
                                 berlangsung saat ini.
                             </p>
@@ -206,11 +206,11 @@ export default function SiswaDashboard({
                     <span>Jadwal Pelajaran Hari Ini</span>
                 </h3>
 
-                <div className="overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+                <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                     <div className="scrollbar-none overflow-x-auto">
                         <table className="w-full min-w-[340px] table-fixed text-left text-[11px]">
                             {/* Modern transparent table header */}
-                            <thead className="dark:text-neutral-450 border-b border-neutral-100 bg-neutral-50/75 font-black text-neutral-500 dark:border-zinc-900 dark:bg-zinc-900/60">
+                            <thead className="dark:text-neutral-450 border-b border-slate-200 bg-slate-50 font-black text-slate-650 dark:border-zinc-900 dark:bg-zinc-900/60">
                                 <tr>
                                     <th className="w-[24%] px-4 py-3 text-center text-[8px] font-extrabold tracking-wider uppercase">
                                         Jam
@@ -237,30 +237,30 @@ export default function SiswaDashboard({
                                             className={`transition-all duration-300 ${
                                                 isActive
                                                     ? 'bg-emerald-500/10 font-semibold text-emerald-950 dark:bg-emerald-500/15 dark:text-emerald-50'
-                                                    : 'hover:bg-neutral-50/50 dark:hover:bg-zinc-900/20'
+                                                    : 'hover:bg-slate-50 dark:hover:bg-zinc-900/20'
                                             }`}
                                         >
                                             {/* Time Column */}
-                                            <td className="dark:text-neutral-450 px-3 py-3.5 text-center font-mono text-[9px] font-black text-neutral-500 select-all">
+                                            <td className="dark:text-neutral-450 px-3 py-3.5 text-center font-mono text-[9px] font-black text-slate-650 select-all">
                                                 {row.waktu}
                                             </td>
 
                                             {/* Mapel Column */}
-                                            <td className="truncate px-3 py-3.5 font-black text-neutral-800 dark:text-neutral-200">
+                                            <td className="truncate px-3 py-3.5 font-black text-slate-900 dark:text-neutral-200">
                                                 {row.mapel}
                                             </td>
 
                                             {/* Teacher Column with small avatar */}
-                                            <td className="px-3 py-3.5 text-neutral-600 dark:text-neutral-400">
+                                            <td className="px-3 py-3.5 text-slate-600 dark:text-neutral-400">
                                                 <div className="flex items-center gap-1.5 truncate">
-                                                    <Avatar className="size-5 shrink-0 overflow-hidden rounded-full ring-1 ring-neutral-200 dark:ring-zinc-800">
+                                                    <Avatar className="size-5 shrink-0 overflow-hidden rounded-full ring-1 ring-slate-200 dark:ring-zinc-800">
                                                         <AvatarImage
                                                             src={
                                                                 row.guru_avatar
                                                             }
                                                             alt={row.guru}
                                                         />
-                                                        <AvatarFallback className="rounded-full bg-neutral-200 text-[8px] font-extrabold text-neutral-700 dark:bg-zinc-800 dark:text-neutral-300">
+                                                        <AvatarFallback className="rounded-full bg-slate-200 text-[8px] font-extrabold text-slate-700 dark:bg-zinc-800 dark:text-neutral-300">
                                                             {getInitials(
                                                                 row.guru,
                                                             )}
@@ -299,7 +299,7 @@ export default function SiswaDashboard({
                                                     {row.status ===
                                                         'belum_tercatat' && (
                                                         <span className="relative flex size-2">
-                                                            <span className="relative inline-flex size-2 rounded-full bg-neutral-300 ring-2 ring-neutral-200/50 dark:bg-zinc-700 dark:ring-zinc-800/30"></span>
+                                                            <span className="relative inline-flex size-2 rounded-full bg-slate-300 ring-2 ring-slate-200 dark:bg-zinc-700 dark:ring-zinc-800/30"></span>
                                                         </span>
                                                     )}
                                                 </div>
@@ -312,7 +312,7 @@ export default function SiswaDashboard({
                                     <tr>
                                         <td
                                             colSpan={4}
-                                            className="py-8 text-center font-bold text-neutral-400 italic dark:text-neutral-500"
+                                            className="py-8 text-center font-bold text-slate-500 italic dark:text-neutral-500"
                                         >
                                             Tidak ada jadwal pelajaran hari ini.
                                         </td>
@@ -323,34 +323,34 @@ export default function SiswaDashboard({
                     </div>
 
                     {/* Status Legend Indicator */}
-                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-neutral-100 bg-neutral-50/50 px-4 py-3 dark:border-zinc-900/60 dark:bg-zinc-900/10">
+                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-zinc-900/60 dark:bg-zinc-900/10">
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-neutral-500 italic">
+                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
                                 Hadir
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-amber-500 ring-2 ring-amber-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-neutral-500 italic">
+                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
                                 Izin
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-rose-500 ring-2 ring-rose-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-neutral-500 italic">
+                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
                                 Alpa
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-sky-500 ring-2 ring-sky-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-neutral-500 italic">
+                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
                                 Sakit
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span className="size-2 rounded-full bg-neutral-300 ring-2 ring-neutral-200/50 dark:bg-zinc-700 dark:ring-zinc-800/30"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-neutral-500 italic">
+                            <span className="size-2 rounded-full bg-slate-300 ring-2 ring-slate-200 dark:bg-zinc-700 dark:ring-zinc-800/30"></span>
+                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
                                 Belum
                             </span>
                         </div>
@@ -376,7 +376,7 @@ export default function SiswaDashboard({
 
                 <div className="grid grid-cols-2 gap-3">
                     {/* Hadir */}
-                    <div className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-3.5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                         <div className="rounded-xl bg-emerald-50 p-2 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400">
                             <CheckCircle2 className="size-4.5" />
                         </div>
@@ -384,14 +384,14 @@ export default function SiswaDashboard({
                             <span className="text-lg leading-none font-black text-emerald-600 dark:text-emerald-400">
                                 {rekap_bulan_ini.hadir}
                             </span>
-                            <span className="mt-1 text-[9px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="mt-1 text-[9px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 Hadir
                             </span>
                         </div>
                     </div>
 
                     {/* Sakit */}
-                    <div className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-3.5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                         <div className="rounded-xl bg-sky-50 p-2 text-sky-600 dark:bg-sky-950/20 dark:text-sky-400">
                             <Smile className="size-4.5" />
                         </div>
@@ -399,14 +399,14 @@ export default function SiswaDashboard({
                             <span className="text-lg leading-none font-black text-sky-600 dark:text-sky-400">
                                 {rekap_bulan_ini.sakit}
                             </span>
-                            <span className="mt-1 text-[9px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="mt-1 text-[9px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 Sakit
                             </span>
                         </div>
                     </div>
 
                     {/* Izin */}
-                    <div className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-3.5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                         <div className="rounded-xl bg-amber-50 p-2 text-amber-500 dark:bg-amber-950/20 dark:text-amber-400">
                             <Calendar className="size-4.5" />
                         </div>
@@ -414,14 +414,14 @@ export default function SiswaDashboard({
                             <span className="text-lg leading-none font-black text-amber-500 dark:text-amber-400">
                                 {rekap_bulan_ini.izin}
                             </span>
-                            <span className="mt-1 text-[9px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="mt-1 text-[9px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 Izin
                             </span>
                         </div>
                     </div>
 
                     {/* Alpa */}
-                    <div className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-3.5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                         <div className="rounded-xl bg-rose-50 p-2 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400">
                             <AlertCircle className="size-4.5" />
                         </div>
@@ -429,7 +429,7 @@ export default function SiswaDashboard({
                             <span className="text-lg leading-none font-black text-rose-600 dark:text-rose-400">
                                 {rekap_bulan_ini.alpa}
                             </span>
-                            <span className="mt-1 text-[9px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="mt-1 text-[9px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 Alpa
                             </span>
                         </div>

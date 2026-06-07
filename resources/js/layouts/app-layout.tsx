@@ -85,27 +85,17 @@ export default function AppLayout({
                 </div>
 
                 {/* ── MOBILE ADMIN LAYOUT (Bottom Navigation, < md) ── */}
-                <div className="flex h-dvh flex-col bg-neutral-100 font-sans antialiased transition-colors duration-300 md:hidden dark:bg-neutral-900">
-                    <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden border border-neutral-200 bg-neutral-50 pb-16 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
-                        {/* Mock Status Bar */}
-                        <div className="border-neutral-250 flex items-center justify-between border-b bg-neutral-50 px-6 py-2 text-[10px] font-medium text-neutral-400 dark:border-zinc-800 dark:bg-zinc-900">
-                            <span>9:41</span>
-                            <div className="mx-auto h-3.5 w-16 rounded-full bg-black dark:bg-zinc-800" />
-                            <div className="flex items-center gap-1.5">
-                                <span className="size-1.5 animate-pulse rounded-full bg-indigo-500" />
-                                <span>Admin</span>
-                            </div>
-                        </div>
-
+                <div className="flex h-dvh flex-col bg-slate-100 font-sans antialiased transition-colors duration-300 md:hidden dark:bg-neutral-900">
+                    <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden border border-slate-200 bg-slate-50 pb-16 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
                         {/* Main Header */}
-                        <header className="border-neutral-150/65 sticky top-0 z-40 flex items-center justify-between border-b bg-white/80 px-5 py-4 backdrop-blur-md transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
+                        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
                             <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-2">
                                     <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-violet-500 to-purple-500 text-sm font-black text-white shadow-md shadow-indigo-500/20">
                                         SP
                                     </span>
                                 </div>
-                                <h1 className="text-lg font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                                <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-50">
                                     {getAdmHeaderTitle()}
                                 </h1>
                             </div>
@@ -113,7 +103,7 @@ export default function AppLayout({
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={toggleTheme}
-                                    className="cursor-pointer rounded-xl border border-neutral-200/40 bg-neutral-100 p-2 text-neutral-600 transition-all hover:bg-neutral-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                    className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 transition-all hover:bg-slate-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                     aria-label="Toggle theme"
                                 >
                                     {appearance === 'dark' ? (
@@ -131,13 +121,13 @@ export default function AppLayout({
                         </main>
 
                         {/* Bottom Navigation */}
-                        <nav className="border-neutral-150/65 absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t bg-white/95 px-2 py-1.5 shadow-lg backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/95">
+                        <nav className="absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t border-slate-200 bg-white px-2 py-1.5 shadow-lg dark:border-zinc-900 dark:bg-zinc-950/95">
                             <Link
                                 href="/admin/dashboard"
                                 className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                     admIsDashboard
                                         ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                        : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                        : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                                 }`}
                             >
                                 <LayoutDashboard
@@ -153,7 +143,7 @@ export default function AppLayout({
                                 className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 cursor-pointer ${
                                     admIsKelas || admIsMapel || admIsJadwal
                                         ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                        : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                        : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                                 }`}
                             >
                                 <BookOpen
@@ -169,7 +159,7 @@ export default function AppLayout({
                                 className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 cursor-pointer ${
                                     admIsGuru || admIsSiswa || admIsOrangTua
                                         ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                        : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                        : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                                 }`}
                             >
                                 <Users
@@ -185,7 +175,7 @@ export default function AppLayout({
                                 className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 cursor-pointer ${
                                     activeSheet === 'profil'
                                         ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                        : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                        : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                                 }`}
                             >
                                 <User
@@ -200,13 +190,13 @@ export default function AppLayout({
 
                     {/* Sheets for Bottom Nav Menu Selections */}
                     <Sheet open={activeSheet === 'akademik'} onOpenChange={(open) => !open && setActiveSheet(null)}>
-                        <SheetContent side="bottom" className="rounded-t-3xl border-t bg-white/95 px-6 pt-6 pb-8 backdrop-blur-lg dark:border-zinc-805 dark:bg-zinc-950/95">
+                        <SheetContent side="bottom" className="rounded-t-3xl border-t border-slate-200 bg-white px-6 pt-6 pb-8 dark:border-zinc-805 dark:bg-zinc-950/95">
                             <SheetHeader>
-                                <SheetTitle className="text-left font-black tracking-tight text-neutral-900 dark:text-neutral-50 flex items-center gap-2">
+                                <SheetTitle className="text-left font-black tracking-tight text-slate-900 dark:text-neutral-50 flex items-center gap-2">
                                     <BookOpen className="size-5 text-indigo-500" />
                                     Menu Akademik
                                 </SheetTitle>
-                                <SheetDescription className="text-left text-xs text-neutral-500 dark:text-neutral-400">
+                                <SheetDescription className="text-left text-xs text-slate-500 dark:text-neutral-400">
                                     Pilih data akademik yang ingin dikelola.
                                 </SheetDescription>
                             </SheetHeader>
@@ -214,10 +204,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/kelas"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsKelas
-                                            ? 'border-indigo-200 bg-indigo-50/50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
@@ -228,10 +218,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/mapel"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsMapel
-                                            ? 'border-indigo-200 bg-indigo-50/50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
@@ -242,10 +232,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/jadwal"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsJadwal
-                                            ? 'border-indigo-200 bg-indigo-50/50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
@@ -258,13 +248,13 @@ export default function AppLayout({
                     </Sheet>
 
                     <Sheet open={activeSheet === 'pengguna'} onOpenChange={(open) => !open && setActiveSheet(null)}>
-                        <SheetContent side="bottom" className="rounded-t-3xl border-t bg-white/95 px-6 pt-6 pb-8 backdrop-blur-lg dark:border-zinc-808 dark:bg-zinc-950/95">
+                        <SheetContent side="bottom" className="rounded-t-3xl border-t border-slate-200 bg-white px-6 pt-6 pb-8 dark:border-zinc-808 dark:bg-zinc-950/95">
                             <SheetHeader>
-                                <SheetTitle className="text-left font-black tracking-tight text-neutral-900 dark:text-neutral-50 flex items-center gap-2">
+                                <SheetTitle className="text-left font-black tracking-tight text-slate-900 dark:text-neutral-50 flex items-center gap-2">
                                     <Users className="size-5 text-violet-500" />
                                     Manajemen Pengguna
                                 </SheetTitle>
-                                <SheetDescription className="text-left text-xs text-neutral-500 dark:text-neutral-400">
+                                <SheetDescription className="text-left text-xs text-slate-500 dark:text-neutral-400">
                                     Pilih data pengguna yang ingin dikelola.
                                 </SheetDescription>
                             </SheetHeader>
@@ -272,10 +262,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/guru"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsGuru
-                                            ? 'border-violet-200 bg-violet-50/50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-950/60 dark:text-violet-400">
@@ -286,10 +276,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/siswa"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsSiswa
-                                            ? 'border-violet-200 bg-violet-50/50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-650 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-950/60 dark:text-violet-400">
@@ -300,10 +290,10 @@ export default function AppLayout({
                                 <Link
                                     href="/admin/orangtua"
                                     onClick={() => setActiveSheet(null)}
-                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-neutral-50 active:scale-95 ${
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 hover:bg-slate-50 active:scale-95 ${
                                         admIsOrangTua
-                                            ? 'border-violet-200 bg-violet-50/50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
-                                            : 'border-neutral-100 bg-neutral-50/50 text-neutral-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
+                                            ? 'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900/50 dark:bg-violet-950/20 dark:text-violet-400'
+                                            : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/20 dark:text-zinc-400'
                                     }`}
                                 >
                                     <span className="flex size-10 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-950/60 dark:text-violet-400">
@@ -316,21 +306,21 @@ export default function AppLayout({
                     </Sheet>
 
                     <Sheet open={activeSheet === 'profil'} onOpenChange={(open) => !open && setActiveSheet(null)}>
-                        <SheetContent side="bottom" className="rounded-t-3xl border-t bg-white/95 px-6 pt-6 pb-8 backdrop-blur-lg dark:border-zinc-808 dark:bg-zinc-950/95">
+                        <SheetContent side="bottom" className="rounded-t-3xl border-t border-slate-200 bg-white px-6 pt-6 pb-8 dark:border-zinc-808 dark:bg-zinc-950/95">
                             <SheetHeader>
-                                <SheetTitle className="text-left font-black tracking-tight text-neutral-900 dark:text-neutral-50 flex items-center gap-2">
+                                <SheetTitle className="text-left font-black tracking-tight text-slate-900 dark:text-neutral-50 flex items-center gap-2">
                                     <User className="size-5 text-indigo-500" />
                                     Informasi Akun
                                 </SheetTitle>
                             </SheetHeader>
                             <div className="mt-4 space-y-4">
-                                <div className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-neutral-50/50 p-4 dark:border-zinc-909 dark:bg-zinc-900/40">
+                                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-zinc-909 dark:bg-zinc-900/40">
                                     <div className="flex size-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-bold dark:bg-indigo-950/60 dark:text-indigo-400">
                                         {auth.user?.name ? auth.user.name.substring(0, 2).toUpperCase() : 'AD'}
                                     </div>
                                     <div className="text-left">
-                                        <h4 className="font-bold text-neutral-900 dark:text-neutral-50">{auth.user?.name}</h4>
-                                        <p className="text-xs text-neutral-500 dark:text-neutral-400">{auth.user?.email}</p>
+                                        <h4 className="font-bold text-slate-900 dark:text-neutral-50">{auth.user?.name}</h4>
+                                        <p className="text-xs text-slate-500 dark:text-neutral-400">{auth.user?.email}</p>
                                         <span className="mt-1 inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-black tracking-wider text-indigo-700 uppercase dark:bg-indigo-950/40 dark:text-indigo-400">
                                             {auth.user?.role || 'Admin'}
                                         </span>
@@ -341,7 +331,7 @@ export default function AppLayout({
                                     <Link
                                         href="/settings/profile"
                                         onClick={() => setActiveSheet(null)}
-                                        className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white py-3 text-xs font-black text-neutral-700 transition-all hover:bg-neutral-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                        className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3 text-xs font-black text-slate-700 transition-all hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                     >
                                         <Settings className="size-4" />
                                         <span>Pengaturan</span>
@@ -407,26 +397,17 @@ export default function AppLayout({
         };
 
         return (
-            <div className="flex h-dvh flex-col items-center justify-center bg-neutral-100 font-sans antialiased transition-colors duration-300 md:h-screen md:py-6 dark:bg-neutral-900">
+            <div className="flex h-dvh flex-col items-center justify-center bg-slate-100 font-sans antialiased transition-colors duration-300 md:h-screen md:py-6 dark:bg-neutral-900">
                 {/* Native Mobile Frame */}
-                <div className="relative flex h-dvh w-full max-w-md flex-col overflow-hidden border border-neutral-200 bg-neutral-50 pb-16 shadow-2xl md:h-[85vh] md:max-h-[900px] md:min-h-[700px] md:rounded-[36px] dark:border-zinc-800 dark:bg-zinc-950">
-                    {/* Status Bar Mock for premium desktop view */}
-                    <div className="border-neutral-250 hidden items-center justify-between border-b bg-neutral-50 px-6 py-2 text-[10px] font-medium text-neutral-400 md:flex dark:border-zinc-800 dark:bg-zinc-900">
-                        <span>9:41</span>
-                        <div className="mx-auto h-3.5 w-16 rounded-full bg-black dark:bg-zinc-800" />
-                        <div className="flex items-center gap-1.5">
-                            <span className="size-1.5 animate-pulse rounded-full bg-teal-500" />
-                            <span>Siswa</span>
-                        </div>
-                    </div>
+                <div className="relative flex h-dvh w-full max-w-md flex-col overflow-hidden border border-slate-200 bg-slate-50 pb-16 shadow-2xl md:h-[85vh] md:max-h-[900px] md:min-h-[700px] md:rounded-[36px] dark:border-zinc-800 dark:bg-zinc-950">
 
                     {/* Main Header */}
-                    <header className="border-neutral-150/65 sticky top-0 z-40 flex items-center justify-between border-b bg-white/80 px-5 py-4 backdrop-blur-md transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
+                    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
                         <div className="flex items-center gap-3">
                             {showBackButton ? (
                                 <Link
                                     href={getBackUrl()}
-                                    className="rounded-full p-1.5 text-neutral-600 transition-all hover:bg-neutral-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                                    className="rounded-full p-1.5 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
                                 >
                                     <ArrowLeft className="size-5" />
                                 </Link>
@@ -437,7 +418,7 @@ export default function AppLayout({
                                     </span>
                                 </div>
                             )}
-                            <h1 className="text-lg font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                            <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-50">
                                 {getHeaderTitle()}
                             </h1>
                         </div>
@@ -445,7 +426,7 @@ export default function AppLayout({
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={toggleTheme}
-                                className="cursor-pointer rounded-xl border border-neutral-200/40 bg-neutral-100 p-2 text-neutral-600 transition-all hover:bg-neutral-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 transition-all hover:bg-slate-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                 aria-label="Toggle theme"
                             >
                                 {appearance === 'dark' ? (
@@ -463,13 +444,13 @@ export default function AppLayout({
                     </main>
 
                     {/* Bottom Navigation */}
-                    <nav className="border-neutral-150/65 absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t bg-white/95 px-2 py-1.5 shadow-lg backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/95">
+                    <nav className="absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t border-slate-200 bg-white px-2 py-1.5 shadow-lg dark:border-zinc-900 dark:bg-zinc-950/95">
                         <Link
                             href="/dashboard"
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 isDashboard || isJadwal
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <LayoutDashboard
@@ -485,7 +466,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 isRekap
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <History
@@ -501,7 +482,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 isProfile || isIzin
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <User
@@ -551,26 +532,16 @@ export default function AppLayout({
 
     if (role === 'orangtua') {
         return (
-            <div className="flex h-dvh flex-col items-center justify-center bg-neutral-100 font-sans antialiased transition-colors duration-300 md:h-screen md:py-6 dark:bg-neutral-900">
+            <div className="flex h-dvh flex-col items-center justify-center bg-slate-100 font-sans antialiased transition-colors duration-300 md:h-screen md:py-6 dark:bg-neutral-900">
                 {/* Native Mobile Frame */}
-                <div className="relative flex h-dvh w-full max-w-md flex-col overflow-hidden border border-neutral-200 bg-neutral-50 pb-16 shadow-2xl md:h-[85vh] md:max-h-[900px] md:min-h-[700px] md:rounded-[36px] dark:border-zinc-800 dark:bg-zinc-950">
-                    {/* Status Bar Mock for desktop */}
-                    <div className="border-neutral-250 hidden items-center justify-between border-b bg-neutral-50 px-6 py-2 text-[10px] font-medium text-neutral-400 md:flex dark:border-zinc-800 dark:bg-zinc-900">
-                        <span>9:41</span>
-                        <div className="mx-auto h-3.5 w-16 rounded-full bg-black dark:bg-zinc-800" />
-                        <div className="flex items-center gap-1.5">
-                            <span className="size-1.5 animate-pulse rounded-full bg-violet-500" />
-                            <span>Wali Murid</span>
-                        </div>
-                    </div>
-
+                <div className="relative flex h-dvh w-full max-w-md flex-col overflow-hidden border border-slate-200 bg-slate-50 pb-16 shadow-2xl md:h-[85vh] md:max-h-[900px] md:min-h-[700px] md:rounded-[36px] dark:border-zinc-800 dark:bg-zinc-950">
                     {/* Main Header */}
-                    <header className="border-neutral-150/65 sticky top-0 z-40 flex items-center justify-between border-b bg-white/80 px-5 py-4 backdrop-blur-md transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
+                    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
                         <div className="flex items-center gap-3">
                             {otShowBack ? (
                                 <Link
                                     href={getOtBackUrl()}
-                                    className="rounded-full p-1.5 text-neutral-600 transition-all hover:bg-neutral-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                                    className="rounded-full p-1.5 text-slate-650 transition-all hover:bg-slate-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
                                 >
                                     <ArrowLeft className="size-5" />
                                 </Link>
@@ -581,14 +552,14 @@ export default function AppLayout({
                                     </span>
                                 </div>
                             )}
-                            <h1 className="text-lg font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                            <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-50">
                                 {getOtHeaderTitle()}
                             </h1>
                         </div>
 
                         <div className="flex items-center gap-2">
                             <button
-                                className="cursor-default rounded-xl border border-neutral-200/40 bg-neutral-100 p-2 text-neutral-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                                className="cursor-default rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                                 aria-label="Notifikasi"
                                 disabled
                             >
@@ -596,7 +567,7 @@ export default function AppLayout({
                             </button>
                             <button
                                 onClick={toggleTheme}
-                                className="cursor-pointer rounded-xl border border-neutral-200/40 bg-neutral-100 p-2 text-neutral-600 transition-all hover:bg-neutral-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 transition-all hover:bg-slate-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                 aria-label="Toggle theme"
                             >
                                 {appearance === 'dark' ? (
@@ -614,13 +585,13 @@ export default function AppLayout({
                     </main>
 
                     {/* Bottom Navigation — Orang Tua */}
-                    <nav className="border-neutral-150/65 absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t bg-white/95 px-1 py-1.5 shadow-lg backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/95">
+                    <nav className="absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t border-slate-200 bg-white px-1 py-1.5 shadow-lg dark:border-zinc-900 dark:bg-zinc-950/95">
                         <Link
                             href="/dashboard"
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
                                 otIsDashboard
                                     ? 'font-bold text-violet-600 dark:text-violet-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <LayoutDashboard
@@ -636,7 +607,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
                                 otIsRiwayat
                                     ? 'font-bold text-violet-600 dark:text-violet-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <History
@@ -652,7 +623,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
                                 otIsIzin
                                     ? 'font-bold text-violet-600 dark:text-violet-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <FileText
@@ -668,7 +639,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
                                 otIsJadwal
                                     ? 'font-bold text-violet-600 dark:text-violet-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <CalendarDays
@@ -684,7 +655,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-2.5 py-1 transition-all duration-300 active:scale-95 ${
                                 otIsProfile
                                     ? 'font-bold text-violet-600 dark:text-violet-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <User
@@ -739,26 +710,17 @@ export default function AppLayout({
             </div>
 
             {/* ── MOBILE GURU LAYOUT (Bottom Navigation, < md) ── */}
-            <div className="flex h-dvh flex-col bg-neutral-100 font-sans antialiased transition-colors duration-300 md:hidden dark:bg-neutral-900">
+            <div className="flex h-dvh flex-col bg-slate-100 font-sans antialiased transition-colors duration-300 md:hidden dark:bg-neutral-900">
                 {/* Native Mobile Frame */}
-                <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden border border-neutral-200 bg-neutral-50 pb-16 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
-                    {/* Mock Status Bar */}
-                    <div className="border-neutral-250 flex items-center justify-between border-b bg-neutral-50 px-6 py-2 text-[10px] font-medium text-neutral-400 dark:border-zinc-800 dark:bg-zinc-900">
-                        <span>9:41</span>
-                        <div className="mx-auto h-3.5 w-16 rounded-full bg-black dark:bg-zinc-800" />
-                        <div className="flex items-center gap-1.5">
-                            <span className="size-1.5 animate-pulse rounded-full bg-indigo-500" />
-                            <span>Guru</span>
-                        </div>
-                    </div>
+                <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden border border-slate-200 bg-slate-50 pb-16 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
 
                     {/* Main Header */}
-                    <header className="border-neutral-150/65 sticky top-0 z-40 flex items-center justify-between border-b bg-white/80 px-5 py-4 backdrop-blur-md transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
+                    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 transition-colors dark:border-zinc-900 dark:bg-zinc-950/80">
                         <div className="flex items-center gap-3">
                             {grShowBack ? (
                                 <Link
                                     href={getGrBackUrl()}
-                                    className="rounded-full p-1.5 text-neutral-600 transition-all hover:bg-neutral-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                                    className="rounded-full p-1.5 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-900"
                                 >
                                     <ArrowLeft className="size-5" />
                                 </Link>
@@ -769,7 +731,7 @@ export default function AppLayout({
                                     </span>
                                 </div>
                             )}
-                            <h1 className="text-lg font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                            <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-50">
                                 {getGrHeaderTitle()}
                             </h1>
                         </div>
@@ -777,7 +739,7 @@ export default function AppLayout({
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={toggleTheme}
-                                className="cursor-pointer rounded-xl border border-neutral-200/40 bg-neutral-100 p-2 text-neutral-600 transition-all hover:bg-neutral-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 transition-all hover:bg-slate-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                 aria-label="Toggle theme"
                             >
                                 {appearance === 'dark' ? (
@@ -795,13 +757,13 @@ export default function AppLayout({
                     </main>
 
                     {/* Bottom Navigation */}
-                    <nav className="border-neutral-150/65 absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t bg-white/95 px-2 py-1.5 shadow-lg backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/95">
+                    <nav className="absolute right-0 bottom-0 left-0 z-40 flex items-center justify-around rounded-t-xl border-t border-slate-200 bg-white px-2 py-1.5 shadow-lg dark:border-zinc-900 dark:bg-zinc-950/95">
                         <Link
                             href="/dashboard"
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 grIsDashboard
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <LayoutDashboard
@@ -817,7 +779,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 grIsPresensi
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <ClipboardList
@@ -833,7 +795,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 grIsIzin
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <CheckSquare
@@ -849,7 +811,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 grIsJadwal
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <CalendarDays
@@ -865,7 +827,7 @@ export default function AppLayout({
                             className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
                                 grIsProfile
                                     ? 'font-bold text-indigo-600 dark:text-indigo-400'
-                                    : 'text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
                             }`}
                         >
                             <User

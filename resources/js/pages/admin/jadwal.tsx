@@ -112,28 +112,28 @@ export default function JadwalPage({
             <Head title="Jadwal Pelajaran Sekolah" />
 
             {/* Header Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/60 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-pink-500/5 p-6 shadow-sm dark:border-zinc-800/80 dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-pink-950/10">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-pink-500/5 p-6 shadow-sm dark:border-zinc-800/80 dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-pink-950/10">
                 <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-500/5" />
                 <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1.5">
                         <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black tracking-wider uppercase text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400">
                             Akademik
                         </span>
-                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+                        <h1 className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 dark:text-neutral-50">
                             <CalendarDays className="size-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
                             Jadwal Pelajaran Sekolah
                         </h1>
-                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-neutral-500 dark:text-neutral-400">
+                        <p className="max-w-2xl text-xs font-medium leading-relaxed text-slate-600 dark:text-neutral-400">
                             Kelola jadwal mata pelajaran mingguan, guru pengampu, serta alokasi jam belajar tiap kelas.
                         </p>
                     </div>
                     {filterKelasId && (
                         <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end">
-                            <span className="inline-flex items-center gap-1.5 rounded-2xl border border-neutral-200/60 bg-white/80 px-3 py-1.5 text-[11px] font-black text-neutral-700 shadow-sm dark:border-zinc-800/60 dark:bg-zinc-900/60 dark:text-neutral-300">
+                            <span className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-black text-slate-700 shadow-sm dark:border-zinc-800/60 dark:bg-zinc-900/60 dark:text-neutral-300">
                                 <CalendarDays className="size-3.5 text-indigo-500" />
                                 {activeDays} Hari Aktif
                             </span>
-                            <span className="inline-flex items-center gap-1.5 rounded-2xl border border-neutral-200/60 bg-white/80 px-3 py-1.5 text-[11px] font-black text-neutral-700 shadow-sm dark:border-zinc-800/60 dark:bg-zinc-900/60 dark:text-neutral-300">
+                            <span className="inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-black text-slate-700 shadow-sm dark:border-zinc-800/60 dark:bg-zinc-900/60 dark:text-neutral-300">
                                 <BookOpen className="size-3.5 text-violet-500" />
                                 {totalSessions} Sesi · Kelas {selectedKelasName}
                             </span>
@@ -143,14 +143,14 @@ export default function JadwalPage({
             </div>
 
             {/* Toolbar */}
-            <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/40 bg-white/60 p-4 backdrop-blur-sm dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
                 {/* Filter Kelas */}
                 <div className="relative flex-1 max-w-xs">
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
                     <select
                         value={filterKelasId}
                         onChange={(e) => setFilterKelasId(e.target.value)}
-                        className="w-full appearance-none rounded-xl border border-neutral-200 bg-white/80 px-4 py-2 pr-9 text-xs font-semibold text-neutral-900 focus:border-indigo-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:focus:border-indigo-500 cursor-pointer"
+                        className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-2 pr-9 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:focus:border-indigo-500 cursor-pointer"
                     >
                         <option value="">— Pilih Kelas —</option>
                         {classes.map((c) => (
@@ -250,22 +250,22 @@ export default function JadwalPage({
                         </div>
 
                         {/* Desktop Table */}
-                        <Card className="hidden md:block overflow-hidden rounded-3xl border border-neutral-200/60 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+                        <Card className="hidden md:block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
                             <CardContent className="p-0">
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left text-sm">
-                                        <thead className="border-b border-neutral-100 bg-neutral-50 dark:border-zinc-800 dark:bg-zinc-900">
+                                        <thead className="border-b border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900">
                                             <tr>
-                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Mata Pelajaran</th>
-                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Guru Pengampu</th>
-                                                {!filterKelasId && <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Kelas</th>}
-                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Waktu</th>
-                                                <th className="px-6 py-3.5 text-right text-[10px] font-black tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Aksi</th>
+                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-500 uppercase dark:text-neutral-500">Mata Pelajaran</th>
+                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-500 uppercase dark:text-neutral-500">Guru Pengampu</th>
+                                                {!filterKelasId && <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-500 uppercase dark:text-neutral-500">Kelas</th>}
+                                                <th className="px-6 py-3.5 text-[10px] font-black tracking-widest text-slate-500 uppercase dark:text-neutral-500">Waktu</th>
+                                                <th className="px-6 py-3.5 text-right text-[10px] font-black tracking-widest text-slate-500 uppercase dark:text-neutral-500">Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800/60">
+                                        <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
                                             {items.map((j) => (
-                                                <tr key={j.id} className="transition-colors hover:bg-indigo-50/20 dark:hover:bg-indigo-950/10">
+                                                <tr key={j.id} className="transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-950/10">
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center gap-3">
                                                             <span className="flex size-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 shrink-0">
@@ -274,7 +274,7 @@ export default function JadwalPage({
                                                             <span className="font-black text-neutral-900 dark:text-neutral-100">{j.nama_mapel}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4 font-semibold text-neutral-600 dark:text-neutral-400">{j.nama_guru}</td>
+                                                    <td className="px-6 py-4 font-semibold text-slate-700 dark:text-neutral-400">{j.nama_guru}</td>
                                                     {!filterKelasId && (
                                                         <td className="px-6 py-4">
                                                             <span className="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-0.5 text-xs font-bold text-violet-700 dark:bg-violet-950/20 dark:text-violet-400">
@@ -290,7 +290,7 @@ export default function JadwalPage({
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <div className="flex justify-end gap-1.5">
-                                                            <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(j)}>
+                                                            <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(j)}>
                                                                 <Pencil className="size-3.5" />
                                                             </Button>
                                                             <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 dark:hover:bg-rose-950/20 cursor-pointer" onClick={() => handleDelete(j.id)}>
@@ -311,7 +311,7 @@ export default function JadwalPage({
                             {items.map((j) => (
                                 <div
                                     key={j.id}
-                                    className="rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-sm transition-all duration-200 hover:border-indigo-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50"
+                                    className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-indigo-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50"
                                 >
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="flex items-center gap-3 min-w-0">
@@ -319,12 +319,12 @@ export default function JadwalPage({
                                                 <BookOpen className="size-5" />
                                             </span>
                                             <div className="min-w-0">
-                                                <h3 className="truncate text-sm font-black text-neutral-900 dark:text-neutral-50">{j.nama_mapel}</h3>
-                                                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">{j.nama_guru}</p>
+                                                <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{j.nama_mapel}</h3>
+                                                <p className="text-[11px] text-slate-600 dark:text-neutral-400">{j.nama_guru}</p>
                                             </div>
                                         </div>
                                         <div className="flex shrink-0 gap-1.5">
-                                            <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(j)}>
+                                            <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(j)}>
                                                 <Pencil className="size-3.5" />
                                             </Button>
                                             <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 cursor-pointer" onClick={() => handleDelete(j.id)}>
@@ -336,7 +336,7 @@ export default function JadwalPage({
                                         <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-0.5 text-[10px] font-bold text-violet-700 dark:bg-violet-950/20 dark:text-violet-400">
                                             {j.nama_kelas}
                                         </span>
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-neutral-600 dark:bg-zinc-800/60 dark:text-neutral-400">
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-slate-600 dark:bg-zinc-800/60 dark:text-neutral-400">
                                             <Clock className="size-3" />
                                             {j.waktu}
                                         </span>

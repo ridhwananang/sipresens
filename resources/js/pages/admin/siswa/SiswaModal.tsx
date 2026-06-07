@@ -364,15 +364,15 @@ export default function SiswaModal({
                         <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4 dark:border-neutral-800">
                             <Button
                                 type="button"
-                                variant="outline"
                                 onClick={onClose}
                                 disabled={processing}
+                                className="border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
                             >
                                 Batal
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-indigo-650 text-white hover:bg-indigo-700"
+                                className="bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"
                                 disabled={processing}
                             >
                                 {processing ? 'Menyimpan...' : 'Simpan'}

@@ -227,10 +227,10 @@ export default function OrangTuaJadwal({
             <div className="flex items-center gap-2">
                 <Calendar className="size-5 text-indigo-600 dark:text-indigo-400" />
                 <div>
-                    <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-50">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-neutral-50">
                         Jadwal Pelajaran {childName}
                     </h2>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    <p className="text-xs text-slate-600 dark:text-neutral-400">
                         Daftar mata pelajaran dan guru pengampu minggu ini
                     </p>
                 </div>
@@ -248,7 +248,7 @@ export default function OrangTuaJadwal({
                             className={`flex shrink-0 items-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all ${
                                 isActive
                                     ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-950'
-                                    : 'border-neutral-200 bg-white text-neutral-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400'
                             }`}
                         >
                             <Calendar className="size-3.5" />
@@ -259,7 +259,7 @@ export default function OrangTuaJadwal({
             </div>
 
             {/* Summary Bar */}
-            <div className="flex items-center justify-between rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 dark:border-indigo-900/40 dark:bg-indigo-950/30">
+            <div className="flex items-center justify-between rounded-2xl border border-indigo-200 bg-indigo-50/80 px-5 py-4 dark:border-indigo-900/40 dark:bg-indigo-950/30">
                 <div className="flex items-center gap-3">
                     <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 shadow-md shadow-indigo-200 dark:shadow-indigo-950">
                         <BookOpen className="size-5 text-white" />
@@ -268,22 +268,22 @@ export default function OrangTuaJadwal({
                         <p className="text-xs font-medium text-indigo-500 dark:text-indigo-400">
                             Total Hari Ini
                         </p>
-                        <p className="text-xl font-extrabold text-neutral-900 dark:text-neutral-50">
+                        <p className="text-xl font-extrabold text-slate-900 dark:text-neutral-50">
                             {daySchedules.length}{' '}
-                            <span className="text-base font-bold text-neutral-600 dark:text-neutral-300">
+                            <span className="text-base font-bold text-slate-600 dark:text-neutral-300">
                                 Sesi
                             </span>
                         </p>
                     </div>
                 </div>
                 {daySchedules.length > 0 && (
-                    <div className="flex items-center gap-2 rounded-xl border border-indigo-100 bg-white px-4 py-2.5 dark:border-indigo-900/40 dark:bg-neutral-900">
+                    <div className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 py-2.5 dark:border-indigo-900/40 dark:bg-neutral-900 shadow-sm">
                         <Clock className="size-4 text-indigo-500" />
                         <div className="text-right">
-                            <p className="text-xs font-medium text-neutral-400">
+                            <p className="text-xs font-medium text-slate-500">
                                 Waktu
                             </p>
-                            <p className="font-mono text-sm font-bold text-neutral-800 dark:text-neutral-100">
+                            <p className="font-mono text-sm font-bold text-slate-900 dark:text-neutral-100">
                                 {timeRange}
                             </p>
                         </div>
@@ -294,7 +294,7 @@ export default function OrangTuaJadwal({
             {/* Schedule List */}
             <div className="space-y-3">
                 {daySchedules.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 py-12 text-neutral-400 dark:border-neutral-800 dark:bg-neutral-900/30">
+                    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-12 text-slate-500 dark:border-neutral-800 dark:bg-neutral-900/30">
                         <Calendar className="mb-2 size-10 stroke-neutral-300 dark:stroke-neutral-700" />
                         <p className="text-sm font-medium">
                             Tidak ada jadwal pelajaran.
@@ -308,7 +308,7 @@ export default function OrangTuaJadwal({
                         return (
                             <div
                                 key={j.id}
-                                className="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-3 shadow-sm transition-all hover:shadow-md dark:border-neutral-800 dark:bg-neutral-950"
+                                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-all hover:shadow-md dark:border-neutral-800 dark:bg-neutral-950 hover:border-slate-300"
                             >
                                 {/* Number Badge */}
                                 <div
@@ -327,15 +327,15 @@ export default function OrangTuaJadwal({
 
                                 {/* Info */}
                                 <div className="min-w-0 flex-1">
-                                    <p className="truncate text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                                    <p className="truncate text-sm font-bold text-slate-900 dark:text-neutral-100">
                                         {j.nama_mapel}
                                     </p>
-                                    <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">
+                                    <p className="truncate text-xs text-slate-600 dark:text-neutral-400">
                                         {j.nama_guru}
                                     </p>
                                     <div className="mt-0.5 flex items-center gap-1">
-                                        <Clock className="size-3 text-neutral-400" />
-                                        <span className="font-mono text-xs text-neutral-500">
+                                        <Clock className="size-3 text-slate-500" />
+                                        <span className="font-mono text-xs text-slate-600">
                                             {j.waktu}
                                         </span>
                                     </div>
@@ -356,15 +356,15 @@ export default function OrangTuaJadwal({
             </div>
 
             {/* Footer Note */}
-            <div className="flex items-center gap-3 rounded-2xl border border-amber-100 bg-amber-50 p-4 dark:border-amber-900/30 dark:bg-amber-950/20">
+            <div className="flex items-center gap-3 rounded-2xl border border-amber-250 bg-amber-50 p-4 dark:border-amber-900/30 dark:bg-amber-950/20">
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 shadow-md shadow-amber-200 dark:shadow-amber-950">
                     <span className="text-lg">⭐</span>
                 </div>
                 <div>
-                    <p className="text-sm font-bold text-neutral-800 dark:text-neutral-100">
+                    <p className="text-sm font-bold text-slate-900 dark:text-neutral-100">
                         Catatan
                     </p>
-                    <p className="text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                    <p className="text-xs leading-relaxed text-slate-650 dark:text-neutral-400">
                         Jadwal dapat berubah sewaktu-waktu.
                         <br />
                         Pastikan anak mengikuti pelajaran sesuai jadwal.

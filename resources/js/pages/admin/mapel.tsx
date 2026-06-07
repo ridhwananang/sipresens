@@ -53,15 +53,15 @@ export default function MapelPage({ mapels }: MapelPageProps) {
     );
 
     const emptyState = (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-neutral-200 bg-white py-16 text-center dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-slate-200 bg-white py-16 text-center dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
                 <BookOpen className="size-6 text-neutral-400 dark:text-neutral-500" />
             </div>
             <div>
-                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <p className="text-sm font-medium text-slate-700 dark:text-neutral-300">
                     {searchQuery ? 'Mata Pelajaran Tidak Ditemukan' : 'Belum Ada Mata Pelajaran'}
                 </p>
-                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-neutral-400">
                     {searchQuery ? `Tidak ada hasil untuk "${searchQuery}".` : 'Silakan tambahkan mata pelajaran baru.'}
                 </p>
             </div>
@@ -73,22 +73,22 @@ export default function MapelPage({ mapels }: MapelPageProps) {
             <Head title="Data Mata Pelajaran" />
 
             {/* Header Card */}
-            <div className="rounded-md border border-neutral-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="rounded-md border border-slate-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
                         <span className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
                             Kurikulum
                         </span>
-                        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 dark:text-neutral-50">
                             <BookOpen className="size-5 shrink-0 text-indigo-600 dark:text-indigo-400" />
                             Data Mata Pelajaran
                         </h1>
-                        <p className="max-w-2xl text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                        <p className="max-w-2xl text-xs leading-relaxed text-slate-600 dark:text-neutral-400">
                             Kelola daftar kurikulum mata pelajaran yang aktif diajarkan di sekolah.
                         </p>
                     </div>
                     <div className="flex shrink-0 items-center">
-                        <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                        <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                             <BookOpen className="size-3.5" />
                             {mapels.length} Mapel
                         </span>
@@ -97,13 +97,13 @@ export default function MapelPage({ mapels }: MapelPageProps) {
             </div>
 
             {/* Toolbar */}
-            <div className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 rounded-md border border-slate-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-center gap-3">
                     <div className="h-7 w-[3px] rounded-full bg-indigo-500" />
-                    <h2 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-neutral-100">
+                    <h2 className="text-sm font-semibold tracking-tight text-slate-800 dark:text-neutral-100">
                         Daftar Mata Pelajaran
                     </h2>
-                    <span className="rounded-sm bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-zinc-400">
+                    <span className="rounded-sm bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">
                         {filteredMapels.length} total
                     </span>
                 </div>
@@ -116,7 +116,7 @@ export default function MapelPage({ mapels }: MapelPageProps) {
                             placeholder="Cari mata pelajaran..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="h-8 w-48 rounded-md border border-neutral-200 bg-neutral-50 pl-8 pr-3 text-xs text-neutral-900 placeholder-neutral-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100 dark:placeholder-neutral-500"
+                            className="h-8 w-48 rounded-md border border-slate-200 bg-slate-50 pl-8 pr-3 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-neutral-100 dark:placeholder-neutral-500"
                         />
                     </div>
 
@@ -154,23 +154,23 @@ export default function MapelPage({ mapels }: MapelPageProps) {
                                     <div className={`flex size-10 items-center justify-center rounded-md ${color.bg}`}>
                                         <BookOpen className={`size-5 ${color.icon}`} />
                                     </div>
-                                    <span className="rounded-sm bg-neutral-100 px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-neutral-400">
+                                    <span className="rounded-sm bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-zinc-800 dark:text-neutral-400">
                                         #{String(idx + 1).padStart(2, '0')}
                                     </span>
                                 </div>
 
                                 {/* Mapel name */}
                                 <div className="mt-3">
-                                    <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-neutral-100">
                                         {m.nama_mapel}
                                     </h3>
-                                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                    <p className="mt-0.5 text-[11px] text-slate-500 dark:text-neutral-400">
                                         Mata Pelajaran
                                     </p>
                                 </div>
 
                                 {/* Actions */}
-                                <div className="mt-3 flex items-center justify-end gap-1 border-t border-neutral-100 pt-3 dark:border-zinc-800">
+                                <div className="mt-3 flex items-center justify-end gap-1 border-t border-slate-100 pt-3 dark:border-zinc-800">
                                     <Button
                                         size="sm"
                                         variant="ghost"

@@ -97,78 +97,61 @@ export default function OrangTuaIzinPage({
     };
 
     return (
-        <div className="animate-fade-in space-y-6">
+        <div className="animate-fade-in space-y-4 pb-4">
             <Head title="Pengajuan Izin Anak" />
-
-            <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
-                    Pengajuan Izin Anak
-                </h1>
-                <p className="text-sm text-neutral-500">
-                    Ajukan surat izin keperluan penting atau keterangan sakit
-                    untuk putra-putri Anda.
-                </p>
-            </div>
 
             {/* Child Selector Tabs */}
             {children.length > 1 && (
-                <div className="border-neutral-150 dark:border-neutral-850 flex flex-wrap gap-2 border-b pb-3">
+                <div className="flex flex-wrap gap-2">
                     {children.map((c) => (
                         <button
                             key={c.id}
                             type="button"
-                            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                            className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all active:scale-95 ${
                                 selected_child_id === c.id
-                                    ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800'
+                                    ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
+                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800'
                             }`}
                             onClick={() => handleSwitchChild(c.id)}
                         >
-                            <User className="size-4" />
-                            {c.name} ({c.kelas})
+                            <User className="size-3.5" />
+                            {c.name}
                         </button>
                     ))}
                 </div>
             )}
 
             {/* Active Child Context Display */}
-            <div className="w-full rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 dark:border-indigo-900/30 dark:bg-indigo-950/20">
-                <p className="text-xs font-bold tracking-wider text-indigo-500 uppercase dark:text-indigo-400">
+            <div className="w-full rounded-2xl border border-indigo-100 bg-indigo-50/50 px-4 py-3 dark:border-indigo-900/30 dark:bg-indigo-950/20">
+                <p className="text-[10px] font-bold tracking-wider text-indigo-500 uppercase dark:text-indigo-400">
                     Siswa Dipantau
                 </p>
-                <h2 className="mt-0.5 text-lg font-bold text-neutral-800 dark:text-neutral-200">
+                <p className="mt-0.5 text-sm font-bold text-neutral-800 dark:text-neutral-200">
                     {activeChild.name}
-                </h2>
-                <p className="text-xs text-neutral-500">
-                    NISN: {activeChild.nisn} | Kelas:{' '}
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                    NISN: {activeChild.nisn} · Kelas{' '}
                     <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                         {activeChild.kelas}
                     </span>
                 </p>
             </div>
 
-            {/* Form and Status Grid — FIX: hapus max-w-6xl, pakai w-full */}
-            <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-3">
-                {/* Form: full width di mobile, 1/3 di lg */}
-                <div className="w-full min-w-0 lg:col-span-1">
-                    <OrangTuaIzinForm
-                        childName={activeChild.name}
-                        data={data}
-                        setData={setData}
-                        errors={errors}
-                        processing={processing}
-                        onSubmit={handleSubmitLeave}
-                    />
-                </div>
+            {/* Form — full width, single column */}
+            <OrangTuaIzinForm
+                childName={activeChild.name}
+                data={data}
+                setData={setData}
+                errors={errors}
+                processing={processing}
+                onSubmit={handleSubmitLeave}
+            />
 
-                {/* Status: full width di mobile, 2/3 di lg */}
-                <div className="w-full min-w-0 lg:col-span-2">
-                    <OrangTuaIzinStatus
-                        childName={activeChild.name}
-                        leave_requests={leave_requests}
-                    />
-                </div>
-            </div>
+            {/* Status — full width, below form */}
+            <OrangTuaIzinStatus
+                childName={activeChild.name}
+                leave_requests={leave_requests}
+            />
         </div>
     );
 }

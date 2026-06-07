@@ -77,7 +77,7 @@ export default function GuruDashboard({
             <Head title="Dashboard Guru" />
 
             {/* ── Welcome Banner ── */}
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-200/50 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-6 shadow-xs sm:p-8">
+            <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-6 shadow-sm sm:p-8">
                 {/* Visual accent dot pattern */}
                 <div className="absolute right-0 top-0 h-full w-1/3 opacity-20 pointer-events-none" 
                      style={{
@@ -97,10 +97,10 @@ export default function GuruDashboard({
                                 SIPRESENS
                             </span>
                         </div>
-                        <h1 className="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-3xl">
+                        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
                             {getGreeting()}, {teacher.name}! 👋
                         </h1>
-                        <p className="max-w-xl text-xs font-medium leading-relaxed text-neutral-500 dark:text-neutral-450">
+                        <p className="max-w-xl text-xs font-medium leading-relaxed text-slate-600 dark:text-neutral-450">
                             {hasKelasWali ? (
                                 <>
                                     Anda terdaftar sebagai Wali Kelas{' '}
@@ -128,11 +128,11 @@ export default function GuruDashboard({
                         </h3>
                         <div className="grid grid-cols-2 gap-4">
                             {/* Card 1: Today's Sessions */}
-                            <div className="group relative overflow-hidden rounded-xl border border-neutral-200/60 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-5 shadow-xs">
+                            <div className="group relative overflow-hidden rounded-xl border border-slate-200 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-5 shadow-sm">
                                 <div className="absolute top-0 left-0 w-full h-[2px] bg-[#6366F1]" />
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
-                                        <span className="block text-3xl font-extrabold text-neutral-900 dark:text-white leading-none">
+                                        <span className="block text-3xl font-extrabold text-slate-900 dark:text-white leading-none">
                                             {jadwal_hari_ini.length}
                                         </span>
                                         <span className="block text-[10px] font-bold tracking-wider text-neutral-450 dark:text-neutral-500 uppercase mt-1">
@@ -146,11 +146,11 @@ export default function GuruDashboard({
                             </div>
 
                             {/* Card 2: Wali Kelas / Status */}
-                            <div className="group relative overflow-hidden rounded-xl border border-neutral-200/60 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-5 shadow-xs">
+                            <div className="group relative overflow-hidden rounded-xl border border-slate-200 dark:border-zinc-800/80 bg-white dark:bg-[#141D2E] p-5 shadow-sm">
                                 <div className="absolute top-0 left-0 w-full h-[2px] bg-violet-500" />
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1 min-w-0">
-                                        <span className="block truncate text-lg font-extrabold text-neutral-900 dark:text-white leading-none">
+                                        <span className="block truncate text-lg font-extrabold text-slate-900 dark:text-white leading-none">
                                             {hasKelasWali ? kelas_wali.nama : 'Guru Pengampu'}
                                         </span>
                                         <span className="block text-[10px] font-bold tracking-wider text-neutral-450 dark:text-neutral-500 uppercase mt-1">
@@ -210,7 +210,7 @@ export default function GuruDashboard({
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between border-t border-neutral-200/50 dark:border-zinc-800/60 pt-3">
+                                    <div className="flex items-center justify-between border-t border-slate-200 dark:border-zinc-800/60 pt-3">
                                         <span className="text-[10px] font-semibold tracking-wide text-neutral-500 dark:text-neutral-450">
                                             Ketuk untuk membuka pengisian presensi
                                         </span>
@@ -222,8 +222,8 @@ export default function GuruDashboard({
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center space-y-3 rounded-xl border border-neutral-200/60 bg-white p-10 text-center dark:border-zinc-800/80 dark:bg-[#141D2E]">
-                                <div className="text-neutral-400 dark:text-neutral-550 rounded-xl border border-neutral-100 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-900/40 p-3">
+                            <div className="flex flex-col items-center justify-center space-y-3 rounded-xl border border-slate-200 bg-white p-10 text-center dark:border-zinc-800/80 dark:bg-[#141D2E]">
+                                <div className="text-slate-400 dark:text-neutral-550 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/40 p-3">
                                     <Clock className="size-6" />
                                 </div>
                                 <div className="space-y-1">
@@ -247,7 +247,7 @@ export default function GuruDashboard({
                             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                 {/* Card 1: Verifikasi Izin */}
                                 <div
-                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-violet-500/20 bg-white dark:bg-[#141D2E] p-4 shadow-xs transition-all duration-250 hover:border-violet-400/40 hover:bg-violet-50/20 dark:hover:bg-violet-900/5"
+                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-violet-200 bg-white dark:bg-[#141D2E] p-4 shadow-sm transition-all duration-250 hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/5"
                                     onClick={() => router.get('/izin')}
                                 >
                                     <div className="flex items-start gap-3">
@@ -255,22 +255,22 @@ export default function GuruDashboard({
                                             <CheckCircle2 className="size-4" />
                                         </div>
                                         <div className="space-y-0.5 text-left">
-                                            <p className="text-xs font-bold text-neutral-900 dark:text-white">
+                                            <p className="text-xs font-bold text-slate-900 dark:text-white">
                                                 Verifikasi Izin & Sakit
                                             </p>
-                                            <p className="text-[10px] leading-relaxed font-medium text-neutral-500 dark:text-neutral-450">
+                                            <p className="text-[10px] leading-relaxed font-medium text-slate-600 dark:text-neutral-450">
                                                 Tinjau & setujui pengajuan izin siswa kelas {kelas_wali.nama}.
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="shrink-0 rounded-lg border border-neutral-200/60 bg-neutral-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
+                                    <div className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
                                         <ChevronRight className="size-3.5 text-neutral-500 dark:text-neutral-400" />
                                     </div>
                                 </div>
 
                                 {/* Card 2: Rekap Absensi Kelas */}
                                 <div
-                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-indigo-500/20 bg-white dark:bg-[#141D2E] p-4 shadow-xs transition-all duration-250 hover:border-indigo-400/40 hover:bg-indigo-50/20 dark:hover:bg-indigo-900/5"
+                                    className="group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-indigo-200 bg-white dark:bg-[#141D2E] p-4 shadow-sm transition-all duration-250 hover:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/5"
                                     onClick={() => router.get(`/admin/kelas/${kelas_wali.id}/absensi`)}
                                 >
                                     <div className="flex items-start gap-3">
@@ -278,15 +278,15 @@ export default function GuruDashboard({
                                             <ClipboardList className="size-4" />
                                         </div>
                                         <div className="space-y-0.5 text-left">
-                                            <p className="text-xs font-bold text-neutral-900 dark:text-white">
+                                            <p className="text-xs font-bold text-slate-900 dark:text-white">
                                                 Rekap Absensi Kelas
                                             </p>
-                                            <p className="text-[10px] leading-relaxed font-medium text-neutral-500 dark:text-neutral-450">
+                                            <p className="text-[10px] leading-relaxed font-medium text-slate-600 dark:text-neutral-450">
                                                 Lihat rekap harian & statistik kehadiran kelas {kelas_wali.nama}.
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="shrink-0 rounded-lg border border-neutral-200/60 bg-neutral-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
+                                    <div className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-[#111827] p-1.5 transition-transform group-hover:translate-x-1">
                                         <ChevronRight className="size-3.5 text-neutral-500 dark:text-neutral-400" />
                                     </div>
                                 </div>
@@ -338,7 +338,7 @@ export default function GuruDashboard({
                                                 ? 'border-[#6366F1] bg-indigo-50/20 dark:bg-[#6366F1]/5'
                                                 : ongoing
                                                   ? 'border-[#22C55E]/40 bg-emerald-50/20 dark:bg-[#22C55E]/5'
-                                                  : 'border-neutral-200/60 bg-white dark:border-zinc-800/80 dark:bg-[#141D2E] hover:border-neutral-300 dark:hover:border-zinc-700'
+                                                  : 'border-slate-200 bg-white dark:border-zinc-800/80 dark:bg-[#141D2E] hover:border-slate-300 dark:hover:border-zinc-700'
                                         }`}
                                         onClick={() =>
                                             handleSelectSchedule(j.id)

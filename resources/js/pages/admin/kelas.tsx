@@ -82,22 +82,22 @@ export default function KelasPage({
             <Head title="Data Kelas Akademik" />
 
            {/* Header Card */}
-<div className="rounded-md border border-neutral-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
+<div className="rounded-md border border-slate-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900">
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
             <span className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
                 Data Akademik
             </span>
-            <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+            <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 dark:text-neutral-50">
                 <BookOpen className="size-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
                 Data Kelas Akademik
             </h1>
-            <p className="max-w-2xl text-xs leading-relaxed text-neutral-400 dark:text-neutral-500">
+            <p className="max-w-2xl text-xs leading-relaxed text-slate-600 dark:text-neutral-500">
                 Kelola kelas akademik, penetapan Wali Kelas, dan atur kenaikan/kelulusan siswa secara bertahap.
             </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[11px] font-semibold text-neutral-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                 <BookOpen className="size-3.5" />
                 {classes.length} Kelas
             </span>
@@ -106,13 +106,13 @@ export default function KelasPage({
 </div>
 
 {/* Toolbar */}
-<div className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col gap-3 rounded-md border border-slate-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-center sm:justify-between">
     <div className="flex items-center gap-3">
         <div className="h-7 w-[3px] rounded-full bg-indigo-500" />
-        <h2 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-neutral-100">
+        <h2 className="text-sm font-semibold tracking-tight text-slate-800 dark:text-neutral-100">
             Daftar Kelas
         </h2>
-        <span className="rounded-sm bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500 dark:bg-zinc-800 dark:text-zinc-400">
+        <span className="rounded-sm bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">
             {classes.length} total
         </span>
     </div>
@@ -156,36 +156,36 @@ export default function KelasPage({
 </div>
 
 {/* Desktop Table */}
-<Card className="hidden md:block overflow-hidden rounded-md border border-neutral-200 bg-white shadow-none dark:border-zinc-800 dark:bg-zinc-900">
+<Card className="hidden md:block overflow-hidden rounded-md border border-slate-200 bg-white shadow-none dark:border-zinc-800 dark:bg-zinc-900">
     <CardContent className="p-0">
         <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-                <thead className="border-b border-neutral-200 bg-neutral-50 dark:border-zinc-800 dark:bg-zinc-800/50">
+                <thead className="border-b border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-800/50">
                     <tr>
-                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Nama Kelas</th>
-                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Tahun Ajaran</th>
-                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Wali Kelas</th>
-                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Jumlah Siswa</th>
-                        <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Aksi</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-slate-500 uppercase dark:text-zinc-500">Nama Kelas</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-slate-500 uppercase dark:text-zinc-500">Tahun Ajaran</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-slate-500 uppercase dark:text-zinc-500">Wali Kelas</th>
+                        <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-slate-500 uppercase dark:text-zinc-500">Jumlah Siswa</th>
+                        <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-wider text-slate-500 uppercase dark:text-zinc-500">Aksi</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                     {classes.length > 0 ? (
                         classes.map((c) => (
                             <tr
                                 key={c.id}
-                                className="group transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-zinc-800/50"
+                                className="group transition-colors duration-150 hover:bg-slate-50 dark:hover:bg-zinc-800/50"
                             >
-                                <td className="px-5 py-3.5 font-semibold text-neutral-900 dark:text-neutral-100">
+                                <td className="px-5 py-3.5 font-semibold text-slate-900 dark:text-neutral-100">
                                     <div className="flex items-center gap-2">
                                         <div className="h-4 w-[2px] rounded-full bg-indigo-400 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
                                         Kelas {c.nama_kelas}
                                     </div>
                                 </td>
-                                <td className="px-5 py-3.5 text-neutral-500 dark:text-neutral-400">
+                                <td className="px-5 py-3.5 text-slate-500 dark:text-neutral-400">
                                     {c.tahun_ajaran || '2025/2026'}
                                 </td>
-                                <td className="px-5 py-3.5 text-neutral-700 dark:text-neutral-300">
+                                <td className="px-5 py-3.5 text-slate-700 dark:text-neutral-300">
                                     {c.wali_kelas}
                                 </td>
                                 <td className="px-5 py-3.5">
@@ -233,11 +233,11 @@ export default function KelasPage({
                         <tr>
                             <td colSpan={5} className="py-16 text-center">
                                 <div className="flex flex-col items-center gap-2">
-                                    <div className="rounded-md border border-neutral-200 bg-neutral-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
+                                    <div className="rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
                                         <BookOpen className="size-6 text-neutral-400 dark:text-neutral-500" />
                                     </div>
-                                    <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">Belum Ada Kelas</p>
-                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">Silakan tambahkan kelas baru.</p>
+                                    <p className="text-sm font-medium text-slate-600 dark:text-neutral-300">Belum Ada Kelas</p>
+                                    <p className="text-xs text-slate-500 dark:text-neutral-500">Silakan tambahkan kelas baru.</p>
                                 </div>
                             </td>
                         </tr>
@@ -254,7 +254,7 @@ export default function KelasPage({
                     classes.map((c) => (
                         <div
                             key={c.id}
-                            className="rounded-3xl border border-neutral-200/60 bg-white p-5 shadow-sm transition-all duration-200 hover:border-indigo-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50"
+                            className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-indigo-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50"
                         >
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-3">
@@ -262,10 +262,10 @@ export default function KelasPage({
                                         <BookOpen className="size-5 text-indigo-600 dark:text-indigo-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-black text-neutral-900 dark:text-neutral-50">
+                                        <h3 className="text-sm font-black text-slate-900 dark:text-neutral-50">
                                             Kelas {c.nama_kelas}
                                         </h3>
-                                        <p className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">
+                                        <p className="text-[11px] font-medium text-slate-500 dark:text-neutral-500">
                                             TA: {c.tahun_ajaran || '2025/2026'}
                                         </p>
                                     </div>
@@ -276,14 +276,14 @@ export default function KelasPage({
                                 </span>
                             </div>
 
-                            <div className="mt-3 border-t border-neutral-100 pt-3 dark:border-zinc-800/60">
-                                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-400">Wali Kelas</p>
-                                <p className="mt-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                            <div className="mt-3 border-t border-slate-100 pt-3 dark:border-zinc-800/60">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Wali Kelas</p>
+                                <p className="mt-0.5 text-xs font-semibold text-slate-700 dark:text-neutral-300">
                                     {c.wali_kelas}
                                 </p>
                             </div>
 
-                            <div className="mt-3 flex items-center justify-end gap-2 border-t border-neutral-100 pt-3 dark:border-zinc-800/60">
+                            <div className="mt-3 flex items-center justify-end gap-2 border-t border-slate-100 pt-3 dark:border-zinc-800/60">
                                 <Button
                                     size="sm"
                                     variant="outline"
@@ -297,7 +297,7 @@ export default function KelasPage({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-9 w-9 rounded-xl hover:bg-neutral-100 dark:hover:bg-zinc-800 cursor-pointer"
+                                    className="h-9 w-9 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer"
                                     onClick={() => openEditModal(c)}
                                 >
                                     <Pencil className="size-4" />
@@ -314,13 +314,13 @@ export default function KelasPage({
                         </div>
                     ))
                 ) : (
-                    <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-neutral-100 bg-white py-14 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
-                        <div className="rounded-2xl bg-neutral-100 p-4 dark:bg-zinc-800">
+                    <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-slate-200 bg-white py-14 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
+                        <div className="rounded-2xl bg-slate-100 p-4 dark:bg-zinc-800">
                             <BookOpen className="size-8 text-neutral-400 dark:text-neutral-500" />
                         </div>
                         <div>
-                            <p className="text-xs font-black text-neutral-800 dark:text-neutral-200">Belum Ada Kelas Terdaftar</p>
-                            <p className="mt-0.5 text-[10px] text-neutral-400 dark:text-neutral-500">Tambahkan kelas baru menggunakan tombol di atas.</p>
+                            <p className="text-xs font-black text-slate-900 dark:text-neutral-200">Belum Ada Kelas Terdaftar</p>
+                            <p className="mt-0.5 text-[10px] text-slate-500 dark:text-neutral-500">Tambahkan kelas baru menggunakan tombol di atas.</p>
                         </div>
                     </div>
                 )}

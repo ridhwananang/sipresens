@@ -135,17 +135,17 @@ export default function AdminIzinPage({
 
             {/* Page Header */}
             <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
+                <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-neutral-555">
                     Manajemen Izin Siswa
                 </h1>
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-slate-655 dark:text-neutral-450">
                     Pantau seluruh pengajuan izin dan sakit siswa. Persetujuan
                     dilakukan oleh Wali Kelas.
                 </p>
             </div>
 
             {/* Read-only notice */}
-            <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/20">
+            <div className="flex items-center gap-3 rounded-xl border border-amber-250 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/20">
                 <ShieldOff className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
                 <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
                     Admin hanya dapat memantau data. Approve &amp; reject izin
@@ -187,17 +187,17 @@ export default function AdminIzinPage({
                 ].map(({ label, count, icon: Icon, color, bg }) => (
                     <Card
                         key={label}
-                        className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950"
+                        className="border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 shadow-sm"
                     >
                         <CardContent className="flex items-center gap-3 p-4">
                             <div className={`rounded-xl p-2.5 ${bg}`}>
                                 <Icon className={`size-5 ${color}`} />
                             </div>
                             <div>
-                                <p className="text-2xl font-black text-neutral-900 dark:text-neutral-100">
+                                <p className="text-2xl font-black text-slate-900 dark:text-neutral-100">
                                     {count}
                                 </p>
-                                <p className="text-xs font-medium text-neutral-500">
+                                <p className="text-xs font-medium text-slate-655">
                                     {label}
                                 </p>
                             </div>
@@ -216,7 +216,7 @@ export default function AdminIzinPage({
                             className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition-all ${
                                 status_filter === tab.key
                                     ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                                    : 'border-neutral-200 bg-white text-neutral-600 hover:border-indigo-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-355 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400'
                             }`}
                         >
                             {tab.label}
@@ -224,7 +224,7 @@ export default function AdminIzinPage({
                                 className={`rounded-full px-1.5 py-0.5 text-[9px] font-black ${
                                     status_filter === tab.key
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-neutral-100 text-neutral-500 dark:bg-neutral-800'
+                                        : 'bg-slate-100 text-slate-555 dark:bg-neutral-800'
                                 }`}
                             >
                                 {tab.count}
@@ -233,26 +233,26 @@ export default function AdminIzinPage({
                     ))}
                 </div>
                 <div className="relative min-w-0 flex-1 sm:max-w-xs">
-                    <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-neutral-400" />
+                    <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-slate-450" />
                     <input
                         type="text"
                         placeholder="Cari nama siswa atau kelas..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white py-2 pr-3 pl-9 text-sm text-neutral-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+                        className="w-full rounded-xl border border-slate-200 bg-white py-2 pr-3 pl-9 text-sm text-slate-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
                     />
                 </div>
             </div>
 
             {/* List */}
             {filtered.length === 0 ? (
-                <Card className="border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+                <Card className="border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 shadow-sm">
                     <CardContent className="p-12 text-center">
                         <Calendar className="mx-auto mb-3 size-14 stroke-neutral-200 dark:stroke-neutral-800" />
-                        <p className="font-bold text-neutral-900 dark:text-neutral-100">
+                        <p className="font-bold text-slate-900 dark:text-neutral-100">
                             Tidak ada pengajuan
                         </p>
-                        <p className="mt-1 text-xs text-neutral-500">
+                        <p className="mt-1 text-xs text-slate-655">
                             Belum ada pengajuan izin untuk filter yang dipilih.
                         </p>
                     </CardContent>
@@ -262,7 +262,7 @@ export default function AdminIzinPage({
                     {filtered.map((iz) => (
                         <Card
                             key={iz.id}
-                            className="overflow-hidden border border-neutral-200 bg-white transition-all hover:border-indigo-200 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-indigo-900"
+                            className="overflow-hidden border border-slate-200 bg-white shadow-sm transition-all hover:border-indigo-200 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-indigo-900"
                         >
                             <CardContent className="p-0">
                                 {/* Top stripe by status */}
@@ -287,7 +287,7 @@ export default function AdminIzinPage({
                                                         iz.bukti_foto!,
                                                     )
                                                 }
-                                                className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 border-neutral-200 bg-neutral-100 transition-all hover:border-indigo-400 sm:h-24 sm:w-24 dark:border-neutral-700 dark:bg-neutral-800"
+                                                className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 border-slate-200 bg-slate-50 transition-all hover:border-indigo-400 sm:h-24 sm:w-24 dark:border-neutral-700 dark:bg-neutral-800"
                                                 title="Klik untuk lihat bukti"
                                             >
                                                 <img
@@ -300,7 +300,7 @@ export default function AdminIzinPage({
                                                 </div>
                                             </button>
                                         ) : (
-                                            <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-neutral-200 bg-neutral-50 text-neutral-400 sm:h-24 sm:w-24 dark:border-neutral-700 dark:bg-neutral-900">
+                                            <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 text-slate-500 sm:h-24 sm:w-24 dark:border-neutral-700 dark:bg-neutral-900">
                                                 <FileImage className="size-6" />
                                                 <span className="text-[9px] font-bold">
                                                     Tidak ada
@@ -312,10 +312,10 @@ export default function AdminIzinPage({
                                         <div className="min-w-0 flex-1 space-y-2.5">
                                             <div className="flex flex-wrap items-start justify-between gap-2">
                                                 <div>
-                                                    <h3 className="font-bold text-neutral-900 dark:text-neutral-100">
+                                                    <h3 className="font-bold text-slate-900 dark:text-neutral-100">
                                                         {iz.name}
                                                     </h3>
-                                                    <p className="mt-0.5 text-xs text-neutral-500">
+                                                    <p className="mt-0.5 text-xs text-slate-655">
                                                         Kelas {iz.kelas ?? '—'}{' '}
                                                         · Orang Tua:{' '}
                                                         {iz.orangtua_name ??
@@ -340,7 +340,7 @@ export default function AdminIzinPage({
                                                         ? '🤒 Sakit'
                                                         : '📝 Izin'}
                                                 </span>
-                                                <span className="inline-flex items-center gap-1 text-xs text-neutral-500">
+                                                <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-neutral-400">
                                                     <Calendar className="size-3.5" />
                                                     {iz.tanggal_mulai ===
                                                     iz.tanggal_selesai
@@ -349,8 +349,8 @@ export default function AdminIzinPage({
                                                 </span>
                                             </div>
 
-                                            <p className="rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2 text-sm text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400">
-                                                <span className="font-semibold text-neutral-700 dark:text-neutral-300">
+                                            <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 shadow-xs">
+                                                <span className="font-semibold text-slate-850 dark:text-neutral-300">
                                                     Keterangan:
                                                 </span>{' '}
                                                 {iz.alasan}

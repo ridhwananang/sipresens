@@ -59,7 +59,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
   return (
     <>
       {/* Command Center Top Bar */}
-      <header className="border-b border-neutral-200 dark:border-neutral-700 bg-white dark:bg-[#0B1120]">
+      <header className="border-b border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#0B1120]">
         <div className="mx-auto flex h-14 items-center px-4 md:max-w-7xl">
           {/* Logo */}
           <Link href={dashboard()} prefetch className="flex items-center space-x-2">
@@ -135,8 +135,8 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
         </div>
         {/* Breadcrumbs */}
         {breadcrumbs.length > 1 && (
-          <div className="flex w-full border-t border-neutral-200 dark:border-neutral-700 bg-white dark:bg-[#0B1120]">
-            <div className="mx-auto flex h-12 items-center px-4 md:max-w-7xl text-neutral-500 dark:text-neutral-400">
+          <div className="flex w-full border-t border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#0B1120]">
+            <div className="mx-auto flex h-12 items-center px-4 md:max-w-7xl text-slate-650 dark:text-neutral-400">
               <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
           </div>

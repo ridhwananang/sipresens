@@ -16,7 +16,6 @@ import { useInitials } from '@/hooks/use-initials';
 import {
     User,
     GraduationCap,
-    FileText,
     Shield,
     Palette,
     LogOut,
@@ -79,7 +78,7 @@ export default function Profile({
     const orangTua = auth.user as AuthUser & { orang_tua?: OrangTuaInfo };
     const getInitials = useInitials();
 
-    // If role is admin, render the original desktop profile edit view!
+    // ─── ADMIN ROLE VIEW ───────────────────────────────────────────────────
     if (user.role === 'admin') {
         return (
             <>
@@ -172,6 +171,7 @@ export default function Profile({
                                 <div className="flex items-center gap-4">
                                     <Button
                                         disabled={processing}
+                                        className="bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"
                                         data-test="update-profile-button"
                                     >
                                         Save
@@ -214,32 +214,32 @@ export default function Profile({
                     </div>
 
                     <div className="space-y-0.5">
-                        <h2 className="text-lg font-black tracking-tight text-neutral-800 dark:text-neutral-200">
+                        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-200">
                             {user.name}
                         </h2>
-                        <p className="text-neutral-455 text-xs font-medium dark:text-neutral-500">
+                        <p className="text-slate-600 text-xs font-medium dark:text-neutral-500">
                             {user.email}
                         </p>
                     </div>
                 </div>
 
                 {/* Data Akademik Siswa Card */}
-                <div className="space-y-3.5 rounded-3xl border border-neutral-100 bg-white p-4 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                    <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 border-b border-neutral-50 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
+                <div className="space-y-3.5 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 border-b border-slate-100 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
                         <GraduationCap className="size-4 text-indigo-600 dark:text-indigo-400" />
                         <span>Data Akademik</span>
                     </h3>
                     <div className="grid grid-cols-2 gap-4 text-left">
                         <div>
-                            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 NISN
                             </span>
-                            <p className="mt-0.5 text-sm font-extrabold text-neutral-800 dark:text-neutral-200">
+                            <p className="mt-0.5 text-sm font-extrabold text-slate-900 dark:text-neutral-200">
                                 {nisnReal}
                             </p>
                         </div>
                         <div>
-                            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                            <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                 Kelas
                             </span>
                             <p className="mt-0.5 text-sm font-extrabold text-indigo-600 dark:text-indigo-400">
@@ -250,8 +250,8 @@ export default function Profile({
                 </div>
 
                 {/* Perbarui Data Diri Form */}
-                <div className="space-y-4 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                    <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
+                <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
                         <User className="size-4 text-indigo-600 dark:text-indigo-400" />
                         <span>Ubah Informasi Akun</span>
                     </h3>
@@ -349,51 +349,51 @@ export default function Profile({
                 </div>
 
                 {/* Menu Pengaturan List (Settings Menu Hub) */}
-                <div className="space-y-1 rounded-3xl border border-neutral-100 bg-white p-3 text-left shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                    <span className="text-neutral-450 dark:text-neutral-550 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
+                <div className="space-y-1 rounded-3xl border border-slate-200 bg-white p-3 text-left shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                    <span className="text-slate-600 dark:text-neutral-500 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
                         Pengaturan Aplikasi
                     </span>
 
                     {/* Security Link */}
                     <Link
                         href={editSecurity()}
-                        className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                        className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                     >
                         <div className="flex items-center gap-3">
                             <div className="rounded-xl bg-indigo-50 p-2 text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400">
                                 <Shield className="size-4" />
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                     Ubah Password
                                 </p>
-                                <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                     Kelola keamanan sandi Anda
                                 </p>
                             </div>
                         </div>
-                        <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                        <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                     </Link>
 
                     {/* Appearance Link */}
                     <Link
                         href={editAppearance()}
-                        className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                        className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                     >
                         <div className="flex items-center gap-3">
                             <div className="rounded-xl bg-sky-50 p-2 text-sky-600 dark:bg-sky-950/30 dark:text-sky-400">
                                 <Palette className="size-4" />
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                     Tampilan Tema
                                 </p>
-                                <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                     Ubah preferensi mode terang/gelap
                                 </p>
                             </div>
                         </div>
-                        <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                        <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                     </Link>
 
                     {/* Log Out Button */}
@@ -401,22 +401,22 @@ export default function Profile({
                         href={logout().url}
                         method="post"
                         as="button"
-                        className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50/50 active:scale-[0.99] dark:text-rose-400 dark:hover:bg-rose-950/10"
+                        className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50 active:scale-[0.99] dark:text-rose-400 dark:hover:bg-rose-950/10"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="rounded-xl bg-rose-50 p-2 text-rose-600 dark:bg-rose-950/30 dark:text-rose-450">
+                            <div className="rounded-xl bg-rose-50 p-2 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400">
                                 <LogOut className="size-4" />
                             </div>
                             <div className="text-left">
-                                <p className="dark:text-rose-455 text-xs font-bold text-rose-600">
+                                <p className="text-xs font-bold text-rose-600 dark:text-rose-400">
                                     Keluar Sesi
                                 </p>
-                                <p className="text-rose-455/70 text-[9px] dark:text-rose-500/70">
+                                <p className="text-rose-600/70 text-[9px] dark:text-rose-500/70">
                                     Keluar dari akun presensi Anda
                                 </p>
                             </div>
                         </div>
-                        <ChevronRight className="text-rose-350 size-4 dark:text-rose-950" />
+                        <ChevronRight className="size-4 text-rose-500 dark:text-rose-400" />
                     </Link>
                 </div>
             </div>
@@ -452,10 +452,10 @@ export default function Profile({
                     </div>
 
                     <div className="space-y-0.5">
-                        <h2 className="text-lg font-black tracking-tight text-neutral-800 dark:text-neutral-200">
+                        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-200">
                             {user.name}
                         </h2>
-                        <p className="text-neutral-455 text-xs font-medium dark:text-neutral-500">
+                        <p className="text-slate-600 text-xs font-medium dark:text-neutral-500">
                             {user.email}
                         </p>
                     </div>
@@ -464,30 +464,30 @@ export default function Profile({
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {/* Left Column: Data Guru */}
                     <div className="space-y-6">
-                        <div className="space-y-3.5 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 border-b border-neutral-50 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
+                        <div className="space-y-3.5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 border-b border-slate-100 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
                                 <GraduationCap className="size-4 text-indigo-600 dark:text-indigo-400" />
                                 <span>Data Pendidik</span>
                             </h3>
                             <div className="grid grid-cols-2 gap-4 text-left">
                                 <div>
-                                    <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                    <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                         NIP
                                     </span>
-                                    <p className="mt-0.5 text-sm font-extrabold text-neutral-800 dark:text-neutral-200 font-mono">
+                                    <p className="mt-0.5 font-mono text-sm font-extrabold text-slate-900 dark:text-neutral-200">
                                         {nipReal}
                                     </p>
                                 </div>
                                 <div>
-                                    <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                    <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                         No. HP
                                     </span>
-                                    <p className="mt-0.5 text-sm font-extrabold text-neutral-800 dark:text-neutral-200">
+                                    <p className="mt-0.5 text-sm font-extrabold text-slate-900 dark:text-neutral-200">
                                         {noHpReal}
                                     </p>
                                 </div>
                                 <div>
-                                    <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                    <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                         Status Wali Kelas
                                     </span>
                                     <p className="mt-0.5 text-sm font-extrabold text-indigo-600 dark:text-indigo-400">
@@ -496,7 +496,7 @@ export default function Profile({
                                 </div>
                                 {kelasBinaanReal && (
                                     <div>
-                                        <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                        <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                             Kelas Binaan
                                         </span>
                                         <p className="mt-0.5 text-sm font-extrabold text-indigo-600 dark:text-indigo-400">
@@ -511,8 +511,8 @@ export default function Profile({
                     {/* Right Column: Ubah Informasi & Pengaturan */}
                     <div className="space-y-6">
                         {/* Perbarui Data Diri Form */}
-                        <div className="space-y-4 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
+                        <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
                                 <User className="size-4 text-indigo-600 dark:text-indigo-400" />
                                 <span>Ubah Informasi Akun</span>
                             </h3>
@@ -530,13 +530,13 @@ export default function Profile({
                                         <div className="space-y-1.5">
                                             <Label
                                                 htmlFor="name"
-                                                className="text-xs font-bold text-neutral-600 dark:text-neutral-400"
+                                                className="text-xs font-bold text-slate-600 dark:text-neutral-400"
                                             >
                                                 Nama Lengkap
                                             </Label>
                                             <Input
                                                 id="name"
-                                                className="w-full rounded-xl border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-800 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                                className="w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                                                 defaultValue={user.name}
                                                 name="name"
                                                 required
@@ -553,14 +553,14 @@ export default function Profile({
                                         <div className="space-y-1.5">
                                             <Label
                                                 htmlFor="email"
-                                                className="text-xs font-bold text-neutral-600 dark:text-neutral-400"
+                                                className="text-xs font-bold text-slate-600 dark:text-neutral-400"
                                             >
                                                 Alamat Email
                                             </Label>
                                             <Input
                                                 id="email"
                                                 type="email"
-                                                className="w-full rounded-xl border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-800 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                                className="w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                                                 defaultValue={user.email}
                                                 name="email"
                                                 required
@@ -575,7 +575,7 @@ export default function Profile({
 
                                         {mustVerifyEmail &&
                                             user.email_verified_at === null && (
-                                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-2.5 text-[10px] leading-relaxed font-medium text-neutral-500 dark:border-zinc-900 dark:bg-zinc-900">
+                                                <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[10px] leading-relaxed font-medium text-slate-600 dark:border-zinc-800 dark:bg-zinc-900">
                                                     Email Anda belum terverifikasi.{' '}
                                                     <Link
                                                         href="/email/verification-notification"
@@ -610,51 +610,51 @@ export default function Profile({
                         </div>
 
                         {/* Menu Pengaturan List (Settings Menu Hub) */}
-                        <div className="space-y-1 rounded-3xl border border-neutral-100 bg-white p-3 text-left shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <span className="text-neutral-450 dark:text-neutral-550 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
+                        <div className="space-y-1 rounded-3xl border border-slate-200 bg-white p-3 text-left shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <span className="text-slate-600 dark:text-neutral-500 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
                                 Pengaturan Aplikasi
                             </span>
 
                             {/* Security Link */}
                             <Link
                                 href={editSecurity()}
-                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="rounded-xl bg-indigo-50 p-2 text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400">
                                         <Shield className="size-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                        <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                             Ubah Password
                                         </p>
-                                        <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                        <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                             Kelola keamanan sandi Anda
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                                <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                             </Link>
 
                             {/* Appearance Link */}
                             <Link
                                 href={editAppearance()}
-                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="rounded-xl bg-sky-50 p-2 text-sky-600 dark:bg-sky-950/30 dark:text-sky-400">
                                         <Palette className="size-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                        <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                             Tampilan Tema
                                         </p>
-                                        <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                        <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                             Ubah preferensi mode terang/gelap
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                                <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                             </Link>
 
                             {/* Log Out Button */}
@@ -662,22 +662,22 @@ export default function Profile({
                                 href={logout().url}
                                 method="post"
                                 as="button"
-                                className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50/50 active:scale-[0.99] dark:text-rose-455 dark:hover:bg-rose-950/10"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50 active:scale-[0.99] dark:text-rose-400 dark:hover:bg-rose-950/10"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-xl bg-rose-50 p-2 text-rose-600 dark:bg-rose-950/30 dark:text-rose-450 font-bold">
+                                    <div className="rounded-xl bg-rose-50 p-2 text-rose-600 font-bold dark:bg-rose-950/30 dark:text-rose-400">
                                         <LogOut className="size-4" />
                                     </div>
                                     <div className="text-left font-bold">
-                                        <p className="dark:text-rose-455 text-xs font-bold text-rose-600">
+                                        <p className="text-xs font-bold text-rose-600 dark:text-rose-400">
                                             Keluar Sesi
                                         </p>
-                                        <p className="text-rose-455/70 text-[9px] dark:text-rose-500/70 font-semibold">
+                                        <p className="text-rose-600/70 text-[9px] font-semibold dark:text-rose-500/70">
                                             Keluar dari akun presensi Anda
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="text-rose-350 size-4 dark:text-rose-950" />
+                                <ChevronRight className="size-4 text-rose-500 dark:text-rose-400" />
                             </Link>
                         </div>
                     </div>
@@ -709,10 +709,10 @@ export default function Profile({
                     </div>
 
                     <div className="space-y-0.5">
-                        <h2 className="text-lg font-black tracking-tight text-neutral-800 dark:text-neutral-200">
+                        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-200">
                             {user.name}
                         </h2>
-                        <p className="text-neutral-455 text-xs font-medium dark:text-neutral-500">
+                        <p className="text-slate-600 text-xs font-medium dark:text-neutral-500">
                             {user.email}
                         </p>
                     </div>
@@ -722,17 +722,17 @@ export default function Profile({
                     {/* Left Column: Data Orang Tua & Anak Terhubung */}
                     <div className="space-y-6">
                         {/* Data Wali Murid */}
-                        <div className="space-y-3.5 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 border-b border-neutral-50 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
+                        <div className="space-y-3.5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 border-b border-slate-100 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
                                 <User className="size-4 text-indigo-600 dark:text-indigo-400" />
                                 <span>Data Wali Murid</span>
                             </h3>
                             <div className="grid grid-cols-2 gap-4 text-left">
                                 <div>
-                                    <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
+                                    <span className="text-[10px] font-bold tracking-wider text-slate-600 uppercase dark:text-neutral-500">
                                         No. HP
                                     </span>
-                                    <p className="mt-0.5 text-sm font-extrabold text-neutral-800 dark:text-neutral-200">
+                                    <p className="mt-0.5 text-sm font-extrabold text-slate-900 dark:text-neutral-200">
                                         {noHpReal}
                                     </p>
                                 </div>
@@ -740,13 +740,13 @@ export default function Profile({
                         </div>
 
                         {/* Anak Terhubung */}
-                        <div className="space-y-3.5 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 border-b border-neutral-50 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
+                        <div className="space-y-3.5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 border-b border-slate-100 pb-2 text-xs font-black tracking-wider uppercase dark:border-zinc-900">
                                 <Users className="size-4 text-indigo-600 dark:text-indigo-400" />
                                 <span>Anak Terhubung</span>
                             </h3>
                             {anakList.length === 0 ? (
-                                <div className="py-6 text-center text-xs font-semibold text-neutral-400 dark:text-neutral-500">
+                                <div className="py-6 text-center text-xs font-semibold text-slate-500 dark:text-neutral-500">
                                     Tidak ada data anak terhubung
                                 </div>
                             ) : (
@@ -756,7 +756,7 @@ export default function Profile({
                                             ? `${child.kelas.nama_kelas} (${child.kelas.tahun_ajaran || ''})`
                                             : 'Belum masuk kelas';
                                         return (
-                                            <div key={index} className="flex items-center gap-3 rounded-2xl border border-neutral-50 bg-neutral-50/30 p-3 dark:border-zinc-900/30 dark:bg-zinc-900/10">
+                                            <div key={index} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-zinc-900/30 dark:bg-zinc-900/10">
                                                 <Avatar className="size-10 overflow-hidden rounded-full">
                                                     <AvatarImage src={child.foto_profile_url || undefined} alt={child.user?.name} />
                                                     <AvatarFallback className="bg-indigo-100 text-sm font-bold text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
@@ -764,12 +764,12 @@ export default function Profile({
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div className="min-w-0 flex-1 text-left">
-                                                    <p className="truncate text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                                    <p className="truncate text-xs font-bold text-slate-900 dark:text-neutral-200">
                                                         {child.user?.name}
                                                     </p>
-                                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] text-neutral-450 dark:text-neutral-500">
+                                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] text-slate-600 dark:text-neutral-500">
                                                         <span>NISN: {child.nisn || '-'}</span>
-                                                        <span className="size-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+                                                        <span className="size-1 rounded-full bg-slate-300 dark:bg-neutral-700" />
                                                         <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                                                             {childClass}
                                                         </span>
@@ -786,8 +786,8 @@ export default function Profile({
                     {/* Right Column: Ubah Informasi & Pengaturan */}
                     <div className="space-y-6">
                         {/* Perbarui Data Diri Form */}
-                        <div className="space-y-4 rounded-3xl border border-neutral-100 bg-white p-5 shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <h3 className="text-neutral-450 dark:text-neutral-550 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
+                        <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <h3 className="text-slate-600 dark:text-neutral-500 flex items-center gap-1.5 text-xs font-black tracking-wider uppercase">
                                 <User className="size-4 text-indigo-600 dark:text-indigo-400" />
                                 <span>Ubah Informasi Akun</span>
                             </h3>
@@ -805,13 +805,13 @@ export default function Profile({
                                         <div className="space-y-1.5">
                                             <Label
                                                 htmlFor="name"
-                                                className="text-xs font-bold text-neutral-600 dark:text-neutral-400"
+                                                className="text-xs font-bold text-slate-600 dark:text-neutral-400"
                                             >
                                                 Nama Lengkap
                                             </Label>
                                             <Input
                                                 id="name"
-                                                className="w-full rounded-xl border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-800 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                                className="w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                                                 defaultValue={user.name}
                                                 name="name"
                                                 required
@@ -828,14 +828,14 @@ export default function Profile({
                                         <div className="space-y-1.5">
                                             <Label
                                                 htmlFor="email"
-                                                className="text-xs font-bold text-neutral-600 dark:text-neutral-400"
+                                                className="text-xs font-bold text-slate-600 dark:text-neutral-400"
                                             >
                                                 Alamat Email
                                             </Label>
                                             <Input
                                                 id="email"
                                                 type="email"
-                                                className="w-full rounded-xl border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-800 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                                                className="w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-indigo-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
                                                 defaultValue={user.email}
                                                 name="email"
                                                 required
@@ -850,7 +850,7 @@ export default function Profile({
 
                                         {mustVerifyEmail &&
                                             user.email_verified_at === null && (
-                                                <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-2.5 text-[10px] leading-relaxed font-medium text-neutral-500 dark:border-zinc-900 dark:bg-zinc-900">
+                                                <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[10px] leading-relaxed font-medium text-slate-600 dark:border-zinc-900 dark:bg-zinc-900">
                                                     Email Anda belum terverifikasi.{' '}
                                                     <Link
                                                         href="/email/verification-notification"
@@ -885,51 +885,51 @@ export default function Profile({
                         </div>
 
                         {/* Menu Pengaturan List (Settings Menu Hub) */}
-                        <div className="space-y-1 rounded-3xl border border-neutral-100 bg-white p-3 text-left shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
-                            <span className="text-neutral-450 dark:text-neutral-550 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
+                        <div className="space-y-1 rounded-3xl border border-slate-200 bg-white p-3 text-left shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
+                            <span className="text-slate-600 dark:text-neutral-500 block px-2 py-1 text-[9px] font-black tracking-wider uppercase">
                                 Pengaturan Aplikasi
                             </span>
 
                             {/* Security Link */}
                             <Link
                                 href={editSecurity()}
-                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="rounded-xl bg-indigo-50 p-2 text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400">
                                         <Shield className="size-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                        <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                             Ubah Password
                                         </p>
-                                        <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                        <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                             Kelola keamanan sandi Anda
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                                <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                             </Link>
 
                             {/* Appearance Link */}
                             <Link
                                 href={editAppearance()}
-                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-neutral-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 transition-all hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-zinc-900/50"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="rounded-xl bg-sky-50 p-2 text-sky-600 dark:bg-sky-950/30 dark:text-sky-400">
                                         <Palette className="size-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                                        <p className="text-xs font-bold text-slate-900 dark:text-neutral-200">
                                             Tampilan Tema
                                         </p>
-                                        <p className="text-neutral-455 text-[9px] dark:text-neutral-500">
+                                        <p className="text-slate-600 text-[9px] dark:text-neutral-500">
                                             Ubah preferensi mode terang/gelap
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="size-4 text-neutral-400 dark:text-neutral-600" />
+                                <ChevronRight className="size-4 text-slate-400 dark:text-neutral-600" />
                             </Link>
 
                             {/* Log Out Button */}
@@ -937,22 +937,22 @@ export default function Profile({
                                 href={logout().url}
                                 method="post"
                                 as="button"
-                                className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50/50 active:scale-[0.99] dark:text-rose-450 dark:hover:bg-rose-950/10"
+                                className="flex w-full items-center justify-between rounded-2xl p-3 text-rose-600 transition-all hover:bg-rose-50 active:scale-[0.99] dark:text-rose-400 dark:hover:bg-rose-950/10"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-xl bg-rose-50 p-2 text-rose-600 dark:bg-rose-950/30 dark:text-rose-455 font-bold">
+                                    <div className="rounded-xl bg-rose-50 p-2 text-rose-600 font-bold dark:bg-rose-950/30 dark:text-rose-400">
                                         <LogOut className="size-4" />
                                     </div>
                                     <div className="text-left font-bold">
-                                        <p className="dark:text-rose-455 text-xs font-bold text-rose-600">
+                                        <p className="text-xs font-bold text-rose-600 dark:text-rose-400">
                                             Keluar Sesi
                                         </p>
-                                        <p className="text-rose-455/70 text-[9px] dark:text-rose-500/70 font-semibold">
+                                        <p className="text-rose-600/70 text-[9px] font-semibold dark:text-rose-500/70">
                                             Keluar dari akun presensi Anda
                                         </p>
                                     </div>
                                 </div>
-                                <ChevronRight className="text-rose-350 size-4 dark:text-rose-950" />
+                                <ChevronRight className="size-4 text-rose-500 dark:text-rose-400" />
                             </Link>
                         </div>
                     </div>

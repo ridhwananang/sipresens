@@ -56,8 +56,8 @@ export default function SiswaJadwal({ jadwals }: SiswaJadwalProps) {
                             onClick={() => setSelectedDay(day)}
                             className={`flex min-w-[70px] flex-1 cursor-pointer flex-col items-center rounded-2xl px-1 py-2 transition-all duration-300 active:scale-95 ${
                                 isSelected
-                                    ? 'bg-teal-600 font-extrabold text-white shadow-md shadow-teal-500/15 dark:bg-teal-500'
-                                    : 'border border-neutral-100 bg-white font-bold text-neutral-500 dark:border-zinc-900/60 dark:bg-zinc-900/40 dark:text-neutral-400'
+                                    ? 'bg-teal-600 font-extrabold text-white shadow-md shadow-teal-500/15 dark:bg-teal-50'
+                                    : 'border border-slate-200 bg-white font-bold text-slate-600 dark:border-zinc-900/60 dark:bg-zinc-900/40 dark:text-neutral-400 hover:border-slate-300'
                             }`}
                         >
                             <span className="text-[10px] tracking-wider uppercase">
@@ -67,7 +67,7 @@ export default function SiswaJadwal({ jadwals }: SiswaJadwalProps) {
                                 className={`py-0.2 mt-0.5 rounded-full px-1.5 text-[8px] font-extrabold ${
                                     isSelected
                                         ? 'bg-white/20 text-white'
-                                        : 'bg-neutral-50 text-neutral-400 dark:bg-zinc-950 dark:text-neutral-500'
+                                        : 'bg-slate-100 text-slate-600 dark:bg-zinc-950 dark:text-neutral-500'
                                 }`}
                             >
                                 {count} Sesi
@@ -78,17 +78,17 @@ export default function SiswaJadwal({ jadwals }: SiswaJadwalProps) {
             </div>
 
             {/* Selected Day Schedule Card */}
-            <Card className="overflow-hidden rounded-3xl border border-neutral-100 bg-white shadow-xs dark:border-zinc-900 dark:bg-zinc-900/40">
+            <Card className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-zinc-900 dark:bg-zinc-900/40">
                 <CardHeader className="px-5 pt-5 pb-3">
                     <div className="flex items-center gap-2">
                         <div className="rounded-lg bg-teal-50 p-1.5 text-teal-600 dark:bg-teal-950/30 dark:text-teal-400">
                             <Calendar className="size-4.5" />
                         </div>
                         <div>
-                            <CardTitle className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                            <CardTitle className="text-sm font-bold text-slate-900 dark:text-neutral-200">
                                 Hari {selectedDay}
                             </CardTitle>
-                            <CardDescription className="text-[10px]">
+                            <CardDescription className="text-[10px] text-slate-500 dark:text-neutral-450">
                                 Daftar mata pelajaran untuk hari {selectedDay}
                             </CardDescription>
                         </div>
@@ -99,18 +99,18 @@ export default function SiswaJadwal({ jadwals }: SiswaJadwalProps) {
                         {daySchedules.map((j) => (
                             <div
                                 key={j.id}
-                                className="relative flex items-center justify-between overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-50/50 p-3.5 shadow-xs transition-transform active:scale-[0.99] dark:border-zinc-900 dark:bg-zinc-900/20"
+                                className="relative flex items-center justify-between overflow-hidden rounded-2xl border border-slate-150 bg-slate-50 p-3.5 shadow-sm transition-transform active:scale-[0.99] dark:border-zinc-900 dark:bg-zinc-900/20 hover:border-slate-200"
                             >
                                 <div className="absolute top-0 left-0 h-full w-1 bg-teal-500" />
 
                                 <div className="space-y-1 pl-3.5">
                                     <div className="flex items-center gap-1.5">
                                         <BookOpen className="size-3.5 text-neutral-400 dark:text-neutral-500" />
-                                        <span className="text-neutral-850 dark:text-neutral-250 text-xs font-black">
+                                        <span className="text-slate-800 dark:text-neutral-250 text-xs font-black">
                                             {j.nama_mapel}
                                         </span>
                                     </div>
-                                    <div className="text-neutral-450 flex items-center gap-1.5 text-[10px] font-medium dark:text-neutral-500">
+                                    <div className="text-slate-600 flex items-center gap-1.5 text-[10px] font-medium dark:text-neutral-500">
                                         <User className="size-3" />
                                         <span>{j.nama_guru}</span>
                                     </div>
@@ -124,7 +124,7 @@ export default function SiswaJadwal({ jadwals }: SiswaJadwalProps) {
                         ))}
 
                         {daySchedules.length === 0 && (
-                            <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-neutral-400 dark:text-neutral-500">
+                            <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-slate-500 dark:text-neutral-500">
                                 <BookOpen className="stroke-neutral-250 size-8 dark:stroke-zinc-800" />
                                 <span className="text-[11px] font-bold italic">
                                     Tidak ada jadwal pelajaran untuk hari{' '}

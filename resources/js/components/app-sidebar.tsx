@@ -56,18 +56,18 @@ function SidebarMenuLink({ href, isActive, icon: Icon, label, tooltip, role, sta
   let dotColor = '';
 
   if (role === 'admin') {
-    activeLinkClass = 'bg-indigo-50/50 dark:bg-[#141D2E] text-[#6366F1] dark:text-white font-extrabold border-l-4 border-[#6366F1]';
-    iconActiveStyle = 'bg-[#6366F1]/10 text-[#6366F1] dark:bg-[#6366F1]/20 dark:text-[#F9F200]';
-    dotColor = 'bg-[#F9F200]';
+    activeLinkClass = 'bg-indigo-50 dark:bg-[#141D2E] text-[#6366F1] dark:text-white font-extrabold border-l-4 border-[#6366F1]';
+    iconActiveStyle = 'bg-indigo-100 text-[#6366F1] dark:bg-[#6366F1]/20 dark:text-[#F9F200]';
+    dotColor = 'bg-[#6366F1] dark:bg-[#F9F200]';
   } else if (role === 'guru') {
-    activeLinkClass = 'bg-[#F9F200]/5 dark:bg-[#141D2E] text-neutral-900 dark:text-white font-extrabold border-l-4 border-[#F9F200]';
-    iconActiveStyle = 'bg-[#F9F200]/10 text-amber-600 dark:bg-[#F9F200]/20 dark:text-[#F9F200]';
-    dotColor = 'bg-[#22C55E]';
+    activeLinkClass = 'bg-amber-50 dark:bg-[#141D2E] text-slate-900 dark:text-white font-extrabold border-l-4 border-amber-500';
+    iconActiveStyle = 'bg-amber-100 text-amber-700 dark:bg-[#F9F200]/20 dark:text-[#F9F200]';
+    dotColor = 'bg-amber-600 dark:bg-[#22C55E]';
   } else {
     // Default fallback (siswa/orang tua)
-    activeLinkClass = 'bg-neutral-100 dark:bg-[#141D2E] text-neutral-900 dark:text-white font-extrabold border-l-4 border-[#6366F1]';
-    iconActiveStyle = 'bg-neutral-200 text-[#6366F1] dark:bg-white/10 dark:text-white';
-    dotColor = 'bg-neutral-400';
+    activeLinkClass = 'bg-slate-100 dark:bg-[#141D2E] text-slate-900 dark:text-white font-extrabold border-l-4 border-[#6366F1]';
+    iconActiveStyle = 'bg-slate-200 text-[#6366F1] dark:bg-white/10 dark:text-white';
+    dotColor = 'bg-slate-500';
   }
 
   return (
@@ -79,14 +79,14 @@ function SidebarMenuLink({ href, isActive, icon: Icon, label, tooltip, role, sta
         className={`group relative flex w-full items-center gap-3 rounded-[14px] px-3 py-2 text-sm font-medium transition-all duration-200 outline-none border border-transparent min-h-[48px] cursor-pointer ${
           isActive
             ? activeLinkClass
-            : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100/50 dark:hover:bg-[#141D2E]/40 hover:text-neutral-900 dark:hover:text-white'
+            : 'text-slate-600 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-[#141D2E]/40 hover:text-slate-900 dark:hover:text-white'
         }`}
       >
         <Link href={href} prefetch className="flex items-center gap-3 w-full">
           <div className={`flex items-center justify-center size-9 shrink-0 rounded-xl transition-all ${
             isActive 
               ? iconActiveStyle 
-              : 'bg-neutral-50 dark:bg-zinc-800/40 text-neutral-500 dark:text-neutral-400 group-hover:bg-neutral-100 dark:group-hover:bg-zinc-850 group-hover:text-neutral-900 dark:group-hover:text-white'
+              : 'bg-slate-50 dark:bg-zinc-800/40 text-slate-500 dark:text-neutral-400 group-hover:bg-slate-100 dark:group-hover:bg-zinc-850 group-hover:text-slate-900 dark:group-hover:text-white'
           }`}>
             <Icon className="size-[18px]" />
           </div>
@@ -108,7 +108,7 @@ export function AppSidebar() {
 
   // Premium Command Center grouping labels
   const labelStyle =
-    'text-[10px] font-extrabold uppercase tracking-[0.15em] text-neutral-400 dark:text-slate-500 px-4 py-2 mt-2 select-none';
+    'text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-500 px-4 py-2 mt-2 select-none';
 
   return (
     <Sidebar
@@ -214,14 +214,14 @@ export function AppSidebar() {
 
         {/* Static Operations Status Card at bottom of content */}
         {state !== 'collapsed' && (role === 'admin' || role === 'guru') && (
-          <div className="mx-2 mt-6 p-3.5 rounded-[18px] bg-neutral-50 dark:bg-[#141D2E] border border-neutral-200 dark:border-white/[0.06] shadow-sm select-none">
+          <div className="mx-2 mt-6 p-3.5 rounded-[18px] bg-slate-50 dark:bg-[#141D2E] border border-slate-200 dark:border-white/[0.06] shadow-sm select-none">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center size-9 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
                 <ShieldCheck className="size-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-extrabold text-neutral-900 dark:text-white leading-tight">Sistem Online</p>
-                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold mt-0.5 truncate">Semua layanan berjalan normal</p>
+                <p className="text-xs font-extrabold text-slate-900 dark:text-white leading-tight">Sistem Online</p>
+                <p className="text-[10px] text-slate-600 dark:text-neutral-400 font-bold mt-0.5 truncate">Semua layanan berjalan normal</p>
               </div>
             </div>
           </div>
