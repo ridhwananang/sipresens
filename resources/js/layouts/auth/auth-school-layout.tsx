@@ -188,8 +188,8 @@ export default function AuthSchoolLayout({ children }: AuthSchoolLayoutProps) {
                             />
                         </div>
 
-                        {/* School name badge – visible on panel */}
-                        <div className="
+                        {/* School name badge – visible only on desktop */}
+                        <div className="hidden lg:block
                             absolute bottom-10 sm:bottom-12 lg:bottom-8
                             left-1/2 -translate-x-1/2
                             z-20 text-center
