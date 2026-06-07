@@ -185,19 +185,6 @@ export default function Login({ status, canResetPassword }: Props) {
                             <InputError message={errors.password} />
                         </div>
 
-                        {/* ── Forgot Password ── */}
-                        {canResetPassword && (
-                            <div className="login-fade-in-d2">
-                                <TextLink
-                                    href={request()}
-                                    tabIndex={5}
-                                    className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-150"
-                                >
-                                    Forgot password?
-                                </TextLink>
-                            </div>
-                        )}
-
                         {/* ── Login Button ── */}
                         <button
                             id="login-button"
