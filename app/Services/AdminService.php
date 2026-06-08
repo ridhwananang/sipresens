@@ -206,6 +206,7 @@ class AdminService
                 'user_id' => $user->id,
                 'no_hp' => $data['no_hp'] ?? null,
                 'jenis_kelamin' => $data['jenis_kelamin'],
+                'foto_profile' => $data['foto_profile'] ?? null,
             ]);
 
             if (! empty($data['siswa_ids'])) {
@@ -233,10 +234,16 @@ class AdminService
 
             $user->update($userUpdate);
 
-            $ortu->update([
+            $ortuUpdate = [
                 'no_hp' => $data['no_hp'] ?? null,
                 'jenis_kelamin' => $data['jenis_kelamin'],
-            ]);
+            ];
+
+            if (isset($data['foto_profile'])) {
+                $ortuUpdate['foto_profile'] = $data['foto_profile'];
+            }
+
+            $ortu->update($ortuUpdate);
 
             // Clear old children of this parent
             Siswa::where('orangtua_id', $ortu->id)->update(['orangtua_id' => null]);

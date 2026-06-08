@@ -15,6 +15,8 @@ class OrangTuaResource extends JsonResource
             'email' => $this->user ? $this->user->email : '',
             'no_hp' => $this->no_hp,
             'jenis_kelamin' => $this->jenis_kelamin,
+            'foto_profile' => $this->foto_profile,
+            'foto_profile_url' => $this->foto_profile_url,
             'anak' => $this->anak->map(function ($siswa) {
                 return [
                     'id' => $siswa->id,

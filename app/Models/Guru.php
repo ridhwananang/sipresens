@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use Illuminate\Support\Facades\Storage;
+
 class Guru extends Model
 {
     use HasFactory;
@@ -23,7 +25,11 @@ class Guru extends Model
 
     public function getFotoProfileUrlAttribute()
     {
-        return $this->foto_profile ? asset('storage/'.$this->foto_profile) : null;
+        if (!$this->foto_profile) {
+            return null;
+        }
+        $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+        return Storage::disk($disk)->url($this->foto_profile);
     }
 
     public function user(): BelongsTo

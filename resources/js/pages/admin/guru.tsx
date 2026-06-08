@@ -13,7 +13,7 @@ interface GuruItem {
     email: string;
     nip: string;
     no_hp?: string;
-    foto?: string;
+    foto_profile_url?: string;
     wali_kelas: string;
     kelas_id?: number | string | null;
 }
@@ -54,6 +54,7 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editItem, setEditItem] = useState<GuruItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -84,12 +85,14 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
         });
     };
 
-    const filteredTeachers = teachers.filter(
-        (t) =>
+    const filteredTeachers = teachers.filter((t) => {
+        const matchSearch =
             t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             t.nip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            t.email.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+            t.email.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchFoto = filterFoto === 'ada' ? !!t.foto_profile_url : filterFoto === 'tidak-ada' ? !t.foto_profile_url : true;
+        return matchSearch && matchFoto;
+    });
 
     const isWaliKelas = (t: GuruItem) => t.wali_kelas && t.wali_kelas !== 'Bukan Wali Kelas';
 
@@ -124,15 +127,26 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
 
             {/* Toolbar */}
             <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
-                <div className="relative flex-1 max-w-sm">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Cari guru, NIP, atau email..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
-                    />
+                <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center max-w-lg">
+                    <div className="relative flex-1">
+                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Cari guru, NIP, atau email..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
+                        />
+                    </div>
+                    <select
+                        value={filterFoto}
+                        onChange={(e) => setFilterFoto(e.target.value as '' | 'ada' | 'tidak-ada')}
+                        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:focus:border-violet-500 cursor-pointer"
+                    >
+                        <option value="">Semua Foto</option>
+                        <option value="ada">Ada Foto</option>
+                        <option value="tidak-ada">Belum Ada Foto</option>
+                    </select>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     <ExportDropdown
@@ -176,9 +190,9 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                                         <tr key={t.id} className="transition-colors hover:bg-violet-50/50 dark:hover:bg-violet-950/10">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    {t.foto ? (
+                                                    {t.foto_profile_url ? (
                                                         <img
-                                                            src={t.foto}
+                                                            src={t.foto_profile_url}
                                                             alt={t.name}
                                                             className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800"
                                                         />
@@ -188,7 +202,18 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                                                         </span>
                                                     )}
                                                     <div>
-                                                        <p className="font-black text-slate-900 dark:text-neutral-100">{t.name}</p>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <p className="font-black text-slate-900 dark:text-neutral-100">{t.name}</p>
+                                                            {t.foto_profile_url ? (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                                                    ✓ Foto
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+                                                                    ⚠ Belum Foto
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                         <p className="text-[11px] text-slate-600 dark:text-neutral-500">{t.email}</p>
                                                     </div>
                                                 </div>
@@ -257,15 +282,26 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3 min-w-0">
-                                    {t.foto ? (
-                                        <img src={t.foto} alt={t.name} className="size-14 rounded-2xl object-cover ring-2 ring-neutral-100 dark:ring-zinc-800 shrink-0" />
+                                    {t.foto_profile_url ? (
+                                        <img src={t.foto_profile_url} alt={t.name} className="size-14 rounded-2xl object-cover ring-2 ring-neutral-100 dark:ring-zinc-800 shrink-0" />
                                     ) : (
                                         <span className={`flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(t.id)} text-lg font-black text-white shadow-sm`}>
                                             {getInitials(t.name)}
                                         </span>
                                     )}
                                     <div className="min-w-0">
-                                        <h3 className="truncate text-sm font-black text-neutral-900 dark:text-neutral-50">{t.name}</h3>
+                                        <div className="flex items-center gap-1.5">
+                                            <h3 className="truncate text-sm font-black text-neutral-900 dark:text-neutral-50">{t.name}</h3>
+                                            {t.foto_profile_url ? (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 shrink-0">
+                                                    ✓ Foto
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 shrink-0">
+                                                    ⚠ Belum Foto
+                                                </span>
+                                            )}
+                                        </div>
                                         {isWaliKelas(t) ? (
                                             <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[9px] font-black text-violet-700 dark:bg-violet-950/30 dark:text-violet-400">
                                                 <span className="size-1 rounded-full bg-violet-500" />

@@ -18,7 +18,7 @@ interface StudentItem {
     orangtua_id: number | string | null;
     jenis_kelamin: 'L' | 'P';
     no_hp?: string;
-    foto?: string;
+    foto_profile_url?: string;
     status: 'aktif' | 'non-aktif';
 }
 
@@ -73,6 +73,7 @@ export default function SiswaPage({
     const [editItem, setEditItem] = useState<StudentItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'' | 'aktif' | 'non-aktif'>('');
+    const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -116,7 +117,8 @@ export default function SiswaPage({
             s.nisn.toLowerCase().includes(searchQuery.toLowerCase()) ||
             s.kelas.toLowerCase().includes(searchQuery.toLowerCase());
         const matchStatus = filterStatus ? s.status === filterStatus : true;
-        return matchSearch && matchStatus;
+        const matchFoto = filterFoto === 'ada' ? !!s.foto_profile_url : filterFoto === 'tidak-ada' ? !s.foto_profile_url : true;
+        return matchSearch && matchStatus && matchFoto;
     });
 
     const totalAktif = students.filter((s) => s.status === 'aktif').length;
@@ -176,6 +178,15 @@ export default function SiswaPage({
                         <option value="aktif">Aktif</option>
                         <option value="non-aktif">Non-aktif</option>
                     </select>
+                    <select
+                        value={filterFoto}
+                        onChange={(e) => setFilterFoto(e.target.value as '' | 'ada' | 'tidak-ada')}
+                        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:focus:border-violet-500 cursor-pointer"
+                    >
+                        <option value="">Semua Foto</option>
+                        <option value="ada">Ada Foto</option>
+                        <option value="tidak-ada">Belum Ada Foto</option>
+                    </select>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     <ExportDropdown
@@ -222,15 +233,26 @@ export default function SiswaPage({
                                         <tr key={s.id} className="transition-colors hover:bg-violet-50 dark:hover:bg-violet-950/10">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    {s.foto ? (
-                                                        <img src={s.foto} alt={s.name} className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800" />
+                                                    {s.foto_profile_url ? (
+                                                        <img src={s.foto_profile_url} alt={s.name} className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800" />
                                                     ) : (
                                                         <span className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(s.id, s.jenis_kelamin)} text-sm font-black text-white shadow-sm`}>
                                                             {getInitials(s.name)}
                                                         </span>
                                                     )}
                                                     <div>
-                                                        <p className="font-black text-slate-900 dark:text-neutral-100">{s.name}</p>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <p className="font-black text-slate-900 dark:text-neutral-100">{s.name}</p>
+                                                            {s.foto_profile_url ? (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                                                    ✓ Foto
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+                                                                    ⚠ Belum Foto
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                         <p className="text-[11px] text-slate-600 dark:text-neutral-500">
                                                             {s.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
                                                         </p>
@@ -297,15 +319,26 @@ export default function SiswaPage({
                         <div key={s.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-violet-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3 min-w-0">
-                                    {s.foto ? (
-                                        <img src={s.foto} alt={s.name} className="size-14 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800 shrink-0" />
+                                    {s.foto_profile_url ? (
+                                        <img src={s.foto_profile_url} alt={s.name} className="size-14 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800 shrink-0" />
                                     ) : (
                                         <span className={`flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(s.id, s.jenis_kelamin)} text-lg font-black text-white shadow-sm`}>
                                             {getInitials(s.name)}
                                         </span>
                                     )}
                                     <div className="min-w-0">
-                                        <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{s.name}</h3>
+                                        <div className="flex items-center gap-1.5">
+                                            <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{s.name}</h3>
+                                            {s.foto_profile_url ? (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 shrink-0">
+                                                    ✓ Foto
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 shrink-0">
+                                                    ⚠ Belum Foto
+                                                </span>
+                                            )}
+                                        </div>
                                         <div className="mt-0.5 flex flex-wrap gap-1">
                                             <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-bold text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-400">{s.kelas}</span>
                                             {s.status === 'aktif' ? (

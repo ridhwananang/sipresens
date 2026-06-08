@@ -10,6 +10,7 @@ use App\Models\OrangTua;
 use App\Models\Siswa;
 use App\Services\AdminService;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class OrangTuaController extends Controller
@@ -49,7 +50,15 @@ class OrangTuaController extends Controller
     {
         Gate::authorize('create', OrangTua::class);
 
-        $this->adminService->createOrangTua($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            $path = $request->file('foto_profile')->store('profile/orangtua', $disk);
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->createOrangTua($validated);
 
         return back()->with('success', 'Data Orang Tua berhasil ditambahkan.');
     }
@@ -59,7 +68,18 @@ class OrangTuaController extends Controller
         $ortu = OrangTua::findOrFail($id);
         Gate::authorize('update', $ortu);
 
-        $this->adminService->updateOrangTua($id, $request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('foto_profile')) {
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            if ($ortu->foto_profile) {
+                Storage::disk($disk)->delete($ortu->foto_profile);
+            }
+            $path = $request->file('foto_profile')->store('profile/orangtua', $disk);
+            $validated['foto_profile'] = $path;
+        }
+
+        $this->adminService->updateOrangTua($id, $validated);
 
         return back()->with('success', 'Data Orang Tua berhasil diperbarui.');
     }
@@ -68,6 +88,11 @@ class OrangTuaController extends Controller
     {
         $ortu = OrangTua::findOrFail($id);
         Gate::authorize('delete', $ortu);
+
+        if ($ortu->foto_profile) {
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            Storage::disk($disk)->delete($ortu->foto_profile);
+        }
 
         $this->adminService->deleteOrangTua($id);
 

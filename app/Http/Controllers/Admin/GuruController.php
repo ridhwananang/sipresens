@@ -48,7 +48,8 @@ class GuruController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('foto_profile')) {
-            $path = $request->file('foto_profile')->store('profile/guru', 'public');
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            $path = $request->file('foto_profile')->store('profile/guru', $disk);
             $validated['foto_profile'] = $path;
         }
 
@@ -65,10 +66,11 @@ class GuruController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('foto_profile')) {
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
             if ($guru->foto_profile) {
-                Storage::disk('public')->delete($guru->foto_profile);
+                Storage::disk($disk)->delete($guru->foto_profile);
             }
-            $path = $request->file('foto_profile')->store('profile/guru', 'public');
+            $path = $request->file('foto_profile')->store('profile/guru', $disk);
             $validated['foto_profile'] = $path;
         }
 
@@ -83,7 +85,8 @@ class GuruController extends Controller
         Gate::authorize('delete', $guru);
 
         if ($guru->foto_profile) {
-            Storage::disk('public')->delete($guru->foto_profile);
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            Storage::disk($disk)->delete($guru->foto_profile);
         }
 
         $this->adminService->deleteGuru($id);

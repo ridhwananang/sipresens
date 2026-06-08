@@ -20,7 +20,7 @@ interface ParentItem {
     email: string;
     no_hp: string;
     jenis_kelamin: 'L' | 'P';
-    foto?: string;
+    foto_profile_url?: string;
     anak: AnakItem[];
 }
 
@@ -66,6 +66,7 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editItem, setEditItem] = useState<ParentItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -91,12 +92,14 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
         });
     };
 
-    const filteredParents = parents.filter(
-        (p) =>
+    const filteredParents = parents.filter((p) => {
+        const matchSearch =
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             p.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.no_hp?.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+            p.no_hp?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchFoto = filterFoto === 'ada' ? !!p.foto_profile_url : filterFoto === 'tidak-ada' ? !p.foto_profile_url : true;
+        return matchSearch && matchFoto;
+    });
 
     return (
         <div className="space-y-6 animate-fade-in text-left">
@@ -129,15 +132,26 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
 
             {/* Toolbar */}
             <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800/30 dark:bg-zinc-950/20 md:flex-row md:items-center md:justify-between">
-                <div className="relative flex-1 max-w-sm">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Cari nama, email, atau no. HP..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
-                    />
+                <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center max-w-lg">
+                    <div className="relative flex-1">
+                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Cari nama, email, atau no. HP..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-500"
+                        />
+                    </div>
+                    <select
+                        value={filterFoto}
+                        onChange={(e) => setFilterFoto(e.target.value as '' | 'ada' | 'tidak-ada')}
+                        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:border-violet-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-neutral-100 dark:focus:border-violet-500 cursor-pointer"
+                    >
+                        <option value="">Semua Foto</option>
+                        <option value="ada">Ada Foto</option>
+                        <option value="tidak-ada">Belum Ada Foto</option>
+                    </select>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     <ExportDropdown
@@ -180,15 +194,26 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                                         <tr key={p.id} className="transition-colors hover:bg-violet-50 dark:hover:bg-violet-950/10">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    {p.foto ? (
-                                                        <img src={p.foto} alt={p.name} className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800" />
+                                                    {p.foto_profile_url ? (
+                                                        <img src={p.foto_profile_url} alt={p.name} className="size-11 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800" />
                                                     ) : (
                                                         <span className={`flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(p.id, p.jenis_kelamin)} text-sm font-black text-white shadow-sm`}>
                                                             {getInitials(p.name)}
                                                         </span>
                                                     )}
                                                     <div>
-                                                        <p className="font-black text-slate-900 dark:text-neutral-100">{p.name}</p>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <p className="font-black text-slate-900 dark:text-neutral-100">{p.name}</p>
+                                                            {p.foto_profile_url ? (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                                                    ✓ Foto
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+                                                                    ⚠ Belum Foto
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                         <p className="text-[11px] text-slate-500 dark:text-neutral-500">{p.jenis_kelamin === 'L' ? 'Bapak' : 'Ibu'}</p>
                                                     </div>
                                                 </div>
@@ -260,15 +285,26 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                         <div key={p.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-violet-200 hover:shadow-md dark:border-zinc-800/80 dark:bg-zinc-900/50">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3 min-w-0">
-                                    {p.foto ? (
-                                        <img src={p.foto} alt={p.name} className="size-14 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800 shrink-0" />
+                                    {p.foto_profile_url ? (
+                                        <img src={p.foto_profile_url} alt={p.name} className="size-14 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-zinc-800 shrink-0" />
                                     ) : (
                                         <span className={`flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${avatarColor(p.id, p.jenis_kelamin)} text-lg font-black text-white shadow-sm`}>
                                             {getInitials(p.name)}
                                         </span>
                                     )}
                                     <div className="min-w-0">
-                                        <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{p.name}</h3>
+                                        <div className="flex items-center gap-1.5">
+                                            <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{p.name}</h3>
+                                            {p.foto_profile_url ? (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 shrink-0">
+                                                    ✓ Foto
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 shrink-0">
+                                                    ⚠ Belum Foto
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-[11px] text-slate-500 dark:text-neutral-500">{p.jenis_kelamin === 'L' ? 'Bapak' : 'Ibu'}</p>
                                     </div>
                                 </div>

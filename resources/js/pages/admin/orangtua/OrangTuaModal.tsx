@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,8 @@ export default function OrangTuaModal({
     editItem,
     students = [],
 }: OrangTuaModalProps) {
+    const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -35,6 +37,7 @@ export default function OrangTuaModal({
         no_hp: '',
         jenis_kelamin: 'L' as 'L' | 'P',
         siswa_ids: [] as number[],
+        foto_profile: null as File | null,
     });
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -50,12 +53,25 @@ export default function OrangTuaModal({
                 siswa_ids: editItem.anak
                     ? editItem.anak.map((a: any) => a.id)
                     : [],
+                foto_profile: null,
             });
+            setPreviewUrl(editItem.foto_profile_url || null);
         } else {
             reset();
+            setPreviewUrl(null);
         }
         setSearchQuery('');
     }, [editItem, isOpen]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setData('foto_profile', file);
+        if (file) {
+            setPreviewUrl(URL.createObjectURL(file));
+        } else {
+            setPreviewUrl(editItem?.foto_profile_url || null);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,13 +80,21 @@ export default function OrangTuaModal({
             : '/admin/orangtua';
 
         if (editItem) {
-            put(url, {
-                onSuccess: () => {
-                    toast.success('Data Orang Tua berhasil diperbarui!');
-                    onClose();
+            // Spoofing PUT using POST to support file uploads in PHP
+            router.post(
+                url,
+                {
+                    _method: 'PUT',
+                    ...data,
                 },
-                onError: () => toast.error('Gagal memperbarui data orang tua.'),
-            });
+                {
+                    onSuccess: () => {
+                        toast.success('Data Orang Tua berhasil diperbarui!');
+                        onClose();
+                    },
+                    onError: () => toast.error('Gagal memperbarui data orang tua.'),
+                },
+            );
         } else {
             post(url, {
                 onSuccess: () => {
@@ -115,6 +139,48 @@ export default function OrangTuaModal({
                 <form onSubmit={handleSubmit}>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {/* Input Foto Profil & Preview */}
+                            <div className="flex items-center gap-4 space-y-2 rounded-2xl border border-neutral-100 bg-neutral-50/50 p-4 sm:col-span-2 dark:border-neutral-800 dark:bg-zinc-900/10">
+                                <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-neutral-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                                    {previewUrl ? (
+                                        <img
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            className="size-full object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-xl font-bold text-neutral-400 uppercase dark:text-neutral-600">
+                                            {data.name
+                                                ? data.name.substring(0, 2)
+                                                : 'OT'}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex-grow space-y-1.5">
+                                    <Label
+                                        htmlFor="foto_profile"
+                                        className="text-xs font-bold text-neutral-700 dark:text-neutral-300"
+                                    >
+                                        Foto Profil
+                                    </Label>
+                                    <Input
+                                        id="foto_profile"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/jpg,image/webp"
+                                        onChange={handleFileChange}
+                                        className="text-xs file:mr-2 file:rounded-md file:border-0 file:bg-neutral-100 file:px-2 file:py-1 file:text-[10px] file:font-semibold file:text-neutral-700 dark:file:bg-zinc-800 dark:file:text-neutral-300"
+                                    />
+                                    <p className="text-[9px] text-neutral-400 dark:text-neutral-500">
+                                        Maks. 2MB (JPG, JPEG, PNG, WEBP)
+                                    </p>
+                                    {errors.foto_profile && (
+                                        <p className="mt-1 text-xs text-rose-500">
+                                            {errors.foto_profile}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="space-y-2">
                                 <Label htmlFor="name">Nama Lengkap</Label>
                                 <Input

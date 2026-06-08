@@ -56,7 +56,8 @@ class SiswaController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('foto_profile')) {
-            $path = $request->file('foto_profile')->store('profile/siswa', 'public');
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            $path = $request->file('foto_profile')->store('profile/siswa', $disk);
             $validated['foto_profile'] = $path;
         }
 
@@ -73,10 +74,11 @@ class SiswaController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('foto_profile')) {
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
             if ($siswa->foto_profile) {
-                Storage::disk('public')->delete($siswa->foto_profile);
+                Storage::disk($disk)->delete($siswa->foto_profile);
             }
-            $path = $request->file('foto_profile')->store('profile/siswa', 'public');
+            $path = $request->file('foto_profile')->store('profile/siswa', $disk);
             $validated['foto_profile'] = $path;
         }
 
@@ -91,7 +93,8 @@ class SiswaController extends Controller
         Gate::authorize('delete', $siswa);
 
         if ($siswa->foto_profile) {
-            Storage::disk('public')->delete($siswa->foto_profile);
+            $disk = !empty(config('filesystems.disks.s3.bucket')) ? 's3' : 'public';
+            Storage::disk($disk)->delete($siswa->foto_profile);
         }
 
         $this->adminService->deleteSiswa($id);
