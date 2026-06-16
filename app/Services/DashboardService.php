@@ -20,6 +20,7 @@ use App\Models\Presensi;
 use App\Models\Siswa;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 class DashboardService
 {
@@ -266,7 +267,7 @@ class DashboardService
 
     public function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
     {
-        $today = Carbon::today()->toDateString();
+        $today = CarbonImmutable::today()->toDateString();
 
         if ($dateString < $today) {
             return true;
@@ -283,8 +284,8 @@ class DashboardService
 
             $startPart = str_replace('.', ':', $startPart);
 
-            $startTime = Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
-            $now = Carbon::now('Asia/Jakarta');
+            $startTime = CarbonImmutable::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
+            $now = CarbonImmutable::now('Asia/Jakarta');
 
             return $now->format('H:i') >= $startTime->format('H:i');
         } catch (\Exception $e) {
@@ -305,8 +306,8 @@ class DashboardService
         ];
 
         $targetDayIndex = $daysMap[$dayName] ?? 1;
-        $baseDate = Carbon::parse($relativeToDate);
-        $monday = $baseDate->startOfWeek();
+        // Use CarbonImmutable to avoid mutation bugs when chaining startOfWeek() + addDays()
+        $monday = CarbonImmutable::parse($relativeToDate)->startOfWeek(CarbonImmutable::MONDAY);
 
         return $monday->addDays($targetDayIndex - 1)->toDateString();
     }

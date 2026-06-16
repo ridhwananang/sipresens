@@ -35,6 +35,18 @@ interface ChildData {
         alpa: number;
         percentage: number;
     };
+    attitude_summary?: {
+        baik: number;
+        cukup: number;
+        kurang_baik: number;
+    };
+    attitude_history?: {
+        tanggal: string;
+        mapel: string;
+        guru: string;
+        sikap: string;
+        catatan: string;
+    }[];
 }
 
 interface OrangTuaDashboardProps {
@@ -228,6 +240,89 @@ export default function OrangTuaDashboard({
                                 </div>
                                 <p className="text-[11.5px] text-slate-600 dark:text-neutral-500">
                                     Tidak ada mapel berlangsung saat ini.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* ── Ringkasan Sikap Anak ── */}
+                    <div className="space-y-2.5 pt-2">
+                        <div className="flex items-center gap-1.5">
+                            <span className="size-2 shrink-0 rounded-full bg-violet-500" />
+                            <span className="text-[10px] font-semibold tracking-widest text-slate-600 uppercase dark:text-neutral-500">
+                                Ringkasan Sikap & Karakter
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="rounded-xl border border-slate-200 bg-white p-3 text-center dark:border-neutral-750 dark:bg-zinc-950/60">
+                                <p className="text-[10px] font-black text-emerald-600 uppercase dark:text-emerald-400">Baik</p>
+                                <p className="mt-1 text-base font-black text-slate-800 dark:text-white">{child.attitude_summary?.baik || 0}</p>
+                            </div>
+                            <div className="rounded-xl border border-slate-200 bg-white p-3 text-center dark:border-neutral-750 dark:bg-zinc-950/60">
+                                <p className="text-[10px] font-black text-amber-500 uppercase dark:text-amber-400">Cukup</p>
+                                <p className="mt-1 text-base font-black text-slate-800 dark:text-white">{child.attitude_summary?.cukup || 0}</p>
+                            </div>
+                            <div className="rounded-xl border border-slate-200 bg-white p-3 text-center dark:border-neutral-750 dark:bg-zinc-950/60">
+                                <p className="text-[10px] font-black text-rose-500 uppercase dark:text-rose-400">Kurang</p>
+                                <p className="mt-1 text-base font-black text-slate-800 dark:text-white">{child.attitude_summary?.kurang_baik || 0}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Riwayat Sikap Terbaru ── */}
+                    <div className="space-y-2.5 pt-2">
+                        <div className="flex items-center gap-1.5">
+                            <span className="size-2 shrink-0 rounded-full bg-violet-500" />
+                            <span className="text-[10px] font-semibold tracking-widest text-slate-600 uppercase dark:text-neutral-500">
+                                Catatan Sikap Terbaru (Maks. 10)
+                            </span>
+                        </div>
+
+                        {child.attitude_history && child.attitude_history.length > 0 ? (
+                            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin">
+                                {child.attitude_history.map((att: any, idx: number) => (
+                                    <div
+                                        key={idx}
+                                        className="rounded-xl border border-slate-200 bg-white p-3 space-y-1.5 dark:border-neutral-750 dark:bg-zinc-950/60 shadow-xs text-left"
+                                    >
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="text-[9.5px] font-black text-neutral-450 dark:text-neutral-500">
+                                                {new Date(att.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                            </span>
+                                            {att.sikap === 'baik' ? (
+                                                <span className="rounded-full bg-emerald-50 border border-emerald-100 px-2 py-0.5 text-[8.5px] font-black uppercase text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400">
+                                                    Baik 😊
+                                                </span>
+                                            ) : att.sikap === 'cukup' ? (
+                                                <span className="rounded-full bg-amber-50 border border-amber-100 px-2 py-0.5 text-[8.5px] font-black uppercase text-amber-700 dark:bg-amber-950/20 dark:text-amber-400">
+                                                    Cukup 😐
+                                                </span>
+                                            ) : (
+                                                <span className="rounded-full bg-rose-50 border border-rose-100 px-2 py-0.5 text-[8.5px] font-black uppercase text-rose-700 dark:bg-rose-950/20 dark:text-rose-400">
+                                                    Kurang 😟
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="space-y-0.5">
+                                            <p className="text-xs font-black text-slate-800 dark:text-neutral-200">
+                                                {att.mapel}
+                                            </p>
+                                            <p className="text-[10px] text-slate-500 dark:text-neutral-500">
+                                                Guru: {att.guru}
+                                            </p>
+                                        </div>
+                                        {att.catatan && (
+                                            <p className="text-[10.5px] text-slate-650 bg-slate-50/50 p-2 rounded-lg italic dark:text-neutral-400 dark:bg-neutral-950/30">
+                                                Catatan: "{att.catatan}"
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-neutral-700/60 dark:bg-neutral-900">
+                                <p className="text-[11px] text-slate-650 dark:text-neutral-500 font-medium">
+                                    Belum ada rekam catatan sikap.
                                 </p>
                             </div>
                         )}

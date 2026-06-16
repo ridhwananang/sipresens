@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\OrangTuaController;
 use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\JurnalMengajarController;
+use App\Http\Controllers\Admin\RekapSikapController;
+use App\Http\Controllers\Admin\AspirasiController as AdminAspirasiController;
+use App\Http\Controllers\Siswa\AspirasiController as SiswaAspirasiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\JadwalController;
@@ -31,6 +35,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('jadwal', App\Http\Controllers\Admin\JadwalController::class)->only(['index', 'store', 'update', 'destroy']);
         // Admin: view-only izin management
         Route::get('izin', [App\Http\Controllers\Admin\IzinController::class, 'index'])->name('izin.index');
+        
+        // Jurnal Mengajar & Rekap Sikap reports
+        Route::get('jurnal', [JurnalMengajarController::class, 'index'])->name('jurnal.index');
+        Route::get('sikap', [RekapSikapController::class, 'index'])->name('sikap.index');
+
+        // Kotak Aspirasi Admin
+        Route::get('aspirasi', [AdminAspirasiController::class, 'index'])->name('aspirasi.index');
+        Route::post('aspirasi/{id}/status', [AdminAspirasiController::class, 'updateStatus'])->name('aspirasi.status');
+
+        // ── Export Routes (Admin only) ───────────────────────────────────
+        // Jurnal Mengajar exports
+        Route::get('jurnal-mengajar/export/pdf', [JurnalMengajarController::class, 'exportPdf'])->name('jurnal.export.pdf');
+        Route::get('jurnal-mengajar/export/excel', [JurnalMengajarController::class, 'exportExcel'])->name('jurnal.export.excel');
+
+        // Rekap Sikap exports
+        Route::get('sikap-siswa/export/pdf', [RekapSikapController::class, 'exportPdf'])->name('sikap.export.pdf');
+        Route::get('sikap-siswa/export/excel', [RekapSikapController::class, 'exportExcel'])->name('sikap.export.excel');
+
+        // Aspirasi exports (strict anonymity enforced at controller level)
+        Route::get('aspirasi/export/pdf', [AdminAspirasiController::class, 'exportPdf'])->name('aspirasi.export.pdf');
+        Route::get('aspirasi/export/excel', [AdminAspirasiController::class, 'exportExcel'])->name('aspirasi.export.excel');
+    });
+
+
+    // Siswa-only: Kotak Aspirasi
+    Route::middleware('role:siswa')->prefix('siswa')->name('siswa.')->group(function () {
+        Route::get('aspirasi', [SiswaAspirasiController::class, 'index'])->name('aspirasi.index');
+        Route::post('aspirasi', [SiswaAspirasiController::class, 'store'])->name('aspirasi.store');
     });
 
     // Shared Admin and Wali Kelas (Guru) Routes

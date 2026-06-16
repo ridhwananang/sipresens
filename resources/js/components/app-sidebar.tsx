@@ -19,6 +19,7 @@ import {
   History,
   FileText,
   LucideIcon,
+  MessageSquare,
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -170,6 +171,16 @@ export function AppSidebar() {
                 <SidebarMenuLink href="/admin/orangtua" isActive={isCurrentUrl('/admin/orangtua')} icon={UserRoundCheck} label="Data Orang Tua" role="admin" state={state} />
               </SidebarMenu>
             </SidebarGroup>
+
+            {/* Laporan & Feedback */}
+            <SidebarGroup className="p-0">
+              <SidebarGroupLabel className={labelStyle}>Laporan & Feedback</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuLink href="/admin/jurnal" isActive={isCurrentUrl('/admin/jurnal')} icon={BookOpenText} label="Jurnal Mengajar" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/sikap" isActive={isCurrentUrl('/admin/sikap')} icon={Activity} label="Rekap Sikap" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/aspirasi" isActive={isCurrentUrl('/admin/aspirasi')} icon={MessageSquare} label="Kotak Aspirasi" role="admin" state={state} />
+              </SidebarMenu>
+            </SidebarGroup>
           </div>
         )}
 
@@ -195,6 +206,7 @@ export function AppSidebar() {
               <SidebarMenuLink href="/riwayat" isActive={isCurrentUrl('/riwayat')} icon={History} label="Riwayat Presensi" role="siswa" state={state} />
               <SidebarMenuLink href="/izin" isActive={isCurrentUrl('/izin')} icon={FileText} label="Pengajuan Izin" role="siswa" state={state} />
               <SidebarMenuLink href="/jadwal" isActive={isCurrentUrl('/jadwal')} icon={CalendarDays} label="Jadwal Pelajaran" role="siswa" state={state} />
+              <SidebarMenuLink href="/siswa/aspirasi" isActive={isCurrentUrl('/siswa/aspirasi')} icon={MessageSquare} label="Kotak Aspirasi" role="siswa" state={state} />
             </SidebarMenu>
           </SidebarGroup>
         )}

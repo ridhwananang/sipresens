@@ -19,6 +19,7 @@ import {
     Settings,
     LogOut,
     Menu,
+    MessageSquare,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAppearance } from '@/hooks/use-appearance';
@@ -369,16 +370,18 @@ export default function AppLayout({
     const isProfile = url.startsWith('/settings');
     const isIzin = url.startsWith('/izin');
     const isJadwal = url.startsWith('/jadwal');
+    const isAspirasi = url.startsWith('/siswa/aspirasi');
 
     // ─── SISWA Layout ────────────────────────────────────────────────────────
     if (role === 'siswa') {
         const showBackButton =
             isIzin ||
             isJadwal ||
+            isAspirasi ||
             url.startsWith('/settings/security') ||
             url.startsWith('/settings/appearance');
         const getBackUrl = () => {
-            if (isIzin || isJadwal) return '/dashboard';
+            if (isIzin || isJadwal || isAspirasi) return '/dashboard';
             if (
                 url.startsWith('/settings/security') ||
                 url.startsWith('/settings/appearance')
@@ -393,6 +396,7 @@ export default function AppLayout({
             if (isProfile) return 'Profil Siswa';
             if (isIzin) return 'Ajukan Izin';
             if (isJadwal) return 'Jadwal Siswa';
+            if (isAspirasi) return 'Kotak Aspirasi';
             return 'SIPRESENS';
         };
 
@@ -474,6 +478,22 @@ export default function AppLayout({
                             />
                             <span className="text-[10px] tracking-wide">
                                 Rekap
+                            </span>
+                        </Link>
+
+                        <Link
+                            href="/siswa/aspirasi"
+                            className={`flex flex-col items-center gap-0.5 rounded-xl px-3 py-1 transition-all duration-300 active:scale-95 ${
+                                isAspirasi
+                                    ? 'font-bold text-indigo-600 dark:text-indigo-400'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-neutral-500 dark:hover:text-neutral-300'
+                            }`}
+                        >
+                            <MessageSquare
+                                className={`size-5 transition-transform duration-300 ${isAspirasi ? 'scale-110' : ''}`}
+                            />
+                            <span className="text-[10px] tracking-wide">
+                                Aspirasi
                             </span>
                         </Link>
 

@@ -86,6 +86,27 @@ class DashboardController extends Controller
                     }
                 }
 
+                // --- Attitude stats & history ---
+                $attitudes = \App\Models\StudentAttitude::where('siswa_id', $siswa->id)->get();
+                $baikCount = $attitudes->where('sikap', 'baik')->count();
+                $cukupCount = $attitudes->where('sikap', 'cukup')->count();
+                $kurangBaikCount = $attitudes->where('sikap', 'kurang_baik')->count();
+
+                $latestAttitudes = \App\Models\StudentAttitude::where('siswa_id', $siswa->id)
+                    ->with(['mapel', 'guru.user'])
+                    ->orderBy('tanggal', 'desc')
+                    ->limit(10)
+                    ->get()
+                    ->map(function ($att) {
+                        return [
+                            'tanggal' => $att->tanggal,
+                            'mapel' => $att->mapel ? $att->mapel->nama_mapel : '-',
+                            'guru' => $att->guru && $att->guru->user ? $att->guru->user->name : '-',
+                            'sikap' => $att->sikap,
+                            'catatan' => $att->catatan ?? '',
+                        ];
+                    })->toArray();
+
                 return [
                     'id' => $siswa->id,
                     'name' => $siswa->user->name,
@@ -101,6 +122,12 @@ class DashboardController extends Controller
                         'alpa' => $alpa,
                         'percentage' => $total > 0 ? round(($hadir / $total) * 100) : 0,
                     ],
+                    'attitude_summary' => [
+                        'baik' => $baikCount,
+                        'cukup' => $cukupCount,
+                        'kurang_baik' => $kurangBaikCount,
+                    ],
+                    'attitude_history' => $latestAttitudes,
                 ];
             })->toArray();
 

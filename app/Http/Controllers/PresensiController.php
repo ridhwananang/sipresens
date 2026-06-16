@@ -86,7 +86,11 @@ class PresensiController extends Controller
             Gate::authorize('record', [Presensi::class, $item['siswa_id']]);
         }
 
-        $this->presensiService->recordPresensiBatch($request->validated(), $guruId);
+        if ($request->has('materi') || $request->has('sikap')) {
+            $this->presensiService->recordSesiMengajarBatch($request->validated(), $guruId);
+        } else {
+            $this->presensiService->recordPresensiBatch($request->validated(), $guruId);
+        }
 
         return back()->with('success', 'Presensi berhasil direkam.');
     }

@@ -13,6 +13,9 @@ import {
     User,
     PlayCircle,
     ChevronRight,
+    FileText,
+    MessageSquare,
+    LayoutGrid,
 } from 'lucide-react';
 
 interface SiswaDashboardProps {
@@ -197,6 +200,33 @@ export default function SiswaDashboard({
                         </div>
                     </div>
                 )}
+            </div>
+
+            {/* SECTION: Layanan Siswa / Kotak Aspirasi */}
+            <div className="space-y-3">
+                <h3 className="dark:text-neutral-550 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
+                    <MessageSquare className="size-3.5 text-indigo-500" />
+                    <span>Aspirasi Siswa</span>
+                </h3>
+                <Link
+                    href="/siswa/aspirasi"
+                    className="relative block overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 transition-all hover:bg-slate-50 active:scale-[0.99] dark:border-zinc-900 dark:bg-zinc-900/40 shadow-sm"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600 dark:bg-indigo-950/20 dark:text-indigo-400">
+                            <MessageSquare className="size-6" />
+                        </div>
+                        <div className="flex-1 text-left">
+                            <h4 className="text-xs font-black text-slate-900 dark:text-neutral-250">
+                                Kirim Kritik & Saran Anonim
+                            </h4>
+                            <p className="mt-1 text-[9.5px] leading-relaxed text-slate-505 dark:text-neutral-500">
+                                Suaramu berharga! Kirim masukan atau aspirasi secara aman tanpa identitas terungkap.
+                            </p>
+                        </div>
+                        <ChevronRight className="size-5 text-slate-400 dark:text-neutral-605" />
+                    </div>
+                </Link>
             </div>
 
             {/* SECTION: Jadwal Hari Ini Table */}

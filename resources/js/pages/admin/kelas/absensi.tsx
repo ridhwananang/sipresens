@@ -575,11 +575,7 @@ export default function AbsensiPage({
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Tanggal</th>
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Hari</th>
                                             <th className="px-3 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500 text-center w-14">Mapel</th>
-                                            <th className="px-2 py-3 text-[10px] font-semibold tracking-wider text-[#22C55E] uppercase text-center w-10">H</th>
-                                            <th className="px-2 py-3 text-[10px] font-semibold tracking-wider text-[#F59E0B] uppercase text-center w-10">I</th>
-                                            <th className="px-2 py-3 text-[10px] font-semibold tracking-wider text-[#3B82F6] uppercase text-center w-10">S</th>
-                                            <th className="px-2 py-3 text-[10px] font-semibold tracking-wider text-[#EF4444] uppercase text-center w-10">A</th>
-                                            <th className="px-2 py-3 text-[10px] font-semibold tracking-wider text-neutral-450 uppercase text-center w-14">Belum</th>
+                                            <th className="px-4 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500 text-center">Kehadiran (H/I/S/A)</th>
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500 text-center w-28">Status Harian</th>
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500 text-right w-24">Aksi</th>
                                         </tr>
@@ -605,11 +601,27 @@ export default function AbsensiPage({
                                                         </td>
                                                         <td className="px-5 py-3 text-neutral-600 dark:text-neutral-400">{row.hari}</td>
                                                         <td className="px-3 py-3 text-center font-bold text-neutral-700 dark:text-neutral-300">{row.jumlah_mapel}</td>
-                                                        <td className="px-2 py-3 text-center text-emerald-600 dark:text-emerald-450 font-bold">{row.hadir}</td>
-                                                        <td className="px-2 py-3 text-center text-amber-600 dark:text-amber-450 font-bold">{row.izin}</td>
-                                                        <td className="px-2 py-3 text-center text-blue-600 dark:text-blue-450 font-bold">{row.sakit}</td>
-                                                        <td className="px-2 py-3 text-center text-rose-600 dark:text-rose-450 font-bold">{row.alpa}</td>
-                                                        <td className="px-2 py-3 text-center text-neutral-400 dark:text-neutral-500 font-medium">{row.belum_diabsen}</td>
+                                                        <td className="px-4 py-3 text-center">
+                                                            <div className="inline-flex items-center gap-1.5 justify-center">
+                                                                <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-md bg-emerald-50 text-[10px] font-black text-emerald-750 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900" title="Hadir">
+                                                                    H:{row.hadir}
+                                                                </span>
+                                                                <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-md bg-amber-50 text-[10px] font-black text-amber-750 dark:bg-amber-950/20 dark:text-amber-400 border border-amber-100 dark:border-amber-900" title="Izin">
+                                                                    I:{row.izin}
+                                                                </span>
+                                                                <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-md bg-sky-50 text-[10px] font-black text-sky-750 dark:bg-sky-950/20 dark:text-sky-400 border border-sky-100 dark:border-sky-900" title="Sakit">
+                                                                    S:{row.sakit}
+                                                                </span>
+                                                                <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-md bg-rose-50 text-[10px] font-black text-rose-750 dark:bg-rose-950/20 dark:text-rose-400 border border-rose-100 dark:border-rose-900" title="Alpa">
+                                                                    A:{row.alpa}
+                                                                </span>
+                                                                {row.belum_diabsen > 0 && (
+                                                                    <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-md bg-slate-100 text-[10px] font-bold text-slate-600 dark:bg-zinc-800 dark:text-neutral-400" title="Belum Diabsen">
+                                                                        ?:{row.belum_diabsen}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </td>
                                                         <td className="px-5 py-3 text-center">
                                                             <span className={`inline-flex items-center rounded-sm px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${getStatusBadgeClass(row.status_harian)}`}>
                                                                 {row.status_harian}
@@ -658,8 +670,9 @@ export default function AbsensiPage({
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Jam</th>
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Mata Pelajaran</th>
                                             <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Guru</th>
-                                            <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500 text-center w-28">Status</th>
-                                            <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-400 uppercase dark:text-zinc-500">Keterangan</th>
+                                            <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-450 uppercase dark:text-zinc-500 text-center w-16">Kehadiran</th>
+                                            <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-450 uppercase dark:text-zinc-500 text-center w-20">Sikap</th>
+                                            <th className="px-5 py-3 text-[10px] font-semibold tracking-wider text-neutral-450 uppercase dark:text-zinc-500">Catatan</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-neutral-100 dark:divide-zinc-800">
@@ -691,12 +704,35 @@ export default function AbsensiPage({
                                                         <td className="px-5 py-3 font-medium text-neutral-800 dark:text-neutral-200">{row.nama_mapel}</td>
                                                         <td className="px-5 py-3 text-neutral-700 dark:text-neutral-350">{row.guru}</td>
                                                         <td className="px-5 py-3 text-center">
-                                                            <span className={`inline-flex items-center rounded-sm px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${getStatusBadgeClass(row.status)}`}>
-                                                                {row.status}
-                                                            </span>
+                                                            {row.status === 'Hadir' ? (
+                                                                <span className="inline-flex items-center justify-center size-6.5 rounded-full bg-emerald-500 text-[10px] font-black text-white shadow-xs" title="Hadir">H</span>
+                                                            ) : row.status === 'Izin' ? (
+                                                                <span className="inline-flex items-center justify-center size-6.5 rounded-full bg-amber-500 text-[10px] font-black text-white shadow-xs" title="Izin">I</span>
+                                                            ) : row.status === 'Sakit' ? (
+                                                                <span className="inline-flex items-center justify-center size-6.5 rounded-full bg-blue-500 text-[10px] font-black text-white shadow-xs" title="Sakit">S</span>
+                                                            ) : row.status === 'Alpa' ? (
+                                                                <span className="inline-flex items-center justify-center size-6.5 rounded-full bg-rose-500 text-[10px] font-black text-white shadow-xs" title="Alpa">A</span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center justify-center size-6.5 rounded-full bg-slate-200 text-[10px] font-black text-slate-500 dark:bg-zinc-800 dark:text-neutral-400">-</span>
+                                                            )}
                                                         </td>
-                                                        <td className="px-5 py-3 text-neutral-500 dark:text-neutral-450 truncate max-w-xs" title={row.keterangan}>
-                                                            {row.keterangan || '-'}
+                                                        <td className="px-5 py-3 text-center">
+                                                            {row.sikap === 'baik' ? (
+                                                                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400">Baik 😊</span>
+                                                            ) : row.sikap === 'cukup' ? (
+                                                                <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black uppercase text-amber-700 dark:bg-amber-950/20 dark:text-amber-400">Cukup 😐</span>
+                                                            ) : row.sikap === 'kurang_baik' ? (
+                                                                <span className="inline-flex items-center rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-black uppercase text-rose-700 dark:bg-rose-950/20 dark:text-rose-400">Kurang 😟</span>
+                                                            ) : (
+                                                                <span className="text-neutral-400">-</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-5 py-3 text-neutral-500 dark:text-neutral-400 max-w-xs">
+                                                            <div className="space-y-0.5">
+                                                                {row.keterangan && <p className="text-[11px]"><span className="font-bold text-neutral-600 dark:text-neutral-350">Absen:</span> {row.keterangan}</p>}
+                                                                {row.catatan_sikap && <p className="text-[11px]"><span className="font-bold text-neutral-600 dark:text-neutral-350">Sikap:</span> {row.catatan_sikap}</p>}
+                                                                {!row.keterangan && !row.catatan_sikap && <span>-</span>}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 );
@@ -922,13 +958,29 @@ export default function AbsensiPage({
                                                 <span>Guru: {det.guru}</span>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-1">
-                                            <span className={`inline-flex items-center rounded-sm px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider ${getStatusBadgeClass(det.status)}`}>
-                                                {det.status}
-                                            </span>
+                                        <div className="flex flex-col items-end gap-1 text-right">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className={`inline-flex items-center rounded-sm px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${getStatusBadgeClass(det.status)}`}>
+                                                    {det.status}
+                                                </span>
+                                                {det.sikap && det.sikap !== '-' && (
+                                                    det.sikap === 'baik' ? (
+                                                        <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400">Baik 😊</span>
+                                                    ) : det.sikap === 'cukup' ? (
+                                                        <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black uppercase text-amber-700 dark:bg-amber-950/20 dark:text-amber-400">Cukup 😐</span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-black uppercase text-rose-700 dark:bg-rose-950/20 dark:text-rose-400">Kurang 😟</span>
+                                                    )
+                                                )}
+                                            </div>
                                             {det.keterangan && (
-                                                <span className="text-[9px] text-neutral-400 dark:text-neutral-500 max-w-[150px] truncate" title={det.keterangan}>
-                                                    {det.keterangan}
+                                                <span className="text-[9px] text-neutral-450 dark:text-neutral-500 max-w-[180px] truncate" title={det.keterangan}>
+                                                    Absen: {det.keterangan}
+                                                </span>
+                                            )}
+                                            {det.catatan_sikap && (
+                                                <span className="text-[9px] text-neutral-450 dark:text-neutral-500 max-w-[180px] truncate" title={det.catatan_sikap}>
+                                                    Sikap: {det.catatan_sikap}
                                                 </span>
                                             )}
                                         </div>

@@ -19,6 +19,7 @@ class PresensiPolicy
 
     public function record(User $user, int $siswaId): bool
     {
+        var_dump("record called with parameters", get_class($user), gettype($siswaId), $siswaId);
         if ($user->role === 'guru') {
             $guru = $user->guru;
             $siswa = Siswa::find($siswaId);

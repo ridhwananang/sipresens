@@ -341,15 +341,15 @@ export default function GuruIzin({
             />
 
             {!hasKelasWali ? (
-                <div className="mt-6 flex flex-col items-center justify-center space-y-4 rounded-3xl border border-neutral-100 bg-white p-10 text-center dark:border-zinc-900 dark:bg-zinc-900/40">
-                    <div className="rounded-2xl bg-neutral-100 p-4 dark:bg-zinc-900">
-                        <ShieldCheck className="size-10 text-neutral-400 dark:text-neutral-600" />
+                <div className="mt-6 flex flex-col items-center justify-center space-y-4 border border-slate-200 bg-white p-10 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
+                    <div className="border border-slate-100 bg-slate-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                        <ShieldCheck className="size-10 text-slate-400 dark:text-neutral-600" />
                     </div>
                     <div className="space-y-1.5">
-                        <h3 className="text-base font-black text-neutral-900 dark:text-neutral-100">
+                        <h3 className="text-base font-semibold text-slate-900 dark:text-neutral-100">
                             Hanya untuk Wali Kelas
                         </h3>
-                        <p className="mx-auto max-w-xs text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                        <p className="mx-auto max-w-xs text-xs leading-relaxed text-slate-500 dark:text-neutral-400">
                             Halaman persetujuan izin dikhususkan bagi guru yang
                             mengampu peran sebagai <strong>Wali Kelas</strong>.
                             Anda terdaftar sebagai Guru Pengampu mata pelajaran
@@ -360,612 +360,535 @@ export default function GuruIzin({
             ) : (
                 <>
                     {/* DASHBOARD VIEW */}
-                    {view === 'dashboard' && (
-                        <div className="space-y-6">
-                            {/* Header */}
-                            <div className="border-neutral-150/70 flex items-center justify-between rounded-3xl border bg-white p-5 shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/45">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative">
-                                        {renderAvatar(
-                                            teacherName,
-                                            teacherAvatar,
-                                            'size-12',
-                                        )}
-                                        <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-zinc-900" />
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-0.5 text-[9px] font-black tracking-wider text-indigo-600 uppercase dark:bg-indigo-950/30 dark:text-indigo-400">
-                                            Wali Kelas {kelas_wali.nama}
-                                        </span>
-                                        <h2 className="max-w-[180px] truncate text-sm font-black text-neutral-900 sm:max-w-xs dark:text-neutral-100">
-                                            {teacherName}
-                                        </h2>
-                                        <p className="dark:text-neutral-550 text-[10px] font-semibold text-neutral-400">
-                                            Verifikasi Izin Siswa
-                                        </p>
-                                    </div>
-                                </div>
-                                <button className="relative cursor-pointer rounded-2xl border border-neutral-200/60 bg-white p-2 text-neutral-500 transition-all duration-200 hover:bg-neutral-50 active:scale-95 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-neutral-400 dark:hover:bg-zinc-800/50">
-                                    <Bell className="size-4.5" />
-                                    {waitingCount > 0 && (
-                                        <span className="absolute top-1.5 right-1.5 size-2 animate-pulse rounded-full bg-rose-500" />
-                                    )}
-                                </button>
-                            </div>
+{view === 'dashboard' && (
+    <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between border border-slate-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/45">
+            <div className="flex items-center gap-3">
+                <div className="relative">
+                    {renderAvatar(teacherName, teacherAvatar, 'size-12')}
+                    <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-zinc-900" />
+                </div>
+                <div className="space-y-0.5">
+                    <span className="inline-flex items-center gap-1 border border-indigo-100 bg-indigo-50 px-2 py-0.5 text-[9px] font-semibold tracking-[0.1em] uppercase text-indigo-600 dark:border-indigo-900 dark:bg-indigo-950/30 dark:text-indigo-400">
+                        Wali Kelas {kelas_wali.nama}
+                    </span>
+                    <h2 className="max-w-[180px] truncate text-sm font-semibold text-slate-900 sm:max-w-xs dark:text-neutral-100">
+                        {teacherName}
+                    </h2>
+                    <p className="text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                        Verifikasi Izin Siswa
+                    </p>
+                </div>
+            </div>
+            <button className="relative cursor-pointer border border-slate-200 bg-white p-2 text-slate-500 transition-all duration-200 hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:bg-zinc-800/50">
+                <Bell className="size-4.5" />
+                {waitingCount > 0 && (
+                    <span className="absolute top-1.5 right-1.5 size-2 animate-pulse rounded-full bg-rose-500" />
+                )}
+            </button>
+        </div>
 
-                            {/* Category Cards */}
-                            <div className="grid grid-cols-1 gap-3.5">
-                                {/* Card Menunggu */}
-                                <div
-                                    onClick={() => {
-                                        setView('menunggu');
-                                        setSearchQuery('');
-                                        setFilterType('all');
-                                    }}
-                                    className="group flex h-[72px] cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-4.5 shadow-xs transition-all duration-200 hover:border-indigo-300 hover:shadow-md active:scale-[0.98] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-indigo-900/50"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="shrink-0 rounded-xl bg-amber-50 p-2.5 text-amber-500 dark:bg-amber-950/20">
-                                            <Clock className="size-5" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-neutral-850 text-xs font-black dark:text-neutral-100">
-                                                Menunggu Verifikasi
-                                            </p>
-                                            <p className="mt-0.5 text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                                Pengajuan izin pending
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-black text-white dark:bg-amber-600">
-                                            {waitingCount}
-                                        </span>
-                                        <ChevronRight className="size-4 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                    </div>
-                                </div>
+        {/* Category Cards */}
+        <div className="grid grid-cols-1 gap-3.5">
+            {/* Card Menunggu */}
+            <div
+                onClick={() => {
+                    setView('menunggu');
+                    setSearchQuery('');
+                    setFilterType('all');
+                }}
+                className="group flex h-[72px] cursor-pointer items-center justify-between border border-slate-200 bg-white p-4.5 transition-all duration-200 hover:border-indigo-300 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-indigo-900/50"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="shrink-0 border border-amber-100 bg-amber-50 p-2.5 text-amber-500 dark:border-amber-900 dark:bg-amber-950/20">
+                        <Clock className="size-5" />
+                    </div>
+                    <div className="text-left">
+                        <p className="text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                            Menunggu Verifikasi
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                            Pengajuan izin pending
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center border border-amber-200 bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-white dark:border-amber-700 dark:bg-amber-600">
+                        {waitingCount}
+                    </span>
+                    <ChevronRight className="size-4 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                </div>
+            </div>
 
-                                {/* Card Ditolak */}
-                                <div
-                                    onClick={() => {
-                                        setView('ditolak');
-                                        setSearchQuery('');
-                                        setFilterType('all');
-                                    }}
-                                    className="group flex h-[72px] cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-4.5 shadow-xs transition-all duration-200 hover:border-rose-300 hover:shadow-md active:scale-[0.98] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-rose-900/50"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="shrink-0 rounded-xl bg-rose-50 p-2.5 text-rose-500 dark:bg-rose-950/20">
-                                            <XCircle className="size-5" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-neutral-850 text-xs font-black dark:text-neutral-100">
-                                                Pengajuan Ditolak
-                                            </p>
-                                            <p className="mt-0.5 text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                                Pengajuan tidak disetujui
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center rounded-full bg-rose-500 px-2.5 py-0.5 text-xs font-black text-white dark:bg-rose-600">
-                                            {rejectedCount}
-                                        </span>
-                                        <ChevronRight className="size-4 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                    </div>
-                                </div>
+            {/* Card Ditolak */}
+            <div
+                onClick={() => {
+                    setView('ditolak');
+                    setSearchQuery('');
+                    setFilterType('all');
+                }}
+                className="group flex h-[72px] cursor-pointer items-center justify-between border border-slate-200 bg-white p-4.5 transition-all duration-200 hover:border-rose-300 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-rose-900/50"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="shrink-0 border border-rose-100 bg-rose-50 p-2.5 text-rose-500 dark:border-rose-900 dark:bg-rose-950/20">
+                        <XCircle className="size-5" />
+                    </div>
+                    <div className="text-left">
+                        <p className="text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                            Pengajuan Ditolak
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                            Pengajuan tidak disetujui
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center border border-rose-200 bg-rose-500 px-2.5 py-0.5 text-xs font-semibold text-white dark:border-rose-700 dark:bg-rose-600">
+                        {rejectedCount}
+                    </span>
+                    <ChevronRight className="size-4 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                </div>
+            </div>
 
-                                {/* Card Riwayat */}
-                                <div
-                                    onClick={() => {
-                                        setView('riwayat');
-                                        setSearchQuery('');
-                                        setFilterType('all');
-                                    }}
-                                    className="group flex h-[72px] cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-4.5 shadow-xs transition-all duration-200 hover:border-indigo-300 hover:shadow-md active:scale-[0.98] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-indigo-900/50"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="shrink-0 rounded-xl bg-indigo-50 p-2.5 text-indigo-500 dark:bg-indigo-950/20">
-                                            <CheckCircle2 className="size-5" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-neutral-850 text-xs font-black dark:text-neutral-100">
-                                                Riwayat Verifikasi
-                                            </p>
-                                            <p className="mt-0.5 text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                                Seluruh data yang diproses
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center rounded-full bg-indigo-500 px-2.5 py-0.5 text-xs font-black text-white dark:bg-indigo-600">
-                                            {historyCount}
-                                        </span>
-                                        <ChevronRight className="size-4 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                    </div>
-                                </div>
-                            </div>
+            {/* Card Riwayat */}
+            <div
+                onClick={() => {
+                    setView('riwayat');
+                    setSearchQuery('');
+                    setFilterType('all');
+                }}
+                className="group flex h-[72px] cursor-pointer items-center justify-between border border-slate-200 bg-white p-4.5 transition-all duration-200 hover:border-indigo-300 active:scale-[0.98] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-indigo-900/50"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="shrink-0 border border-indigo-100 bg-indigo-50 p-2.5 text-indigo-500 dark:border-indigo-900 dark:bg-indigo-950/20">
+                        <CheckCircle2 className="size-5" />
+                    </div>
+                    <div className="text-left">
+                        <p className="text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                            Riwayat Verifikasi
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                            Seluruh data yang diproses
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center border border-indigo-200 bg-indigo-500 px-2.5 py-0.5 text-xs font-semibold text-white dark:border-indigo-700 dark:bg-indigo-600">
+                        {historyCount}
+                    </span>
+                    <ChevronRight className="size-4 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                </div>
+            </div>
+        </div>
 
-                            {/* Pengajuan Terbaru */}
-                            <div className="space-y-3.5">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-neutral-450 text-xs font-black tracking-widest uppercase dark:text-neutral-500">
-                                        Pengajuan Terbaru
-                                    </h3>
-                                    {waitingCount > 5 && (
-                                        <button
-                                            onClick={() => setView('menunggu')}
-                                            className="cursor-pointer text-[10px] font-extrabold text-indigo-600 hover:underline dark:text-indigo-400"
+        {/* Pengajuan Terbaru */}
+        <div className="space-y-3.5">
+            <div className="flex items-center justify-between">
+                <h3 className="text-[9px] font-semibold tracking-[0.1em] uppercase text-slate-400 dark:text-neutral-500">
+                    Pengajuan Terbaru
+                </h3>
+                {waitingCount > 5 && (
+                    <button
+                        onClick={() => setView('menunggu')}
+                        className="cursor-pointer text-[10px] font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+                    >
+                        Lihat Semua
+                    </button>
+                )}
+            </div>
+
+            {waitingCount === 0 ? (
+                <div className="flex flex-col items-center justify-center space-y-2.5 border border-slate-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/35">
+                    <div className="border border-slate-100 bg-slate-50 p-3 dark:border-zinc-800 dark:bg-zinc-900">
+                        <CheckCircle2 className="size-6 text-slate-400 dark:text-neutral-600" />
+                    </div>
+                    <div className="space-y-0.5">
+                        <p className="text-xs font-semibold text-slate-700 dark:text-neutral-300">
+                            Belum Ada Pengajuan Baru
+                        </p>
+                        <p className="text-[10px] text-slate-400 dark:text-neutral-500">
+                            Semua izin siswa kelas binaan sudah selesai diproses.
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-2">
+                    {waitingList.slice(0, 5).map((iz) => (
+                        <div
+                            key={iz.id}
+                            onClick={() => setActiveRequest(iz)}
+                            className="group flex cursor-pointer items-center justify-between border border-slate-200 bg-white p-3.5 transition-all duration-200 hover:border-indigo-200 active:scale-[0.99] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-indigo-900/40"
+                        >
+                            <div className="flex min-w-0 items-center gap-3">
+                                {renderAvatar(iz.name, null, 'size-10')}
+                                <div className="min-w-0 space-y-0.5 text-left">
+                                    <h4 className="truncate text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                                        {iz.name}
+                                    </h4>
+                                    <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-medium text-slate-400 dark:text-neutral-500">
+                                        <span
+                                            className={`inline-flex items-center border px-1.5 py-0.5 text-[8.5px] font-semibold tracking-wider uppercase ${
+                                                iz.jenis_izin === 'sakit'
+                                                    ? 'border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
+                                                    : 'border-indigo-100/50 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                            }`}
                                         >
-                                            Lihat Semua
-                                        </button>
-                                    )}
+                                            {iz.jenis_izin === 'sakit' ? '🤒 Sakit' : '📝 Izin'}
+                                        </span>
+                                        <span>•</span>
+                                        <span>
+                                            {getDurationDays(iz.tanggal_mulai, iz.tanggal_selesai)}
+                                        </span>
+                                        <span>•</span>
+                                        <span>
+                                            {formatDateRange(iz.tanggal_mulai, iz.tanggal_selesai)}
+                                        </span>
+                                    </div>
                                 </div>
-
-                                {waitingCount === 0 ? (
-                                    <div className="flex flex-col items-center justify-center space-y-2.5 rounded-2xl border border-neutral-200/60 bg-white p-8 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                        <div className="rounded-xl bg-neutral-50 p-3 dark:bg-zinc-900">
-                                            <CheckCircle2 className="size-6 text-neutral-400 dark:text-neutral-600" />
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <p className="text-xs font-black text-neutral-700 dark:text-neutral-300">
-                                                Belum Ada Pengajuan Baru
-                                            </p>
-                                            <p className="text-[10px] text-neutral-400 dark:text-neutral-500">
-                                                Semua izin siswa kelas binaan
-                                                sudah selesai diproses.
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-2">
-                                        {waitingList.slice(0, 5).map((iz) => (
-                                            <div
-                                                key={iz.id}
-                                                onClick={() =>
-                                                    setActiveRequest(iz)
-                                                }
-                                                className="group flex cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-3.5 shadow-xs transition-all duration-200 hover:border-indigo-200 hover:shadow-xs active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-indigo-900/40"
-                                            >
-                                                <div className="flex min-w-0 items-center gap-3">
-                                                    {renderAvatar(
-                                                        iz.name,
-                                                        null,
-                                                        'size-10',
-                                                    )}
-                                                    <div className="min-w-0 space-y-0.5 text-left">
-                                                        <h4 className="text-neutral-850 truncate text-xs font-black dark:text-neutral-100">
-                                                            {iz.name}
-                                                        </h4>
-                                                        <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-bold text-neutral-400 dark:text-neutral-500">
-                                                            <span
-                                                                className={`inline-flex items-center rounded-sm px-1.5 py-0.5 text-[8.5px] font-black tracking-wider uppercase ${
-                                                                    iz.jenis_izin ===
-                                                                    'sakit'
-                                                                        ? 'border border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
-                                                                        : 'text-indigo-750 border border-indigo-100/50 bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                                                }`}
-                                                            >
-                                                                {iz.jenis_izin ===
-                                                                'sakit'
-                                                                    ? '🤒 Sakit'
-                                                                    : '📝 Izin'}
-                                                            </span>
-                                                            <span>•</span>
-                                                            <span>
-                                                                {getDurationDays(
-                                                                    iz.tanggal_mulai,
-                                                                    iz.tanggal_selesai,
-                                                                )}
-                                                            </span>
-                                                            <span>•</span>
-                                                            <span>
-                                                                {formatDateRange(
-                                                                    iz.tanggal_mulai,
-                                                                    iz.tanggal_selesai,
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <ChevronRight className="size-4.5 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
+                            <ChevronRight className="size-4.5 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
                         </div>
-                    )}
+                    ))}
+                </div>
+            )}
+        </div>
+    </div>
+)}
 
                     {/* MENUNGGU VIEW */}
-                    {view === 'menunggu' && (
-                        <div className="animate-fade-in space-y-5">
-                            {/* Sub header */}
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setView('dashboard')}
-                                    className="text-neutral-650 cursor-pointer rounded-xl border border-neutral-200/60 bg-white p-2 transition-all hover:bg-neutral-50 active:scale-95 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-neutral-400 dark:hover:bg-zinc-800"
-                                >
-                                    <ArrowLeft className="size-4" />
-                                </button>
-                                <div className="text-left">
-                                    <h2 className="text-neutral-850 text-base font-black dark:text-neutral-100">
-                                        Menunggu Verifikasi
-                                    </h2>
-                                    <p className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                        Total {waitingCount} pengajuan pending
-                                    </p>
-                                </div>
-                            </div>
+{view === 'menunggu' && (
+    <div className="animate-fade-in space-y-5">
+        {/* Sub header */}
+        <div className="flex items-center gap-3">
+            <button
+                onClick={() => setView('dashboard')}
+                className="cursor-pointer border border-slate-200 bg-white p-2 text-slate-500 transition-all hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:bg-zinc-800"
+            >
+                <ArrowLeft className="size-4" />
+            </button>
+            <div className="text-left">
+                <h2 className="text-sm font-semibold text-slate-800 dark:text-neutral-100">
+                    Menunggu Verifikasi
+                </h2>
+                <p className="text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                    Total {waitingCount} pengajuan pending
+                </p>
+            </div>
+        </div>
 
-                            {/* Search and Filters */}
-                            <div className="space-y-3 rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                <div className="relative">
-                                    <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-                                    <input
-                                        type="text"
-                                        placeholder="Cari nama siswa..."
-                                        value={searchQuery}
-                                        onChange={(e) =>
-                                            setSearchQuery(e.target.value)
-                                        }
-                                        className="border-neutral-150 dark:border-zinc-850/80 dark:text-neutral-250 w-full rounded-xl border bg-neutral-50 py-2.5 pr-4 pl-9.5 text-xs font-semibold text-neutral-800 placeholder-neutral-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:bg-zinc-950"
-                                    />
-                                    {searchQuery && (
-                                        <button
-                                            onClick={() => setSearchQuery('')}
-                                            className="absolute top-1/2 right-3 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                                        >
-                                            <X className="size-3.5" />
-                                        </button>
-                                    )}
-                                </div>
+        {/* Search and Filters */}
+        <div className="space-y-3 border border-slate-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/35">
+            <div className="relative">
+                <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400 dark:text-neutral-500" />
+                <input
+                    type="text"
+                    placeholder="Cari nama siswa..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-sm border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9.5 text-xs font-medium text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                />
+                {searchQuery && (
+                    <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-neutral-300"
+                    >
+                        <X className="size-3.5" />
+                    </button>
+                )}
+            </div>
 
-                                <div className="flex items-center gap-1.5">
-                                    <Filter className="size-3 shrink-0 text-neutral-400 dark:text-neutral-500" />
-                                    <span className="text-neutral-450 mr-1.5 text-[10px] font-black tracking-wider uppercase dark:text-neutral-500">
-                                        Filter:
+            <div className="flex items-center gap-1.5">
+                <Filter className="size-3 shrink-0 text-slate-400 dark:text-neutral-500" />
+                <span className="mr-1.5 text-[9px] font-semibold tracking-[0.1em] uppercase text-slate-400 dark:text-neutral-500">
+                    Filter:
+                </span>
+                <div className="flex flex-wrap gap-1">
+                    {(['all', 'sakit', 'izin'] as const).map((type) => (
+                        <button
+                            key={type}
+                            type="button"
+                            onClick={() => setFilterType(type)}
+                            className={`cursor-pointer rounded-sm border px-3 py-1.5 text-[10.5px] font-medium capitalize transition-all ${
+                                filterType === type
+                                    ? 'border-indigo-600 bg-indigo-600 text-white dark:bg-indigo-700'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:border-indigo-950'
+                            }`}
+                        >
+                            {type === 'all' ? 'Semua' : type}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+
+        {/* List Pending */}
+        {activeWaitingList.length === 0 ? (
+            <div className="flex flex-col items-center justify-center space-y-2 border border-slate-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/35">
+                <p className="text-xs font-semibold text-slate-600 dark:text-neutral-400">
+                    Tidak Ada Hasil
+                </p>
+                <p className="text-[10px] text-slate-400 dark:text-neutral-500">
+                    Tidak ada pengajuan pending yang cocok dengan kriteria pencarian.
+                </p>
+            </div>
+        ) : (
+            <div className="space-y-2">
+                {activeWaitingList.map((iz) => (
+                    <div
+                        key={iz.id}
+                        onClick={() => setActiveRequest(iz)}
+                        className="group flex cursor-pointer items-center justify-between border border-slate-200 bg-white p-3.5 transition-all duration-200 hover:border-indigo-200 active:scale-[0.99] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-indigo-900/40"
+                    >
+                        <div className="flex min-w-0 items-center gap-3">
+                            {renderAvatar(iz.name, null, 'size-10')}
+                            <div className="min-w-0 space-y-0.5 text-left">
+                                <h4 className="truncate text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                                    {iz.name}
+                                </h4>
+                                <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-medium text-slate-400 dark:text-neutral-500">
+                                    <span
+                                        className={`inline-flex items-center border px-1.5 py-0.5 text-[8.5px] font-semibold tracking-wider uppercase ${
+                                            iz.jenis_izin === 'sakit'
+                                                ? 'border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
+                                                : 'border-indigo-100/50 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                        }`}
+                                    >
+                                        {iz.jenis_izin === 'sakit' ? '🤒 Sakit' : '📝 Izin'}
                                     </span>
-                                    <div className="flex flex-wrap gap-1">
-                                        {(
-                                            ['all', 'sakit', 'izin'] as const
-                                        ).map((type) => (
-                                            <button
-                                                key={type}
-                                                type="button"
-                                                onClick={() =>
-                                                    setFilterType(type)
-                                                }
-                                                className={`cursor-pointer rounded-lg border px-3 py-1.5 text-[10.5px] font-bold capitalize transition-all ${
-                                                    filterType === type
-                                                        ? 'dark:bg-indigo-650 border-indigo-650 bg-indigo-600 text-white'
-                                                        : 'border-neutral-200 bg-white text-neutral-600 hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:border-indigo-950'
-                                                }`}
-                                            >
-                                                {type === 'all'
-                                                    ? 'Semua'
-                                                    : type}
-                                            </button>
-                                        ))}
-                                    </div>
+                                    <span>•</span>
+                                    <span>
+                                        {getDurationDays(iz.tanggal_mulai, iz.tanggal_selesai)}
+                                    </span>
+                                    <span>•</span>
+                                    <span>
+                                        {formatDateRange(iz.tanggal_mulai, iz.tanggal_selesai)}
+                                    </span>
                                 </div>
                             </div>
-
-                            {/* List Pending */}
-                            {activeWaitingList.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center space-y-2 rounded-2xl border border-neutral-200/60 bg-white p-12 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                    <p className="text-xs font-black text-neutral-600 dark:text-neutral-400">
-                                        Tidak Ada Hasil
-                                    </p>
-                                    <p className="dark:text-neutral-550 text-[10px] text-neutral-400">
-                                        Tidak ada pengajuan pending yang cocok
-                                        dengan kriteria pencarian.
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="space-y-2">
-                                    {activeWaitingList.map((iz) => (
-                                        <div
-                                            key={iz.id}
-                                            onClick={() => setActiveRequest(iz)}
-                                            className="group flex cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-3.5 shadow-xs transition-all duration-200 hover:border-indigo-200 hover:shadow-xs active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-indigo-900/40"
-                                        >
-                                            <div className="flex min-w-0 items-center gap-3">
-                                                {renderAvatar(
-                                                    iz.name,
-                                                    null,
-                                                    'size-10',
-                                                )}
-                                                <div className="min-w-0 space-y-0.5 text-left">
-                                                    <h4 className="text-neutral-850 truncate text-xs font-black dark:text-neutral-100">
-                                                        {iz.name}
-                                                    </h4>
-                                                    <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-bold text-neutral-400 dark:text-neutral-500">
-                                                        <span
-                                                            className={`inline-flex items-center rounded-sm px-1.5 py-0.5 text-[8.5px] font-black tracking-wider uppercase ${
-                                                                iz.jenis_izin ===
-                                                                'sakit'
-                                                                    ? 'border border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
-                                                                    : 'text-indigo-750 border border-indigo-100/50 bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                                            }`}
-                                                        >
-                                                            {iz.jenis_izin ===
-                                                            'sakit'
-                                                                ? '🤒 Sakit'
-                                                                : '📝 Izin'}
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span>
-                                                            {getDurationDays(
-                                                                iz.tanggal_mulai,
-                                                                iz.tanggal_selesai,
-                                                            )}
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span>
-                                                            {formatDateRange(
-                                                                iz.tanggal_mulai,
-                                                                iz.tanggal_selesai,
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <ChevronRight className="size-4.5 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
-                    )}
+                        <ChevronRight className="size-4.5 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
+)}
 
                     {/* DITOLAK VIEW */}
-                    {view === 'ditolak' && (
-                        <div className="animate-fade-in space-y-5">
-                            {/* Sub header */}
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setView('dashboard')}
-                                    className="text-neutral-650 cursor-pointer rounded-xl border border-neutral-200/60 bg-white p-2 transition-all hover:bg-neutral-50 active:scale-95 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-neutral-400 dark:hover:bg-zinc-800"
-                                >
-                                    <ArrowLeft className="size-4" />
-                                </button>
-                                <div className="text-left">
-                                    <h2 className="text-neutral-850 text-base font-black dark:text-neutral-100">
-                                        Pengajuan Ditolak
-                                    </h2>
-                                    <p className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                        Total {rejectedCount} pengajuan ditolak
-                                    </p>
-                                </div>
-                            </div>
+{view === 'ditolak' && (
+    <div className="animate-fade-in space-y-5">
+        {/* Sub header */}
+        <div className="flex items-center gap-3">
+            <button
+                onClick={() => setView('dashboard')}
+                className="cursor-pointer border border-slate-200 bg-white p-2 text-slate-500 transition-all hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:bg-zinc-800"
+            >
+                <ArrowLeft className="size-4" />
+            </button>
+            <div className="text-left">
+                <h2 className="text-sm font-semibold text-slate-800 dark:text-neutral-100">
+                    Pengajuan Ditolak
+                </h2>
+                <p className="text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                    Total {rejectedCount} pengajuan ditolak
+                </p>
+            </div>
+        </div>
 
-                            {/* Search and Filters */}
-                            <div className="space-y-3 rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                <div className="relative">
-                                    <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-                                    <input
-                                        type="text"
-                                        placeholder="Cari nama siswa..."
-                                        value={searchQuery}
-                                        onChange={(e) =>
-                                            setSearchQuery(e.target.value)
-                                        }
-                                        className="border-neutral-150 dark:border-zinc-850/80 dark:text-neutral-250 w-full rounded-xl border bg-neutral-50 py-2.5 pr-4 pl-9.5 text-xs font-semibold text-neutral-800 placeholder-neutral-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:bg-zinc-950"
-                                    />
-                                    {searchQuery && (
-                                        <button
-                                            onClick={() => setSearchQuery('')}
-                                            className="absolute top-1/2 right-3 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                                        >
-                                            <X className="size-3.5" />
-                                        </button>
-                                    )}
-                                </div>
+        {/* Search and Filters */}
+        <div className="space-y-3 border border-slate-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/35">
+            <div className="relative">
+                <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400 dark:text-neutral-500" />
+                <input
+                    type="text"
+                    placeholder="Cari nama siswa..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-sm border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9.5 text-xs font-medium text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-950 dark:text-neutral-200"
+                />
+                {searchQuery && (
+                    <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-neutral-300"
+                    >
+                        <X className="size-3.5" />
+                    </button>
+                )}
+            </div>
 
+            <div className="flex items-center gap-1.5">
+                <Filter className="size-3 shrink-0 text-slate-400 dark:text-neutral-500" />
+                <span className="mr-1.5 text-[9px] font-semibold tracking-[0.1em] uppercase text-slate-400 dark:text-neutral-500">
+                    Filter:
+                </span>
+                <div className="flex flex-wrap gap-1">
+                    {(['all', 'sakit', 'izin'] as const).map((type) => (
+                        <button
+                            key={type}
+                            type="button"
+                            onClick={() => setFilterType(type)}
+                            className={`cursor-pointer rounded-sm border px-3 py-1.5 text-[10.5px] font-medium capitalize transition-all ${
+                                filterType === type
+                                    ? 'border-indigo-600 bg-indigo-600 text-white dark:bg-indigo-700'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:border-indigo-950'
+                            }`}
+                        >
+                            {type === 'all' ? 'Semua' : type}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+
+        {/* List Rejected */}
+        {activeRejectedList.length === 0 ? (
+            <div className="flex flex-col items-center justify-center space-y-2 border border-slate-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/35">
+                <p className="text-xs font-semibold text-slate-600 dark:text-neutral-400">
+                    Tidak Ada Hasil
+                </p>
+                <p className="text-[10px] text-slate-400 dark:text-neutral-500">
+                    Tidak ada pengajuan ditolak yang cocok dengan kriteria pencarian.
+                </p>
+            </div>
+        ) : (
+            <div className="space-y-2">
+                {activeRejectedList.map((iz) => (
+                    <div
+                        key={iz.id}
+                        onClick={() => setActiveRequest(iz)}
+                        className="group flex cursor-pointer items-center justify-between border border-slate-200 bg-white p-3.5 transition-all duration-200 hover:border-rose-200 active:scale-[0.99] dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-rose-900/40"
+                    >
+                        <div className="flex min-w-0 items-center gap-3">
+                            {renderAvatar(iz.name, null, 'size-10')}
+                            <div className="min-w-0 space-y-0.5 text-left">
                                 <div className="flex items-center gap-1.5">
-                                    <Filter className="size-3 shrink-0 text-neutral-400 dark:text-neutral-500" />
-                                    <span className="text-neutral-450 mr-1.5 text-[10px] font-black tracking-wider uppercase dark:text-neutral-500">
-                                        Filter:
+                                    <h4 className="truncate text-xs font-semibold text-slate-800 dark:text-neutral-100">
+                                        {iz.name}
+                                    </h4>
+                                    <span
+                                        className="size-1.5 shrink-0 rounded-full bg-rose-500"
+                                        title="Ditolak"
+                                    />
+                                </div>
+                                <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-medium text-slate-400 dark:text-neutral-500">
+                                    <span
+                                        className={`inline-flex items-center border px-1.5 py-0.5 text-[8.5px] font-semibold tracking-wider uppercase ${
+                                            iz.jenis_izin === 'sakit'
+                                                ? 'border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
+                                                : 'border-indigo-100/50 bg-indigo-50 text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
+                                        }`}
+                                    >
+                                        {iz.jenis_izin === 'sakit' ? '🤒 Sakit' : '📝 Izin'}
                                     </span>
-                                    <div className="flex flex-wrap gap-1">
-                                        {(
-                                            ['all', 'sakit', 'izin'] as const
-                                        ).map((type) => (
-                                            <button
-                                                key={type}
-                                                type="button"
-                                                onClick={() =>
-                                                    setFilterType(type)
-                                                }
-                                                className={`cursor-pointer rounded-lg border px-3 py-1.5 text-[10.5px] font-bold capitalize transition-all ${
-                                                    filterType === type
-                                                        ? 'bg-indigo-650 border-indigo-650 text-white'
-                                                        : 'text-neutral-650 border-neutral-200 bg-white hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:border-indigo-950'
-                                                }`}
-                                            >
-                                                {type === 'all'
-                                                    ? 'Semua'
-                                                    : type}
-                                            </button>
-                                        ))}
-                                    </div>
+                                    <span>•</span>
+                                    <span>
+                                        {formatDateRange(iz.tanggal_mulai, iz.tanggal_selesai)}
+                                    </span>
+                                    <span>•</span>
+                                    <span className="border border-rose-100/50 bg-rose-50 px-1.5 font-semibold text-rose-600 dark:border-rose-900/35 dark:bg-rose-950/20 dark:text-rose-400">
+                                        Ditolak
+                                    </span>
                                 </div>
                             </div>
-
-                            {/* List Rejected */}
-                            {activeRejectedList.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center space-y-2 rounded-2xl border border-neutral-200/60 bg-white p-12 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                    <p className="text-xs font-black text-neutral-600 dark:text-neutral-400">
-                                        Tidak Ada Hasil
-                                    </p>
-                                    <p className="dark:text-neutral-550 text-[10px] text-neutral-400">
-                                        Tidak ada pengajuan ditolak yang cocok
-                                        dengan kriteria pencarian.
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="space-y-2">
-                                    {activeRejectedList.map((iz) => (
-                                        <div
-                                            key={iz.id}
-                                            onClick={() => setActiveRequest(iz)}
-                                            className="group flex cursor-pointer items-center justify-between rounded-2xl border border-neutral-200/60 bg-white p-3.5 shadow-xs transition-all duration-200 hover:border-rose-200 hover:shadow-xs active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-rose-900/40"
-                                        >
-                                            <div className="flex min-w-0 items-center gap-3">
-                                                {renderAvatar(
-                                                    iz.name,
-                                                    null,
-                                                    'size-10',
-                                                )}
-                                                <div className="min-w-0 space-y-0.5 text-left">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <h4 className="text-neutral-850 truncate text-xs font-black dark:text-neutral-100">
-                                                            {iz.name}
-                                                        </h4>
-                                                        <span
-                                                            className="size-1.5 shrink-0 rounded-full bg-rose-500"
-                                                            title="Ditolak"
-                                                        />
-                                                    </div>
-                                                    <div className="flex flex-wrap items-center gap-1 text-[9.5px] font-bold text-neutral-400 dark:text-neutral-500">
-                                                        <span
-                                                            className={`inline-flex items-center rounded-sm px-1.5 py-0.5 text-[8.5px] font-black tracking-wider uppercase ${
-                                                                iz.jenis_izin ===
-                                                                'sakit'
-                                                                    ? 'border border-sky-100/50 bg-sky-50 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-400'
-                                                                    : 'text-indigo-750 border border-indigo-100/50 bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400'
-                                                            }`}
-                                                        >
-                                                            {iz.jenis_izin ===
-                                                            'sakit'
-                                                                ? '🤒 Sakit'
-                                                                : '📝 Izin'}
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span>
-                                                            {formatDateRange(
-                                                                iz.tanggal_mulai,
-                                                                iz.tanggal_selesai,
-                                                            )}
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span className="rounded border border-rose-100/50 bg-rose-50 px-1.5 font-extrabold text-rose-600 dark:border-rose-900/35 dark:bg-rose-950/20 dark:text-rose-400">
-                                                            Ditolak
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <ChevronRight className="size-4.5 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
-                    )}
+                        <ChevronRight className="size-4.5 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
+)}
 
                     {/* RIWAYAT VIEW */}
-                    {view === 'riwayat' && (
-                        <div className="animate-fade-in space-y-5">
-                            {/* Sub header */}
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setView('dashboard')}
-                                    className="text-neutral-650 cursor-pointer rounded-xl border border-neutral-200/60 bg-white p-2 transition-all hover:bg-neutral-50 active:scale-95 dark:border-zinc-800/80 dark:bg-zinc-900/40 dark:text-neutral-400 dark:hover:bg-zinc-800"
-                                >
-                                    <ArrowLeft className="size-4" />
-                                </button>
-                                <div className="text-left">
-                                    <h2 className="text-neutral-850 text-base font-black dark:text-neutral-100">
-                                        Riwayat Verifikasi
-                                    </h2>
-                                    <p className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">
-                                        Total {historyCount} data terverifikasi
-                                    </p>
-                                </div>
-                            </div>
+{view === 'riwayat' && (
+    <div className="animate-fade-in space-y-5">
+        {/* Sub header */}
+        <div className="flex items-center gap-3">
+            <button
+                onClick={() => setView('dashboard')}
+                className="cursor-pointer border border-slate-200 bg-white p-2 text-slate-500 transition-all hover:bg-slate-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-400 dark:hover:bg-zinc-800"
+            >
+                <ArrowLeft className="size-4" />
+            </button>
+            <div className="text-left">
+                <h2 className="text-sm font-semibold text-slate-800 dark:text-neutral-100">
+                    Riwayat Verifikasi
+                </h2>
+                <p className="text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                    Total {historyCount} data terverifikasi
+                </p>
+            </div>
+        </div>
 
-                            {/* List Grouped by Date */}
-                            {historyList.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center space-y-2 rounded-2xl border border-neutral-200/60 bg-white p-12 text-center shadow-xs dark:border-zinc-800/80 dark:bg-zinc-900/35">
-                                    <p className="text-xs font-black text-neutral-600 dark:text-neutral-400">
-                                        Belum Ada Riwayat
-                                    </p>
-                                    <p className="dark:text-neutral-550 text-[10px] text-neutral-400">
-                                        Semua pengajuan verifikasi yang telah
-                                        disetujui/ditolak akan muncul di sini.
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="space-y-5">
-                                    {Object.entries(
-                                        groupHistoryByDate(historyList),
-                                    ).map(([dateKey, items]) => (
-                                        <div
-                                            key={dateKey}
-                                            className="space-y-2"
-                                        >
-                                            {/* Date Header */}
-                                            <div className="flex items-center gap-2 py-1 pl-1">
-                                                <CalendarDays className="size-3.5 text-neutral-400 dark:text-neutral-500" />
-                                                <span className="text-neutral-650 text-[11px] font-black dark:text-neutral-400">
-                                                    {dateKey}
-                                                </span>
-                                            </div>
-
-                                            {/* Compact rows */}
-                                            <div className="space-y-1.5">
-                                                {items.map((iz) => (
-                                                    <div
-                                                        key={iz.id}
-                                                        onClick={() =>
-                                                            setActiveRequest(iz)
-                                                        }
-                                                        className="group hover:border-neutral-350 flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200/60 bg-white px-4 py-2.5 shadow-2xs transition-all duration-200 active:scale-[0.995] dark:border-zinc-800/80 dark:bg-zinc-900/35 dark:hover:border-zinc-700"
-                                                    >
-                                                        <div className="flex min-w-0 items-center gap-3">
-                                                            {iz.status ===
-                                                            'disetujui' ? (
-                                                                <span className="inline-flex size-5 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[10px] font-extrabold text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/20">
-                                                                    ✓
-                                                                </span>
-                                                            ) : (
-                                                                <span className="inline-flex size-5 items-center justify-center rounded-md border border-rose-100 bg-rose-50 text-[10px] font-extrabold text-rose-600 dark:border-rose-900/60 dark:bg-rose-950/20">
-                                                                    ✕
-                                                                </span>
-                                                            )}
-                                                            <div className="flex min-w-0 items-center gap-2 text-left">
-                                                                <span className="max-w-[140px] truncate text-xs font-bold text-neutral-800 sm:max-w-xs dark:text-neutral-200">
-                                                                    {iz.name}
-                                                                </span>
-                                                                <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500">
-                                                                    —
-                                                                </span>
-                                                                <span
-                                                                    className={`text-[10px] font-extrabold uppercase ${
-                                                                        iz.status ===
-                                                                        'disetujui'
-                                                                            ? 'text-emerald-600 dark:text-emerald-400'
-                                                                            : 'dark:text-rose-450 text-rose-600'
-                                                                    }`}
-                                                                >
-                                                                    {iz.status ===
-                                                                    'disetujui'
-                                                                        ? 'Disetujui'
-                                                                        : 'Ditolak'}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <ChevronRight className="size-3.5 text-neutral-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+        {/* List Grouped by Date */}
+        {historyList.length === 0 ? (
+            <div className="flex flex-col items-center justify-center space-y-2 border border-slate-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900/35">
+                <p className="text-xs font-semibold text-slate-600 dark:text-neutral-400">
+                    Belum Ada Riwayat
+                </p>
+                <p className="text-[10px] text-slate-400 dark:text-neutral-500">
+                    Semua pengajuan verifikasi yang telah disetujui/ditolak akan muncul di sini.
+                </p>
+            </div>
+        ) : (
+            <div className="space-y-5">
+                {Object.entries(groupHistoryByDate(historyList)).map(([dateKey, items]) => (
+                    <div key={dateKey} className="space-y-2">
+                        {/* Date Header */}
+                        <div className="flex items-center gap-2 py-1 pl-1">
+                            <CalendarDays className="size-3.5 text-slate-400 dark:text-neutral-500" />
+                            <span className="text-[11px] font-semibold text-slate-500 dark:text-neutral-400">
+                                {dateKey}
+                            </span>
                         </div>
-                    )}
+
+                        {/* Compact rows */}
+                        <div className="space-y-1.5">
+                            {items.map((iz) => (
+                                <div
+                                    key={iz.id}
+                                    onClick={() => setActiveRequest(iz)}
+                                    className="group flex cursor-pointer items-center justify-between border border-slate-200 bg-white px-4 py-2.5 transition-all duration-200 active:scale-[0.995] hover:border-slate-300 dark:border-zinc-800 dark:bg-zinc-900/35 dark:hover:border-zinc-700"
+                                >
+                                    <div className="flex min-w-0 items-center gap-3">
+                                        {iz.status === 'disetujui' ? (
+                                            <span className="inline-flex size-5 items-center justify-center border border-emerald-100 bg-emerald-50 text-[10px] font-semibold text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/20">
+                                                ✓
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex size-5 items-center justify-center border border-rose-100 bg-rose-50 text-[10px] font-semibold text-rose-600 dark:border-rose-900/60 dark:bg-rose-950/20">
+                                                ✕
+                                            </span>
+                                        )}
+                                        <div className="flex min-w-0 items-center gap-2 text-left">
+                                            <span className="max-w-[140px] truncate text-xs font-medium text-slate-800 sm:max-w-xs dark:text-neutral-200">
+                                                {iz.name}
+                                            </span>
+                                            <span className="text-[10px] font-medium text-slate-400 dark:text-neutral-500">
+                                                —
+                                            </span>
+                                            <span
+                                                className={`text-[10px] font-semibold uppercase ${
+                                                    iz.status === 'disetujui'
+                                                        ? 'text-emerald-600 dark:text-emerald-400'
+                                                        : 'text-rose-600 dark:text-rose-400'
+                                                }`}
+                                            >
+                                                {iz.status === 'disetujui' ? 'Disetujui' : 'Ditolak'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <ChevronRight className="size-3.5 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-600" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
+)}
 
                     {activeRequest && (
                         <div className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center">

@@ -290,12 +290,20 @@ class KelasAbsensiController extends Controller
                 }
             }
 
+            // Fetch attitude record
+            $attRecord = \App\Models\StudentAttitude::where('siswa_id', $siswa->id)
+                ->where('tanggal', $tanggal)
+                ->where('mata_pelajaran_id', $jadwal->mapel_id)
+                ->first();
+
             $details[] = [
                 'jam' => $jadwal->waktu,
                 'nama_mapel' => $jadwal->mapel ? $jadwal->mapel->nama_mapel : '-',
                 'guru' => $guruName,
                 'status' => $statusVal,
                 'keterangan' => $keterangan,
+                'sikap' => $attRecord ? $attRecord->sikap : '-',
+                'catatan_sikap' => $attRecord ? $attRecord->catatan : null,
             ];
         }
 
@@ -1128,6 +1136,11 @@ class KelasAbsensiController extends Controller
             ->with(['siswa.user', 'jadwal.mapel', 'jadwal.guru.user', 'verifikator.user'])
             ->get();
 
+        // Retrieve student attitudes
+        $attitudes = \App\Models\StudentAttitude::whereIn('siswa_id', $siswaIds)
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->get();
+
         // Retrieve approved leave requests
         $izins = PengajuanIzin::whereIn('siswa_id', $siswaIds)
             ->where('status', 'disetujui')
@@ -1203,6 +1216,12 @@ class KelasAbsensiController extends Controller
                             }
                         }
 
+                        // Look up attitude
+                        $attRecord = $attitudes->where('siswa_id', $siswa->id)
+                            ->where('tanggal', $dateStr)
+                            ->where('mata_pelajaran_id', $jadwal->mapel_id)
+                            ->first();
+
                         $results[] = [
                             'siswa_id' => $siswa->id,
                             'nama_siswa' => $siswa->user ? $siswa->user->name : '',
@@ -1216,6 +1235,8 @@ class KelasAbsensiController extends Controller
                             'guru' => $guruName,
                             'status' => $statusVal,
                             'keterangan' => $keterangan,
+                            'sikap' => $attRecord ? $attRecord->sikap : '-',
+                            'catatan_sikap' => $attRecord ? $attRecord->catatan : null,
                         ];
                     }
                 }
@@ -1257,6 +1278,16 @@ class KelasAbsensiController extends Controller
                             }
                         }
 
+                        // Look up attitude for manual presence (where jadwal mapel_id is queried if presensi has jadwal)
+                        $manualMapelId = $presensi && $presensi->jadwal ? $presensi->jadwal->mapel_id : null;
+                        $attRecord = null;
+                        if ($manualMapelId) {
+                            $attRecord = $attitudes->where('siswa_id', $siswa->id)
+                                ->where('tanggal', $dateStr)
+                                ->where('mata_pelajaran_id', $manualMapelId)
+                                ->first();
+                        }
+
                         $results[] = [
                             'siswa_id' => $siswa->id,
                             'nama_siswa' => $siswa->user ? $siswa->user->name : '',
@@ -1265,11 +1296,13 @@ class KelasAbsensiController extends Controller
                             'tanggal' => $dateStr,
                             'hari' => $dayName,
                             'jam' => '-',
-                            'mapel_id' => $presensi && $presensi->jadwal ? $presensi->jadwal->mapel_id : null,
+                            'mapel_id' => $manualMapelId,
                             'nama_mapel' => $mapelName,
                             'guru' => $guruName,
                             'status' => $statusVal,
                             'keterangan' => $keterangan,
+                            'sikap' => $attRecord ? $attRecord->sikap : '-',
+                            'catatan_sikap' => $attRecord ? $attRecord->catatan : null,
                         ];
                     }
                 }

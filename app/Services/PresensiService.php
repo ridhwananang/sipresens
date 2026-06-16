@@ -8,6 +8,7 @@ use App\Models\PengajuanIzin;
 use App\Models\Presensi;
 use App\Models\Siswa;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Log;
 
@@ -69,6 +70,71 @@ class PresensiService
                 $data['jadwal_id'] ?? null
             );
         }
+    }
+
+    /**
+     * Record teaching journal, student presences, and student attitudes in one atomic transaction.
+     */
+    public function recordSesiMengajarBatch(array $data, ?int $guruId): void
+    {
+        $jadwal = Jadwal::findOrFail($data['jadwal_id']);
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $guruId, $jadwal) {
+            // 1. Record Jurnal Mengajar (updateOrCreate by unique session keys)
+            \App\Models\TeachingJournal::updateOrCreate(
+                [
+                    'guru_id' => $guruId,
+                    'kelas_id' => $jadwal->kelas_id,
+                    'mata_pelajaran_id' => $jadwal->mapel_id,
+                    'tanggal' => $data['tanggal'],
+                ],
+                [
+                    'materi' => $data['materi'],
+                    'catatan' => $data['catatan_jurnal'] ?? null,
+                ]
+            );
+
+            // 2. Record Presensi Siswa
+            foreach ($data['presensi'] as $item) {
+                Presensi::updateOrCreate(
+                    [
+                        'siswa_id' => $item['siswa_id'],
+                        'tanggal' => $data['tanggal'],
+                        'jadwal_id' => $jadwal->id,
+                    ],
+                    [
+                        'status' => $item['status'],
+                        'keterangan' => $item['keterangan'] ?? null,
+                        'diverifikasi_oleh' => $guruId,
+                    ]
+                );
+
+                $this->triggerWhatsappNotification(
+                    $item['siswa_id'],
+                    $item['status'],
+                    $data['tanggal'],
+                    $item['keterangan'] ?? null,
+                    $jadwal->id
+                );
+            }
+
+            // 3. Record Sikap Siswa (updateOrCreate by unique session + student keys)
+            foreach ($data['sikap'] as $item) {
+                \App\Models\StudentAttitude::updateOrCreate(
+                    [
+                        'guru_id' => $guruId,
+                        'siswa_id' => $item['siswa_id'],
+                        'kelas_id' => $jadwal->kelas_id,
+                        'mata_pelajaran_id' => $jadwal->mapel_id,
+                        'tanggal' => $data['tanggal'],
+                    ],
+                    [
+                        'sikap' => $item['sikap'],
+                        'catatan' => $item['catatan'] ?? null,
+                    ]
+                );
+            }
+        });
     }
 
     /**
@@ -211,7 +277,7 @@ class PresensiService
 
     public function hasSessionArrived(Jadwal $jadwal, string $dateString): bool
     {
-        $today = Carbon::today()->toDateString();
+        $today = CarbonImmutable::today()->toDateString();
 
         if ($dateString < $today) {
             return true;
@@ -228,8 +294,8 @@ class PresensiService
 
             $startPart = str_replace('.', ':', $startPart);
 
-            $startTime = Carbon::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
-            $now = Carbon::now('Asia/Jakarta');
+            $startTime = CarbonImmutable::createFromFormat('H:i', $startPart, 'Asia/Jakarta');
+            $now = CarbonImmutable::now('Asia/Jakarta');
 
             return $now->format('H:i') >= $startTime->format('H:i');
         } catch (\Exception $e) {
@@ -250,8 +316,8 @@ class PresensiService
         ];
 
         $targetDayIndex = $daysMap[$dayName] ?? 1;
-        $baseDate = Carbon::parse($relativeToDate);
-        $monday = $baseDate->startOfWeek();
+        // Use CarbonImmutable to avoid mutation bugs when chaining startOfWeek() + addDays()
+        $monday = CarbonImmutable::parse($relativeToDate)->startOfWeek(CarbonImmutable::MONDAY);
 
         return $monday->addDays($targetDayIndex - 1)->toDateString();
     }

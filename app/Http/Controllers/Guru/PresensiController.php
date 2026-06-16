@@ -52,11 +52,34 @@ class PresensiController extends Controller
 
         $studentList = [];
         $hasArrived = true;
+        $journal = null;
 
         if ($activeJadwal) {
             $kelasId = $activeJadwal->kelas_id;
             $students = Siswa::where('kelas_id', $kelasId)->with('user')->get();
             $siswaIds = $students->pluck('id');
+
+            // 1. Fetch teaching journal if exists
+            $journalDb = \App\Models\TeachingJournal::where('guru_id', $guru->id)
+                ->where('kelas_id', $kelasId)
+                ->where('mata_pelajaran_id', $activeJadwal->mapel_id)
+                ->where('tanggal', $selectedDate)
+                ->first();
+
+            if ($journalDb) {
+                $journal = [
+                    'materi' => $journalDb->materi,
+                    'catatan_jurnal' => $journalDb->catatan ?? '',
+                ];
+            }
+
+            // 2. Fetch student attitudes if exist
+            $attitudesDb = \App\Models\StudentAttitude::where('guru_id', $guru->id)
+                ->where('kelas_id', $kelasId)
+                ->where('mata_pelajaran_id', $activeJadwal->mapel_id)
+                ->where('tanggal', $selectedDate)
+                ->get()
+                ->keyBy('siswa_id');
 
             // Presensi yang sudah direkam untuk jadwal & tanggal ini
             $presensiDb = Presensi::where('tanggal', $selectedDate)
@@ -65,8 +88,7 @@ class PresensiController extends Controller
                 ->get()
                 ->keyBy('siswa_id');
 
-            // Fallback: pengajuan izin yang sudah disetujui wali kelas
-            // yang mencakup tanggal presensi ini
+            // Fallback: pengajuan izin yang sudah disetujui wali kelas yang mencakup tanggal presensi ini
             $izinDb = PengajuanIzin::where('status', 'disetujui')
                 ->where('tanggal_mulai', '<=', $selectedDate)
                 ->where('tanggal_selesai', '>=', $selectedDate)
@@ -102,6 +124,8 @@ class PresensiController extends Controller
                     $keterangan = '';
                 }
 
+                $attitude = $attitudesDb[$siswa->id] ?? null;
+
                 $studentList[] = [
                     'id' => $siswa->id,
                     'name' => $siswa->user->name,
@@ -109,6 +133,8 @@ class PresensiController extends Controller
                     'status' => $status,
                     'keterangan' => $keterangan,
                     'izin_default' => $izinDefault, // null jika tidak ada izin aktif
+                    'sikap' => $attitude ? $attitude->sikap : 'baik', // default: baik
+                    'catatan_sikap' => $attitude ? ($attitude->catatan ?? '') : '',
                 ];
             }
 
@@ -121,6 +147,7 @@ class PresensiController extends Controller
             'selected_date' => $selectedDate,
             'students' => $studentList,
             'has_arrived' => $hasArrived,
+            'journal' => $journal,
         ]);
-    }
+}
 }
