@@ -6,6 +6,7 @@ import { Plus, Pencil, Trash2, Users, Search, CheckCircle2, XCircle } from 'luci
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import SiswaModal from './siswa/SiswaModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface StudentItem {
     id: number;
@@ -74,6 +75,8 @@ export default function SiswaPage({
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'' | 'aktif' | 'non-aktif'>('');
     const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -98,16 +101,22 @@ export default function SiswaPage({
     };
 
     const handleDelete = (id: number) => {
-        if (
-            !confirm(
-                'Apakah Anda yakin ingin menghapus data siswa ini? Tindakan ini tidak dapat dibatalkan.',
-            )
-        )
-            return;
+        setDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+    };
 
-        router.delete(`/admin/siswa/${id}`, {
-            onSuccess: () => toast.success('Data Siswa berhasil dihapus!'),
-            onError: () => toast.error('Gagal menghapus data siswa.'),
+    const executeDelete = () => {
+        if (!deleteId) return;
+        setIsDeleteConfirmOpen(false);
+        router.delete(`/admin/siswa/${deleteId}`, {
+            onSuccess: () => {
+                toast.success('Data Siswa berhasil dihapus!');
+                setDeleteId(null);
+            },
+            onError: () => {
+                toast.error('Gagal menghapus data siswa.');
+                setDeleteId(null);
+            },
         });
     };
 
@@ -243,15 +252,6 @@ export default function SiswaPage({
                                                     <div>
                                                         <div className="flex items-center gap-1.5">
                                                             <p className="font-black text-slate-900 dark:text-neutral-100">{s.name}</p>
-                                                            {s.foto_profile_url ? (
-                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-                                                                    ✓ Foto
-                                                                </span>
-                                                            ) : (
-                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
-                                                                    ⚠ Belum Foto
-                                                                </span>
-                                                            )}
                                                         </div>
                                                         <p className="text-[11px] text-slate-600 dark:text-neutral-500">
                                                             {s.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
@@ -329,15 +329,6 @@ export default function SiswaPage({
                                     <div className="min-w-0">
                                         <div className="flex items-center gap-1.5">
                                             <h3 className="truncate text-sm font-black text-slate-900 dark:text-neutral-50">{s.name}</h3>
-                                            {s.foto_profile_url ? (
-                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 shrink-0">
-                                                    ✓ Foto
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 shrink-0">
-                                                    ⚠ Belum Foto
-                                                </span>
-                                            )}
                                         </div>
                                         <div className="mt-0.5 flex flex-wrap gap-1">
                                             <span className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-bold text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-400">{s.kelas}</span>
@@ -401,6 +392,18 @@ export default function SiswaPage({
                 editItem={editItem}
                 classes={classes}
                 parents={parents}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteId(null);
+                }}
+                onConfirm={executeDelete}
+                title="Hapus Data Siswa"
+                message="Apakah Anda yakin ingin menghapus data siswa ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                variant="destructive"
             />
         </div>
     );

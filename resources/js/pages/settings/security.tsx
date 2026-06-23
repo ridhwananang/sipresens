@@ -10,6 +10,8 @@ import ManageTwoFactor from '@/components/manage-two-factor';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { ShieldCheck } from 'lucide-react';
 import { edit } from '@/routes/security';
 
 type Props = {
@@ -19,7 +21,6 @@ type Props = {
 
 export default function Security(props: Props) {
     const passwordInput = useRef<HTMLInputElement>(null);
-    const currentPasswordInput = useRef<HTMLInputElement>(null);
 
     return (
         <>
@@ -28,99 +29,91 @@ export default function Security(props: Props) {
             <h1 className="sr-only">Security settings</h1>
 
             <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
-                />
+                <Card className="border border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 shadow-sm rounded-2xl overflow-hidden">
+                    <CardHeader className="border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-900/50 p-6 flex flex-row items-center gap-4">
+                        <div className="flex size-12 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400">
+                            <ShieldCheck className="size-6" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-lg font-black tracking-tight text-slate-900 dark:text-neutral-50">
+                                Ubah Kata Sandi
+                            </CardTitle>
+                            <CardDescription className="text-xs text-slate-505 dark:text-neutral-400 mt-1">
+                                Pastikan akun Anda menggunakan kata sandi yang kuat dan aman untuk melindungi data pribadi.
+                            </CardDescription>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                        <Form
+                            {...SecurityController.update.form()}
+                            options={{
+                                preserveScroll: true,
+                            }}
+                            resetOnError={[
+                                'password',
+                                'password_confirmation',
+                            ]}
+                            resetOnSuccess
+                            onError={(errors) => {
+                                if (errors.password) {
+                                    passwordInput.current?.focus();
+                                }
+                            }}
+                            className="space-y-5"
+                        >
+                            {({ errors, processing }) => (
+                                <>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="password" className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                                            Kata Sandi Baru
+                                        </Label>
 
-                <Form
-                    {...SecurityController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    resetOnError={[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]}
-                    resetOnSuccess
-                    onError={(errors) => {
-                        if (errors.password) {
-                            passwordInput.current?.focus();
-                        }
+                                        <PasswordInput
+                                            id="password"
+                                            ref={passwordInput}
+                                            name="password"
+                                            className="mt-1 block w-full rounded-xl"
+                                            autoComplete="new-password"
+                                            placeholder="Masukkan kata sandi baru"
+                                            passwordrules={props.passwordRules}
+                                        />
 
-                        if (errors.current_password) {
-                            currentPasswordInput.current?.focus();
-                        }
-                    }}
-                    className="space-y-6"
-                >
-                    {({ errors, processing }) => (
-                        <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="current_password">
-                                    Current password
-                                </Label>
+                                        <InputError message={errors.password} />
+                                    </div>
 
-                                <PasswordInput
-                                    id="current_password"
-                                    ref={currentPasswordInput}
-                                    name="current_password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="current-password"
-                                    placeholder="Current password"
-                                />
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="password_confirmation" className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                                            Konfirmasi Kata Sandi
+                                        </Label>
 
-                                <InputError message={errors.current_password} />
-                            </div>
+                                        <PasswordInput
+                                            id="password_confirmation"
+                                            name="password_confirmation"
+                                            className="mt-1 block w-full rounded-xl"
+                                            autoComplete="new-password"
+                                            placeholder="Ulangi kata sandi baru"
+                                            passwordrules={props.passwordRules}
+                                        />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
+                                        <InputError
+                                            message={errors.password_confirmation}
+                                        />
+                                    </div>
 
-                                <PasswordInput
-                                    id="password"
-                                    ref={passwordInput}
-                                    name="password"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="New password"
-                                    passwordrules={props.passwordRules}
-                                />
-
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    name="password_confirmation"
-                                    className="mt-1 block w-full"
-                                    autoComplete="new-password"
-                                    placeholder="Confirm password"
-                                    passwordrules={props.passwordRules}
-                                />
-
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-password-button"
-                                >
-                                    Save password
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-zinc-800">
+                                        <Button
+                                            disabled={processing}
+                                            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold px-4 py-2 cursor-pointer shadow-md shadow-indigo-500/20"
+                                            data-test="update-password-button"
+                                        >
+                                            {processing ? 'Menyimpan...' : 'Perbarui Kata Sandi'}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </Form>
+                    </CardContent>
+                </Card>
             </div>
 
             <ManageTwoFactor

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { FileDown, Table, FileText } from 'lucide-react';
+import { toast } from 'sonner';
 
 export interface ExportColumn {
     label: string;
@@ -41,7 +42,7 @@ export default function ExportDropdown({
     // 1. Export data to Excel-friendly CSV with UTF-8 BOM
     const handleExportExcel = () => {
         if (data.length === 0) {
-            alert('Tidak ada data untuk diekspor.');
+            toast.error('Tidak ada data untuk diekspor.');
             return;
         }
 
@@ -89,13 +90,13 @@ export default function ExportDropdown({
     // 2. Export data to premium formatted PDF using browser print preview
     const handleExportPDF = () => {
         if (data.length === 0) {
-            alert('Tidak ada data untuk diekspor.');
+            toast.error('Tidak ada data untuk diekspor.');
             return;
         }
 
         const printWindow = window.open('', '_blank');
         if (!printWindow) {
-            alert(
+            toast.error(
                 'Mohon izinkan popup window pada browser Anda agar dapat mempratinjau laporan PDF.',
             );
             return;

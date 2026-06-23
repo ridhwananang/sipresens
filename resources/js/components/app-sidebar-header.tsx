@@ -58,33 +58,29 @@ export function AppSidebarHeader({
 
                 {/* Actions Container */}
                 <div className="flex items-center gap-1.5">
-                    {/* Theme Toggle */}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => updateAppearance(appearance === 'dark' ? 'light' : 'dark')}
-                        className="h-9 w-9 rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 text-neutral-500 dark:text-neutral-400 transition-colors cursor-pointer"
-                        aria-label="Toggle theme"
-                    >
-                        {appearance === 'dark' ? (
-                            <Sun className="h-4.5 w-4.5 text-amber-500 transition-transform duration-250 hover:rotate-45" />
-                        ) : (
-                            <Moon className="h-4.5 w-4.5 text-indigo-600 transition-transform duration-250 hover:-rotate-12" />
-                        )}
-                    </Button>
-
-                    {/* Notification Placeholder */}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="relative h-9 w-9 rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 text-neutral-500 dark:text-neutral-400 transition-colors cursor-pointer"
-                        aria-label="Notifications"
-                    >
-                        <Bell className="h-4.5 w-4.5" />
-                        <span className="absolute top-2.5 right-2.5 flex h-1.5 w-1.5">
-                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#EF4444]"></span>
-                        </span>
-                    </Button>
+                   {/* Theme Toggle */}
+<Button
+    variant="ghost"
+    size="icon"
+    onClick={() => updateAppearance(appearance === 'dark' ? 'light' : 'dark')}
+    className="relative h-9 w-9 rounded-full hover:bg-neutral-100 dark:hover:bg-white/5 transition-colors cursor-pointer group"
+    aria-label="Toggle theme"
+>
+    <Sun
+        className={`absolute h-4.5 w-4.5 text-amber-500 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            appearance === 'dark'
+                ? "rotate-90 scale-0 opacity-0"
+                : "rotate-0 scale-100 opacity-100 group-hover:rotate-45"
+        }`}
+    />
+    <Moon
+        className={`absolute h-4.5 w-4.5 text-indigo-500 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            appearance === 'dark'
+                ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
+                : "-rotate-90 scale-0 opacity-0"
+        }`}
+    />
+</Button>
 
                     <div className="h-4 w-px bg-neutral-200 dark:bg-zinc-800 mx-1" />
 

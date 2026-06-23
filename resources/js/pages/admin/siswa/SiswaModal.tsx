@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import PasswordInput from '@/components/password-input';
 
 interface ClassItem {
     id: number;
@@ -206,9 +207,8 @@ export default function SiswaModal({
                                         ? 'Kata Sandi Baru (Kosongkan jika tidak diubah)'
                                         : 'Kata Sandi'}
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
                                     value={data.password}
                                     onChange={(e) =>
                                         setData('password', e.target.value)

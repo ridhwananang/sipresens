@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import PasswordInput from '@/components/password-input';
 
 interface ClassItem {
     id: number;
@@ -192,9 +193,8 @@ export default function GuruModal({
                                         ? 'Kata Sandi Baru (Kosongkan jika tidak diubah)'
                                         : 'Kata Sandi'}
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
                                     value={data.password}
                                     onChange={(e) =>
                                         setData('password', e.target.value)
@@ -279,7 +279,7 @@ export default function GuruModal({
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-indigo-650 text-white hover:bg-indigo-700"
+                                className="bg-indigo-600 text-white hover:bg-indigo-700"
                                 disabled={processing}
                             >
                                 {processing ? 'Menyimpan...' : 'Simpan'}

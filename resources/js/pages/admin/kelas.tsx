@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import KelasModal from './kelas/KelasModal';
 import PromotionModal from './kelas/PromotionModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface KelasItem {
     id: number;
@@ -52,6 +53,8 @@ export default function KelasPage({
     const [selectedClass, setSelectedClass] = useState<KelasItem | null>(null);
 
     const [isPromotionOpen, setIsPromotionOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -64,16 +67,22 @@ export default function KelasPage({
     };
 
     const handleDelete = (id: number) => {
-        if (
-            !confirm(
-                'Apakah Anda yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan.',
-            )
-        )
-            return;
+        setDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+    };
 
-        router.delete(`/admin/kelas/${id}`, {
-            onSuccess: () => toast.success('Kelas berhasil dihapus!'),
-            onError: () => toast.error('Gagal menghapus kelas.'),
+    const executeDelete = () => {
+        if (!deleteId) return;
+        setIsDeleteConfirmOpen(false);
+        router.delete(`/admin/kelas/${deleteId}`, {
+            onSuccess: () => {
+                toast.success('Kelas berhasil dihapus!');
+                setDeleteId(null);
+            },
+            onError: () => {
+                toast.error('Gagal menghapus kelas.');
+                setDeleteId(null);
+            },
         });
     };
 
@@ -341,6 +350,18 @@ export default function KelasPage({
                 onClose={() => setIsPromotionOpen(false)}
                 classes={classes}
                 students={students}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteId(null);
+                }}
+                onConfirm={executeDelete}
+                title="Hapus Kelas"
+                message="Apakah Anda yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                variant="destructive"
             />
         </div>
     );

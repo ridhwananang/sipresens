@@ -6,6 +6,7 @@ import InputPresensi, {
     StudentPresence,
 } from '../dashboard/guru/InputPresensi';
 import { ScheduleItem } from '../dashboard/guru/JadwalMengajar';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface GuruPresensiProps {
     jadwals: ScheduleItem[];
@@ -45,6 +46,8 @@ export default function GuruPresensi({
         >
     >({});
     const [isSaving, setIsSaving] = useState(false);
+    const [pendingNavigation, setPendingNavigation] = useState<{ type: 'date' | 'schedule'; value: any } | null>(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     useEffect(() => {
         if (journal) {
@@ -94,33 +97,47 @@ export default function GuruPresensi({
             );
         });
 
+    const executeNavigation = (nav: { type: 'date' | 'schedule'; value: any }) => {
+        if (nav.type === 'date') {
+            setSelectedDate(nav.value);
+            router.get(
+                '/presensi',
+                { jadwal_id: active_jadwal_id, tanggal: nav.value },
+                { preserveState: false, preserveScroll: true },
+            );
+        } else {
+            router.get(
+                '/presensi',
+                { jadwal_id: nav.value, tanggal: selectedDate },
+                { preserveState: false, preserveScroll: true },
+            );
+        }
+    };
+
+    const handleConfirmNavigation = () => {
+        setIsConfirmOpen(false);
+        if (pendingNavigation) {
+            executeNavigation(pendingNavigation);
+            setPendingNavigation(null);
+        }
+    };
+
     const handleDateChange = (date: string) => {
         if (isDirty) {
-            const confirmLeave = window.confirm(
-                'Anda memiliki perubahan yang belum disimpan. Pindah tanggal akan membatalkan perubahan tersebut. Lanjutkan?',
-            );
-            if (!confirmLeave) return;
+            setPendingNavigation({ type: 'date', value: date });
+            setIsConfirmOpen(true);
+        } else {
+            executeNavigation({ type: 'date', value: date });
         }
-        setSelectedDate(date);
-        router.get(
-            '/presensi',
-            { jadwal_id: active_jadwal_id, tanggal: date },
-            { preserveState: false, preserveScroll: true },
-        );
     };
 
     const handleSelectSchedule = (jadwalId: number | null) => {
         if (isDirty) {
-            const confirmLeave = window.confirm(
-                'Anda memiliki perubahan yang belum disimpan. Pindah sesi akan membatalkan perubahan tersebut. Lanjutkan?',
-            );
-            if (!confirmLeave) return;
+            setPendingNavigation({ type: 'schedule', value: jadwalId });
+            setIsConfirmOpen(true);
+        } else {
+            executeNavigation({ type: 'schedule', value: jadwalId });
         }
-        router.get(
-            '/presensi',
-            { jadwal_id: jadwalId, tanggal: selectedDate },
-            { preserveState: false, preserveScroll: true },
-        );
     };
 
     const handleStatusChange = (
@@ -276,6 +293,19 @@ export default function GuruPresensi({
                     setLocalAttendance={setLocalAttendance}
                 />
             )}
+
+            <ConfirmationModal
+                isOpen={isConfirmOpen}
+                onClose={() => {
+                    setIsConfirmOpen(false);
+                    setPendingNavigation(null);
+                }}
+                onConfirm={handleConfirmNavigation}
+                title="Perubahan Belum Disimpan"
+                message="Anda memiliki perubahan yang belum disimpan. Berpindah halaman akan membatalkan perubahan tersebut. Lanjutkan?"
+                confirmText="Lanjutkan"
+                variant="warning"
+            />
         </div>
     );
 }

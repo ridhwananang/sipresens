@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Search, Sparkles, TrendingUp, X } from 'lucide-react';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface ClassItem {
     id: number;
@@ -46,6 +47,8 @@ export default function PromotionModal({
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [selectedStudentIds, setSelectedStudentIds] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState('');
 
     // List of active students in the selected source class
     const sourceClassStudents = students.filter(
@@ -117,8 +120,12 @@ export default function PromotionModal({
                 ? `Apakah Anda yakin ingin memindahkan ${selectedStudentIds.length} siswa ke kelas baru?`
                 : `Apakah Anda yakin ingin meluluskan ${selectedStudentIds.length} siswa terpilih? Tindakan ini akan menonaktifkan akun mereka.`;
 
-        if (!confirm(confirmMsg)) return;
+        setConfirmMessage(confirmMsg);
+        setIsConfirmOpen(true);
+    };
 
+    const handleConfirmSubmit = () => {
+        setIsConfirmOpen(false);
         setIsSubmitting(true);
         router.post(
             '/admin/promote-students',
@@ -361,6 +368,16 @@ return (
                 </CardContent>
             </form>
         </Card>
+
+        <ConfirmationModal
+            isOpen={isConfirmOpen}
+            onClose={() => setIsConfirmOpen(false)}
+            onConfirm={handleConfirmSubmit}
+            title={action === 'graduate' ? 'Konfirmasi Kelulusan' : 'Konfirmasi Kenaikan Kelas'}
+            message={confirmMessage}
+            confirmText="Ya, Proses"
+            variant={action === 'graduate' ? 'destructive' : 'warning'}
+        />
     </div>
 );
 }

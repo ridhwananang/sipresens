@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, BookOpen,Search } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import MapelModal from './mapel/MapelModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface MapelItem {
     id: number;
@@ -28,6 +29,8 @@ export default function MapelPage({ mapels }: MapelPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editItem, setEditItem] = useState<MapelItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -40,11 +43,22 @@ export default function MapelPage({ mapels }: MapelPageProps) {
     };
 
     const handleDelete = (id: number) => {
-        if (!confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini? Tindakan ini tidak dapat dibatalkan.'))
-            return;
-        router.delete(`/admin/mapel/${id}`, {
-            onSuccess: () => toast.success('Mata Pelajaran berhasil dihapus!'),
-            onError: () => toast.error('Gagal menghapus mata pelajaran.'),
+        setDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+    };
+
+    const executeDelete = () => {
+        if (!deleteId) return;
+        setIsDeleteConfirmOpen(false);
+        router.delete(`/admin/mapel/${deleteId}`, {
+            onSuccess: () => {
+                toast.success('Mata Pelajaran berhasil dihapus!');
+                setDeleteId(null);
+            },
+            onError: () => {
+                toast.error('Gagal menghapus mata pelajaran.');
+                setDeleteId(null);
+            },
         });
     };
 
@@ -206,6 +220,18 @@ export default function MapelPage({ mapels }: MapelPageProps) {
                     setEditItem(null);
                 }}
                 editItem={editItem}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteId(null);
+                }}
+                onConfirm={executeDelete}
+                title="Hapus Mata Pelajaran"
+                message="Apakah Anda yakin ingin menghapus mata pelajaran ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                variant="destructive"
             />
         </div>
     );

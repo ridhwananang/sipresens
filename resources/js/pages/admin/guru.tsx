@@ -6,6 +6,7 @@ import { Plus, Pencil, Trash2, GraduationCap, Phone, Search } from 'lucide-react
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import GuruModal from './guru/GuruModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface GuruItem {
     id: number;
@@ -55,6 +56,8 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
     const [editItem, setEditItem] = useState<GuruItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -72,16 +75,22 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
     };
 
     const handleDelete = (id: number) => {
-        if (
-            !confirm(
-                'Apakah Anda yakin ingin menghapus data guru ini? Tindakan ini tidak dapat dibatalkan.',
-            )
-        )
-            return;
+        setDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+    };
 
-        router.delete(`/admin/guru/${id}`, {
-            onSuccess: () => toast.success('Data Guru berhasil dihapus!'),
-            onError: () => toast.error('Gagal menghapus data guru.'),
+    const executeDelete = () => {
+        if (!deleteId) return;
+        setIsDeleteConfirmOpen(false);
+        router.delete(`/admin/guru/${deleteId}`, {
+            onSuccess: () => {
+                toast.success('Data Guru berhasil dihapus!');
+                setDeleteId(null);
+            },
+            onError: () => {
+                toast.error('Gagal menghapus data guru.');
+                setDeleteId(null);
+            },
         });
     };
 
@@ -204,15 +213,6 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                                                     <div>
                                                         <div className="flex items-center gap-1.5">
                                                             <p className="font-black text-slate-900 dark:text-neutral-100">{t.name}</p>
-                                                            {t.foto_profile_url ? (
-                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-                                                                    ✓ Foto
-                                                                </span>
-                                                            ) : (
-                                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
-                                                                    ⚠ Belum Foto
-                                                                </span>
-                                                            )}
                                                         </div>
                                                         <p className="text-[11px] text-slate-600 dark:text-neutral-500">{t.email}</p>
                                                     </div>
@@ -292,15 +292,6 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                                     <div className="min-w-0">
                                         <div className="flex items-center gap-1.5">
                                             <h3 className="truncate text-sm font-black text-neutral-900 dark:text-neutral-50">{t.name}</h3>
-                                            {t.foto_profile_url ? (
-                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-black text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 shrink-0">
-                                                    ✓ Foto
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-black text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 shrink-0">
-                                                    ⚠ Belum Foto
-                                                </span>
-                                            )}
                                         </div>
                                         {isWaliKelas(t) ? (
                                             <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[9px] font-black text-violet-700 dark:bg-violet-950/30 dark:text-violet-400">
@@ -360,6 +351,18 @@ export default function GuruPage({ teachers, classes }: GuruPageProps) {
                 }}
                 editItem={editItem}
                 classes={classes}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteId(null);
+                }}
+                onConfirm={executeDelete}
+                title="Hapus Data Guru"
+                message="Apakah Anda yakin ingin menghapus data guru ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                variant="destructive"
             />
         </div>
     );

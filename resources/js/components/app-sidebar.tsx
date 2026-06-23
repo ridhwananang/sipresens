@@ -5,21 +5,21 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
   LayoutDashboard,
-  Activity,
   School,
-  BookOpenText,
-  CalendarDays,
+  BookOpen,
+  Calendar,
   GraduationCap,
-  UsersRound,
-  UserRoundCheck,
+  Users,
+  HeartHandshake,
+  ClipboardList,
+  Award,
+  MessageSquare,
   ClipboardCheck,
   ShieldCheck,
   CalendarClock,
-  ChevronLeft,
   History,
   FileText,
   LucideIcon,
-  MessageSquare,
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -57,18 +57,18 @@ function SidebarMenuLink({ href, isActive, icon: Icon, label, tooltip, role, sta
   let dotColor = '';
 
   if (role === 'admin') {
-    activeLinkClass = 'bg-indigo-50 dark:bg-[#141D2E] text-[#6366F1] dark:text-white font-extrabold border-l-4 border-[#6366F1]';
-    iconActiveStyle = 'bg-indigo-100 text-[#6366F1] dark:bg-[#6366F1]/20 dark:text-[#F9F200]';
-    dotColor = 'bg-[#6366F1] dark:bg-[#F9F200]';
+    activeLinkClass = 'bg-indigo-50/80 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 font-extrabold border-l-4 border-indigo-600 dark:border-indigo-500 shadow-sm';
+    iconActiveStyle = 'bg-indigo-600 text-white dark:bg-indigo-500 dark:text-white shadow-md shadow-indigo-500/20';
+    dotColor = 'bg-indigo-600 dark:bg-indigo-400';
   } else if (role === 'guru') {
-    activeLinkClass = 'bg-amber-50 dark:bg-[#141D2E] text-slate-900 dark:text-white font-extrabold border-l-4 border-amber-500';
-    iconActiveStyle = 'bg-amber-100 text-amber-700 dark:bg-[#F9F200]/20 dark:text-[#F9F200]';
-    dotColor = 'bg-amber-600 dark:bg-[#22C55E]';
+    activeLinkClass = 'bg-amber-50 dark:bg-amber-950/10 text-amber-700 dark:text-amber-400 font-extrabold border-l-4 border-amber-500 shadow-sm';
+    iconActiveStyle = 'bg-amber-600 text-white dark:bg-amber-500 dark:text-white shadow-md shadow-amber-500/20';
+    dotColor = 'bg-amber-600 dark:bg-amber-400';
   } else {
     // Default fallback (siswa/orang tua)
-    activeLinkClass = 'bg-slate-100 dark:bg-[#141D2E] text-slate-900 dark:text-white font-extrabold border-l-4 border-[#6366F1]';
-    iconActiveStyle = 'bg-slate-200 text-[#6366F1] dark:bg-white/10 dark:text-white';
-    dotColor = 'bg-slate-500';
+    activeLinkClass = 'bg-indigo-50/50 dark:bg-indigo-950/15 text-indigo-600 dark:text-indigo-400 font-extrabold border-l-4 border-indigo-600 dark:border-indigo-400 shadow-sm';
+    iconActiveStyle = 'bg-indigo-600 text-white dark:bg-indigo-500 dark:text-white';
+    dotColor = 'bg-indigo-600';
   }
 
   return (
@@ -77,23 +77,23 @@ function SidebarMenuLink({ href, isActive, icon: Icon, label, tooltip, role, sta
         asChild
         isActive={isActive}
         tooltip={{ children: tooltip || label }}
-        className={`group relative flex w-full items-center gap-3 rounded-[14px] px-3 py-2 text-sm font-medium transition-all duration-200 outline-none border border-transparent min-h-[48px] cursor-pointer ${
+        className={`group relative flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold outline-none border border-transparent min-h-[48px] cursor-pointer transition-all duration-300 ${
           isActive
             ? activeLinkClass
-            : 'text-slate-600 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-[#141D2E]/40 hover:text-slate-900 dark:hover:text-white'
+            : 'text-slate-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-zinc-800/40 hover:text-slate-900 dark:hover:text-neutral-250 hover:translate-x-1'
         }`}
       >
         <Link href={href} prefetch className="flex items-center gap-3 w-full">
-          <div className={`flex items-center justify-center size-9 shrink-0 rounded-xl transition-all ${
+          <div className={`flex items-center justify-center size-8.5 shrink-0 rounded-xl transition-all duration-300 ${
             isActive 
               ? iconActiveStyle 
-              : 'bg-slate-50 dark:bg-zinc-800/40 text-slate-500 dark:text-neutral-400 group-hover:bg-slate-100 dark:group-hover:bg-zinc-850 group-hover:text-slate-900 dark:group-hover:text-white'
+              : 'bg-slate-50 dark:bg-zinc-800/30 text-slate-500 dark:text-neutral-450 group-hover:bg-slate-100 dark:group-hover:bg-zinc-700/50 group-hover:text-slate-800 dark:group-hover:text-neutral-100 group-hover:scale-105'
           }`}>
-            <Icon className="size-[18px]" />
+            <Icon className="size-[17px]" />
           </div>
-          {state !== 'collapsed' && <span className="truncate">{label}</span>}
+          {state !== 'collapsed' && <span className="truncate tracking-wide">{label}</span>}
           {isActive && state !== 'collapsed' && (
-            <span className={`absolute right-4 size-2 rounded-full ${dotColor} animate-pulse`} />
+            <span className={`absolute right-4 size-1.5 rounded-full ${dotColor} animate-pulse`} />
           )}
         </Link>
       </SidebarMenuButton>
@@ -144,7 +144,7 @@ export function AppSidebar() {
                 <SidebarMenuLink
                   href="/admin/dashboard"
                   isActive={isCurrentUrl('/admin/dashboard')}
-                  icon={Activity}
+                  icon={LayoutDashboard}
                   label="Ringkasan"
                   role="admin"
                   state={state}
@@ -157,8 +157,8 @@ export function AppSidebar() {
               <SidebarGroupLabel className={labelStyle}>Data Akademik</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuLink href="/admin/kelas" isActive={isCurrentUrl('/admin/kelas')} icon={School} label="Data Kelas" role="admin" state={state} />
-                <SidebarMenuLink href="/admin/mapel" isActive={isCurrentUrl('/admin/mapel')} icon={BookOpenText} label="Mata Pelajaran" role="admin" state={state} />
-                <SidebarMenuLink href="/admin/jadwal" isActive={isCurrentUrl('/admin/jadwal')} icon={CalendarDays} label="Jadwal Pelajaran" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/mapel" isActive={isCurrentUrl('/admin/mapel')} icon={BookOpen} label="Mata Pelajaran" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/jadwal" isActive={isCurrentUrl('/admin/jadwal')} icon={Calendar} label="Jadwal Pelajaran" role="admin" state={state} />
               </SidebarMenu>
             </SidebarGroup>
 
@@ -167,8 +167,8 @@ export function AppSidebar() {
               <SidebarGroupLabel className={labelStyle}>Manajemen Pengguna</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuLink href="/admin/guru" isActive={isCurrentUrl('/admin/guru')} icon={GraduationCap} label="Data Guru" role="admin" state={state} />
-                <SidebarMenuLink href="/admin/siswa" isActive={isCurrentUrl('/admin/siswa')} icon={UsersRound} label="Data Siswa" role="admin" state={state} />
-                <SidebarMenuLink href="/admin/orangtua" isActive={isCurrentUrl('/admin/orangtua')} icon={UserRoundCheck} label="Data Orang Tua" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/siswa" isActive={isCurrentUrl('/admin/siswa')} icon={Users} label="Data Siswa" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/orangtua" isActive={isCurrentUrl('/admin/orangtua')} icon={HeartHandshake} label="Data Orang Tua" role="admin" state={state} />
               </SidebarMenu>
             </SidebarGroup>
 
@@ -176,8 +176,8 @@ export function AppSidebar() {
             <SidebarGroup className="p-0">
               <SidebarGroupLabel className={labelStyle}>Laporan & Feedback</SidebarGroupLabel>
               <SidebarMenu>
-                <SidebarMenuLink href="/admin/jurnal" isActive={isCurrentUrl('/admin/jurnal')} icon={BookOpenText} label="Jurnal Mengajar" role="admin" state={state} />
-                <SidebarMenuLink href="/admin/sikap" isActive={isCurrentUrl('/admin/sikap')} icon={Activity} label="Rekap Sikap" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/jurnal" isActive={isCurrentUrl('/admin/jurnal')} icon={ClipboardList} label="Jurnal Mengajar" role="admin" state={state} />
+                <SidebarMenuLink href="/admin/sikap" isActive={isCurrentUrl('/admin/sikap')} icon={Award} label="Rekap Sikap" role="admin" state={state} />
                 <SidebarMenuLink href="/admin/aspirasi" isActive={isCurrentUrl('/admin/aspirasi')} icon={MessageSquare} label="Kotak Aspirasi" role="admin" state={state} />
               </SidebarMenu>
             </SidebarGroup>

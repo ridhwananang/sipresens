@@ -338,7 +338,7 @@ export default function JadwalModal({
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-indigo-650 text-white hover:bg-indigo-700 rounded-xl h-10 px-5 text-xs font-black cursor-pointer shadow-sm shadow-indigo-500/10"
+                                className="bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl h-10 px-5 text-xs font-black cursor-pointer shadow-sm shadow-indigo-500/10"
                                 disabled={processing}
                             >
                                 {processing ? 'Menyimpan...' : 'Simpan Jadwal'}

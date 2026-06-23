@@ -6,6 +6,7 @@ import { Plus, Pencil, Trash2, CalendarDays, Clock, BookOpen, ChevronDown } from
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
 import JadwalModal from './jadwal/JadwalModal';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface JadwalItem {
     id: number;
@@ -63,6 +64,8 @@ export default function JadwalPage({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editItem, setEditItem] = useState<JadwalItem | null>(null);
     const [filterKelasId, setFilterKelasId] = useState<string>('');
+    const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const openCreateModal = () => {
         setEditItem(null);
@@ -75,16 +78,22 @@ export default function JadwalPage({
     };
 
     const handleDelete = (id: number) => {
-        if (
-            !confirm(
-                'Apakah Anda yakin ingin menghapus jadwal ini? Tindakan ini tidak dapat dibatalkan.',
-            )
-        )
-            return;
+        setDeleteId(id);
+        setIsDeleteConfirmOpen(true);
+    };
 
-        router.delete(`/admin/jadwal/${id}`, {
-            onSuccess: () => toast.success('Jadwal berhasil dihapus!'),
-            onError: () => toast.error('Gagal menghapus jadwal.'),
+    const executeDelete = () => {
+        if (!deleteId) return;
+        setIsDeleteConfirmOpen(false);
+        router.delete(`/admin/jadwal/${deleteId}`, {
+            onSuccess: () => {
+                toast.success('Jadwal berhasil dihapus!');
+                setDeleteId(null);
+            },
+            onError: () => {
+                toast.error('Gagal menghapus jadwal.');
+                setDeleteId(null);
+            },
         });
     };
 
@@ -360,6 +369,18 @@ export default function JadwalPage({
                 teachers={teachers}
                 classes={classes}
                 defaultKelasId={filterKelasId}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onClose={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteId(null);
+                }}
+                onConfirm={executeDelete}
+                title="Hapus Jadwal"
+                message="Apakah Anda yakin ingin menghapus jadwal pelajaran ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                variant="destructive"
             />
         </div>
     );

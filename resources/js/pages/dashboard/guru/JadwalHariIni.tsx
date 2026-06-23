@@ -74,7 +74,7 @@ export default function JadwalHariIni({
                                 key={j.id}
                                 className={`group relative cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300 hover:scale-[1.01] hover:shadow-sm ${
                                     isActive
-                                        ? 'dark:border-indigo-650 border-indigo-400 bg-gradient-to-r from-indigo-50/70 to-violet-50/50 shadow-xs dark:from-indigo-950/20 dark:to-violet-950/10'
+                                        ? 'dark:border-indigo-600 border-indigo-400 bg-gradient-to-r from-indigo-50/70 to-violet-50/50 shadow-xs dark:from-indigo-950/20 dark:to-violet-950/10'
                                         : ongoing
                                           ? 'border-emerald-250 bg-emerald-50/40 dark:border-emerald-900/45 dark:bg-emerald-950/10'
                                           : 'border-neutral-205 bg-white hover:border-indigo-200 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-indigo-900/50'
@@ -85,10 +85,10 @@ export default function JadwalHariIni({
                                 <div
                                     className={`absolute top-0 bottom-0 left-0 w-[4px] rounded-l-2xl ${
                                         isActive
-                                            ? 'bg-indigo-650'
+                                            ? 'bg-indigo-600'
                                             : ongoing
                                               ? 'bg-emerald-500'
-                                              : 'bg-neutral-250 group-hover:bg-indigo-455 dark:bg-zinc-700'
+                                              : 'bg-neutral-250 group-hover:bg-indigo-400 dark:bg-zinc-700'
                                     }`}
                                 />
 
@@ -129,7 +129,7 @@ export default function JadwalHariIni({
                                             isActive
                                                 ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
                                                 : ongoing
-                                                  ? 'shadow-emerald-550/20 border-emerald-600 bg-emerald-600 text-white shadow-md'
+                                                  ? 'shadow-emerald-500/20 border-emerald-600 bg-emerald-600 text-white shadow-md'
                                                   : 'border-neutral-200/50 bg-neutral-50 text-neutral-400 group-hover:border-indigo-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:border-zinc-700/80 dark:bg-zinc-800 dark:group-hover:border-indigo-900/40 dark:group-hover:bg-indigo-950/30 dark:group-hover:text-indigo-400'
                                         }`}
                                         title={

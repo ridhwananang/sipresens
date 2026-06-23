@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Search } from 'lucide-react';
+import PasswordInput from '@/components/password-input';
 
 interface StudentItem {
     id: number;
@@ -222,9 +223,8 @@ export default function OrangTuaModal({
                                         ? 'Kata Sandi Baru (Kosongkan jika tidak diubah)'
                                         : 'Kata Sandi'}
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
                                     value={data.password}
                                     onChange={(e) =>
                                         setData('password', e.target.value)

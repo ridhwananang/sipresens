@@ -99,7 +99,7 @@ export default function MapelModal({
                             </Button>
                             <Button
                                 type="submit"
-                                className="bg-indigo-650 text-white hover:bg-indigo-700"
+                                className="bg-indigo-600 text-white hover:bg-indigo-700"
                                 disabled={processing}
                             >
                                 {processing ? 'Menyimpan...' : 'Simpan'}
