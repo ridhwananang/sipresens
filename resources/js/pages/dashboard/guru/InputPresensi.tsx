@@ -295,12 +295,7 @@ export default function InputPresensi({
                         setLocalAttendance((prev: any) => {
                             const next = { ...prev };
                             students.forEach((s) => {
-                                if (
-                                    next[s.id] &&
-                                    next[s.id].status !== 'izin' &&
-                                    next[s.id].status !== 'sakit' &&
-                                    !s.izin_default
-                                ) {
+                                if (next[s.id] && !s.izin_default) {
                                     next[s.id] = { ...next[s.id], status: 'hadir' };
                                 }
                             });
