@@ -579,13 +579,6 @@ export default function AppLayout({
 
                         <div className="flex items-center gap-2">
                             <button
-                                className="cursor-default rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-                                aria-label="Notifikasi"
-                                disabled
-                            >
-                                <Bell className="size-4" />
-                            </button>
-                            <button
                                 onClick={toggleTheme}
                                 className="cursor-pointer rounded-xl border border-slate-200 bg-slate-100 p-2 text-slate-700 transition-all hover:bg-slate-200 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                                 aria-label="Toggle theme"
@@ -699,13 +692,17 @@ export default function AppLayout({
     const grIsProfile = url.startsWith('/settings');
     const grShowBack =
         url.startsWith('/settings/security') ||
-        url.startsWith('/settings/appearance');
+        url.startsWith('/settings/appearance') ||
+        url.startsWith('/admin/kelas');
     const getGrBackUrl = () => {
         if (
             url.startsWith('/settings/security') ||
             url.startsWith('/settings/appearance')
         )
             return '/settings/profile';
+        if (url.startsWith('/admin/kelas')) {
+            return '/guru/wali-kelas';
+        }
         return '/dashboard';
     };
 

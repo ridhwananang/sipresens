@@ -79,12 +79,7 @@ export default function OrangTuaIzinPage({
                 toast.success(
                     `Pengajuan izin untuk ${activeChild.name} berhasil dikirim!`,
                 );
-                reset(
-                    'tanggal_mulai',
-                    'tanggal_selesai',
-                    'alasan',
-                    'bukti_foto',
-                );
+                reset();
             },
             onError: (err: any) => {
                 toast.error(

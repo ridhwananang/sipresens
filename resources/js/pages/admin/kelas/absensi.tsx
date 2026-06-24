@@ -271,6 +271,18 @@ export default function AbsensiPage({
                             </Button>
                         </div>
                     )}
+                    {userRole === 'guru' && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button
+                                onClick={() => router.get('/guru/wali-kelas')}
+                                variant="outline"
+                                className="h-8 gap-1.5 rounded-md border-neutral-200 px-3 text-xs font-medium text-neutral-600 hover:bg-neutral-50 dark:border-zinc-700 dark:text-zinc-400 cursor-pointer"
+                            >
+                                <ArrowLeft className="size-3.5" />
+                                Kembali
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
 

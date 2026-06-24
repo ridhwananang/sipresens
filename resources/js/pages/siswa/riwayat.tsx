@@ -514,9 +514,9 @@ export default function SiswaRiwayatPage({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                         <Award className="size-4.5 text-indigo-500" />
-                        <h3 className="dark:text-neutral-250 text-sm font-black text-neutral-800">
-                            Detail Kehadiran
-                        </h3>
+                      <h3 className="text-sm font-black text-slate-800 dark:text-slate-200">
+                        Detail Kehadiran
+                    </h3>
                     </div>
                     <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-black text-slate-500 dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-neutral-500">
                         {filteredHistory.length} Catatan{' '}
@@ -527,14 +527,14 @@ export default function SiswaRiwayatPage({
                 {/* Empty State / Detail List */}
                 {history.length === 0 ? (
                     <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
-                        <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
+                        <Smile className="size-10 stroke-slate-300 dark:stroke-slate-600" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-neutral-500">
                             Belum ada data absensi pada periode yang dipilih.
                         </p>
                     </div>
                 ) : filteredHistory.length === 0 ? (
                     <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
-                        <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
+                       <Smile className="size-10 stroke-slate-300 dark:stroke-slate-600" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-neutral-500">
                             Tidak ada data {getStatusLabel(selectedStatus)} pada
                             bulan ini.
@@ -547,7 +547,7 @@ export default function SiswaRiwayatPage({
                             return (
                                 <div
                                     key={row.id}
-                                    className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-transform duration-200 active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900"
+                                    className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-transform duration-200 active:scale-[0.99] dark:border-slate-800 dark:bg-slate-900"
                                 >
                                     {/* Left colored border */}
                                     <div
@@ -559,7 +559,7 @@ export default function SiswaRiwayatPage({
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex min-w-0 items-center gap-1.5">
                                                 <BookOpen className="size-4 shrink-0 text-indigo-500" />
-                                                <span className="truncate text-xs font-black text-neutral-800 dark:text-neutral-100">
+                                                <span className="truncate text-xs font-black text-slate-800 dark:text-slate-100">
                                                     {row.nama_mapel}
                                                 </span>
                                             </div>
@@ -571,40 +571,36 @@ export default function SiswaRiwayatPage({
                                         </div>
 
                                         {/* Grid: Day/Date & Jam Pelajaran */}
-                                        <div className="dark:text-neutral-450 grid grid-cols-2 gap-x-4 gap-y-2.5 text-[10px] font-bold text-neutral-500">
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
                                             <div className="flex min-w-0 items-center gap-1.5">
-                                                <Calendar className="size-3.5 shrink-0 text-neutral-400 dark:text-neutral-500" />
+                                                <Calendar className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
                                                 <span className="truncate">
-                                                    {row.hari},{' '}
-                                                    {row.tanggal_format}
+                                                    {row.hari}, {row.tanggal_format}
                                                 </span>
                                             </div>
                                             <div className="flex min-w-0 items-center gap-1.5">
-                                                <Clock className="size-3.5 shrink-0 text-neutral-400 dark:text-neutral-500" />
+                                                <Clock className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
                                                 <span className="truncate font-mono">
-                                                    {row.jam !== 'N/A'
-                                                        ? row.jam
-                                                        : 'N/A'}
+                                                    {row.jam !== 'N/A' ? row.jam : 'N/A'}
                                                 </span>
                                             </div>
                                         </div>
 
                                         {/* Teacher Info */}
-                                        <div className="dark:text-neutral-450 flex items-center gap-1.5 border-t border-neutral-100 pt-3 text-[10px] font-bold text-neutral-500 dark:border-zinc-800/50">
-                                            <User className="size-3.5 shrink-0 text-neutral-400 dark:text-neutral-500" />
+                                        <div className="flex items-center gap-1.5 border-t border-slate-100 pt-3 text-[10px] font-bold text-slate-500 dark:border-slate-800/50 dark:text-slate-400">
+                                            <User className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
                                             <span className="truncate">
                                                 Guru: {row.nama_guru}
                                             </span>
                                         </div>
 
                                         {/* Keterangan */}
-                                        <div className="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[10px] dark:border-zinc-900 dark:bg-zinc-950/40">
-                                            <span className="dark:text-neutral-550 text-[8px] font-bold tracking-wider text-neutral-400 uppercase">
+                                        <div className="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[10px] dark:border-slate-800 dark:bg-slate-950/40">
+                                            <span className="text-[8px] font-bold tracking-wider text-slate-400 uppercase dark:text-slate-500">
                                                 Catatan / Keterangan
                                             </span>
-                                            <p className="dark:text-neutral-350 leading-relaxed font-semibold text-neutral-600 italic">
-                                                {row.keterangan ||
-                                                    'Tidak ada keterangan'}
+                                            <p className="leading-relaxed font-semibold text-slate-600 italic dark:text-slate-300">
+                                                {row.keterangan || 'Tidak ada keterangan'}
                                             </p>
                                         </div>
                                     </div>

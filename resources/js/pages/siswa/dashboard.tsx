@@ -86,7 +86,7 @@ export default function SiswaDashboard({
                 <h1 className="mt-2 text-xl font-black text-slate-900 dark:text-neutral-200">
                     Halo, {siswa_name}!
                 </h1>
-                <p className="text-slate-600 dark:text-neutral-550 text-[11px] font-medium">
+                <p className="text-slate-600 dark:text-neutral-400 text-[11px] font-medium">
                     Kelas Anda:{' '}
                     <strong className="font-bold text-indigo-600 dark:text-indigo-400">
                         {kelas_name}
@@ -96,8 +96,8 @@ export default function SiswaDashboard({
 
             {/* SECTION: SEDANG BERLANGSUNG Welcome Card */}
             <div className="space-y-2.5">
-                <h3 className="dark:text-neutral-550 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
-                    <PlayCircle className="size-3.5 animate-pulse text-indigo-500" />
+                <h3 className="dark:text-neutral-500 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
+                    <PlayCircle className="size-3.5  text-indigo-500" />
                     <span>Sedang Berlangsung</span>
                 </h3>
 
@@ -142,13 +142,13 @@ export default function SiswaDashboard({
 
                             {/* Attendance Status Bar */}
                             <div className="mt-1 flex items-center justify-between border-t border-white/10 pt-3">
-                                <span className="text-indigo-150 text-[10px] font-bold">
+                                <span className="text-indigo-200 text-[10px] font-bold">
                                     Status Kehadiran:
                                 </span>
                                 <div>
                                     {active_jadwal.status === 'hadir' && (
                                         <div className="flex flex-col items-end">
-                                            <span className="text-emerald-250 inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
+                                            <span className="text-emerald-200 inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
                                                 Hadir
                                             </span>
                                             {active_jadwal.waktu_tercatat && (
@@ -167,12 +167,12 @@ export default function SiswaDashboard({
                                         </span>
                                     )}
                                     {active_jadwal.status === 'izin' && (
-                                        <span className="text-amber-250 inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
+                                        <span className="text-amber-200 inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
                                             Izin
                                         </span>
                                     )}
                                     {active_jadwal.status === 'alpa' && (
-                                        <span className="text-rose-250 inline-flex items-center gap-1 rounded-full border border-rose-500/20 bg-rose-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
+                                        <span className="text-rose-200 inline-flex items-center gap-1 rounded-full border border-rose-500/20 bg-rose-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase backdrop-blur-md">
                                             Alpa
                                         </span>
                                     )}
@@ -188,12 +188,12 @@ export default function SiswaDashboard({
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center dark:border-zinc-900 dark:bg-zinc-900/40 shadow-sm">
-                        <Clock className="size-10 animate-pulse stroke-neutral-300 dark:stroke-zinc-800" />
+                       <Clock className="size-10  stroke-slate-300 dark:stroke-slate-600" />
                         <div className="space-y-0.5">
-                            <p className="dark:text-neutral-250 text-xs font-black text-slate-900">
+                            <p className="dark:text-neutral-200 text-xs font-black text-slate-900">
                                 Tidak Ada Kelas
                             </p>
-                            <p className="text-[10px] font-medium text-slate-600 dark:text-neutral-550">
+                            <p className="text-[10px] font-medium text-slate-600 dark:text-neutral-400">
                                 Belum ada jadwal pelajaran yang sedang
                                 berlangsung saat ini.
                             </p>
@@ -204,34 +204,34 @@ export default function SiswaDashboard({
 
             {/* SECTION: Layanan Siswa / Kotak Aspirasi */}
             <div className="space-y-3">
-                <h3 className="dark:text-neutral-550 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
+                <h3 className="dark:text-neutral-500 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
                     <MessageSquare className="size-3.5 text-indigo-500" />
                     <span>Aspirasi Siswa</span>
                 </h3>
                 <Link
                     href="/siswa/aspirasi"
-                    className="relative block overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 transition-all hover:bg-slate-50 active:scale-[0.99] dark:border-zinc-900 dark:bg-zinc-900/40 shadow-sm"
+                    className="relative block overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 transition-all hover:bg-slate-50 active:scale-[0.99] dark:border-zinc-900 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/60 shadow-sm"
                 >
                     <div className="flex items-center gap-4">
                         <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600 dark:bg-indigo-950/20 dark:text-indigo-400">
                             <MessageSquare className="size-6" />
                         </div>
                         <div className="flex-1 text-left">
-                            <h4 className="text-xs font-black text-slate-900 dark:text-neutral-250">
-                                Kirim Kritik & Saran Anonim
+                            <h4 className="text-xs font-black text-slate-900 dark:text-neutral-200">
+                                Kirim Kritik & Saran 
                             </h4>
-                            <p className="mt-1 text-[9.5px] leading-relaxed text-slate-505 dark:text-neutral-500">
-                                Suaramu berharga! Kirim masukan atau aspirasi secara aman tanpa identitas terungkap.
+                            <p className="mt-1 text-[9.5px] leading-relaxed text-slate-500 dark:text-neutral-500">
+                                Suaramu berharga! Kirim masukan atau aspirasi 
                             </p>
                         </div>
-                        <ChevronRight className="size-5 text-slate-400 dark:text-neutral-605" />
+                        <ChevronRight className="size-5 text-slate-400 dark:text-neutral-600" />
                     </div>
                 </Link>
             </div>
 
             {/* SECTION: Jadwal Hari Ini Table */}
             <div className="space-y-3">
-                <h3 className="dark:text-neutral-550 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
+                <h3 className="dark:text-neutral-500 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
                     <BookOpen className="size-3.5 text-indigo-500" />
                     <span>Jadwal Pelajaran Hari Ini</span>
                 </h3>
@@ -240,7 +240,7 @@ export default function SiswaDashboard({
                     <div className="scrollbar-none overflow-x-auto">
                         <table className="w-full min-w-[340px] table-fixed text-left text-[11px]">
                             {/* Modern transparent table header */}
-                            <thead className="dark:text-neutral-450 border-b border-slate-200 bg-slate-50 font-black text-slate-650 dark:border-zinc-900 dark:bg-zinc-900/60">
+                            <thead className="border-b border-slate-200 bg-slate-50 font-black text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400">
                                 <tr>
                                     <th className="w-[24%] px-4 py-3 text-center text-[8px] font-extrabold tracking-wider uppercase">
                                         Jam
@@ -271,7 +271,7 @@ export default function SiswaDashboard({
                                             }`}
                                         >
                                             {/* Time Column */}
-                                            <td className="dark:text-neutral-450 px-3 py-3.5 text-center font-mono text-[9px] font-black text-slate-650 select-all">
+                                            <td className="dark:text-neutral-400 px-3 py-3.5 text-center font-mono text-[9px] font-black text-slate-600 select-all">
                                                 {row.waktu}
                                             </td>
 
@@ -356,31 +356,31 @@ export default function SiswaDashboard({
                     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-zinc-900/60 dark:bg-zinc-900/10">
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
+                            <span className="dark:text-neutral-400 text-[9px] text-slate-600 italic">
                                 Hadir
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-amber-500 ring-2 ring-amber-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
+                            <span className="dark:text-neutral-400 text-[9px] text-slate-600 italic">
                                 Izin
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-rose-500 ring-2 ring-rose-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
+                            <span className="dark:text-neutral-400 text-[9px] text-slate-600 italic">
                                 Alpa
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-sky-500 ring-2 ring-sky-500/20"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
+                            <span className="dark:text-neutral-400 text-[9px] text-slate-600 italic">
                                 Sakit
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-slate-300 ring-2 ring-slate-200 dark:bg-zinc-700 dark:ring-zinc-800/30"></span>
-                            <span className="dark:text-neutral-450 text-[9px] text-slate-655 italic">
+                            <span className="dark:text-neutral-400 text-[9px] text-slate-600 italic">
                                 Belum
                             </span>
                         </div>
@@ -391,7 +391,7 @@ export default function SiswaDashboard({
             {/* SECTION: Ringkasan Absensi (2x2 Grid) */}
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <h3 className="dark:text-neutral-550 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
+                    <h3 className="dark:text-neutral-500 flex items-center gap-1 text-[10px] font-black tracking-widest text-neutral-400 uppercase">
                         <Calendar className="size-3.5 text-indigo-500" />
                         <span>Rekap Presensi Bulan Ini</span>
                     </h3>

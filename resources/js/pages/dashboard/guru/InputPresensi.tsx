@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogClose,
+} from '@/components/ui/dialog';
 import {
     Loader2,
     AlertCircle,
@@ -10,6 +17,8 @@ import {
     Lock,
     FileText,
     User,
+    X,
+    ExternalLink,
 } from 'lucide-react';
 
 export interface StudentPresence {
@@ -123,6 +132,13 @@ export default function InputPresensi({
     setLocalAttendance,
 }: InputPresensiProps) {
     const activeJadwal = jadwals.find((j) => j.id === activeJadwalId);
+    const [buktiModalUrl, setBuktiModalUrl] = useState<string | null>(null);
+
+    // Derive if bukti is an image based on URL extension
+    const isImageUrl = (url: string): boolean => {
+        const ext = url.split('?')[0].toLowerCase().split('.').pop() ?? '';
+        return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
+    };
 
     const counts = Object.values(localAttendance).reduce(
         (acc, curr) => {
@@ -279,7 +295,11 @@ export default function InputPresensi({
                         setLocalAttendance((prev: any) => {
                             const next = { ...prev };
                             students.forEach((s) => {
-                                if (next[s.id]) {
+                                if (
+                                    next[s.id] &&
+                                    next[s.id].status !== 'izin' &&
+                                    next[s.id].status !== 'sakit'
+                                ) {
                                     next[s.id] = { ...next[s.id], status: 'hadir' };
                                 }
                             });
@@ -422,18 +442,18 @@ export default function InputPresensi({
                                                 </p>
                                                 {stud.izin_default
                                                     ?.bukti_url && (
-                                                    <a
-                                                        href={
-                                                            stud.izin_default
-                                                                .bukti_url
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setBuktiModalUrl(
+                                                                stud.izin_default!.bukti_url!
+                                                            )
                                                         }
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="mt-1 inline-flex items-center gap-1 text-[10px] font-extrabold text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400"
+                                                        className="mt-1 inline-flex items-center gap-1 text-[10px] font-extrabold text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400 cursor-pointer"
                                                     >
                                                         <FileText className="size-3.5" />{' '}
                                                         Lihat Surat Bukti
-                                                    </a>
+                                                    </button>
                                                 )}
                                             </div>
 
@@ -620,14 +640,17 @@ export default function InputPresensi({
                                             NISN: {stud.nisn}
                                         </p>
                                         {stud.izin_default?.bukti_url && (
-                                            <a
-                                                href={stud.izin_default.bukti_url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="mt-0.5 inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-500 hover:text-indigo-600 hover:underline"
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setBuktiModalUrl(
+                                                        stud.izin_default!.bukti_url!
+                                                    )
+                                                }
+                                                className="mt-0.5 inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-500 hover:text-indigo-600 hover:underline cursor-pointer"
                                             >
                                                 <FileText className="size-3.5" /> Lihat Bukti
-                                            </a>
+                                            </button>
                                         )}
                                     </div>
                                 </div>
@@ -770,7 +793,7 @@ export default function InputPresensi({
     {/* Save Button */}
     <div className="flex w-full shrink-0 flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center">
         {isDirty && (
-            <div className="flex animate-pulse items-center gap-1.5 border border-amber-100 bg-amber-50 px-3.5 py-1.5 text-[10px] font-semibold text-amber-700 dark:border-amber-900/30 dark:bg-amber-950/15 dark:text-amber-500">
+            <div className="flex items-center gap-1.5 border border-amber-100 bg-amber-50 px-3.5 py-1.5 text-[10px] font-semibold text-amber-700 dark:border-amber-900/30 dark:bg-amber-950/15 dark:text-amber-500">
                 <AlertCircle className="size-4 shrink-0" />
                 <span>Ada perubahan belum disimpan</span>
             </div>
@@ -785,7 +808,7 @@ export default function InputPresensi({
             }
             className={`flex h-9 items-center justify-center gap-2 rounded-sm px-6 font-semibold transition-all duration-300 ${
                 isDirty
-                    ? 'animate-pulse bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-700 hover:to-violet-800 active:scale-95'
+                    ? 'bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-700 hover:to-violet-800 active:scale-95'
                     : 'cursor-not-allowed border border-slate-200 bg-slate-100 text-slate-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-neutral-600'
             }`}
         >
@@ -809,6 +832,68 @@ export default function InputPresensi({
 </div>
                 </>
             )}
+
+            {/* ── Bukti Modal ── */}
+            <Dialog open={buktiModalUrl !== null} onOpenChange={(open) => { if (!open) setBuktiModalUrl(null); }}>
+                <DialogContent className="max-w-2xl w-full p-0 overflow-hidden border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+                    <DialogHeader className="flex flex-row items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 px-5 py-3.5">
+                        <DialogTitle className="text-sm font-semibold text-slate-800 dark:text-neutral-100 flex items-center gap-2">
+                            <FileText className="size-4 text-indigo-500 shrink-0" />
+                            Bukti Izin / Sakit
+                        </DialogTitle>
+                        <DialogClose asChild>
+                            <button
+                                type="button"
+                                className="flex items-center justify-center size-7 rounded-sm text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+                            >
+                                <X className="size-4" />
+                                <span className="sr-only">Tutup</span>
+                            </button>
+                        </DialogClose>
+                    </DialogHeader>
+
+                    <div className="p-5">
+                        {buktiModalUrl && isImageUrl(buktiModalUrl) ? (
+                            <div className="flex flex-col items-center gap-4">
+                                <img
+                                    src={buktiModalUrl}
+                                    alt="Bukti Izin/Sakit"
+                                    className="max-h-[60vh] w-full rounded-sm object-contain border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900"
+                                />
+                                <a
+                                    href={buktiModalUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-indigo-500 hover:text-indigo-600 hover:underline"
+                                >
+                                    <ExternalLink className="size-3.5" />
+                                    Buka di Tab Baru
+                                </a>
+                            </div>
+                        ) : buktiModalUrl ? (
+                            <div className="flex flex-col items-center gap-4 py-8">
+                                <div className="flex items-center justify-center size-16 rounded-sm border border-slate-100 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900">
+                                    <FileText className="size-8 text-indigo-400" />
+                                </div>
+                                <div className="text-center space-y-1">
+                                    <p className="text-xs font-semibold text-slate-700 dark:text-neutral-300">File Bukti Tersedia</p>
+                                    <p className="text-[11px] text-slate-500 dark:text-neutral-500">File ini tidak dapat dipratinjau secara langsung.</p>
+                                </div>
+                                <a
+                                    href={buktiModalUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-sm border border-indigo-200 bg-indigo-50 px-4 py-2 text-[11px] font-semibold text-indigo-600 hover:bg-indigo-100 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-indigo-400 transition-colors"
+                                >
+                                    <ExternalLink className="size-3.5" />
+                                    Buka / Unduh File
+                                </a>
+                            </div>
+                        ) : null}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
+

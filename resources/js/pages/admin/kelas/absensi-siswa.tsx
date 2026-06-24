@@ -543,22 +543,33 @@ export default function AbsensiSiswaPage({
     );
 }
 
-AbsensiSiswaPage.layout = (page: any) => (
-    <AppLayout
-        breadcrumbs={[
-            { title: 'Portal Admin', href: '/admin/dashboard' },
-            { title: 'Data Kelas', href: '/admin/kelas' },
-            {
-                title: page.props?.kelas?.nama_kelas ?? 'Detail Kelas',
-                href: page.props?.kelas?.id ? `/admin/kelas/${page.props.kelas.id}/detail` : '#',
-            },
-            {
-                title: 'Detail Absensi',
-                href: page.props?.kelas?.id ? `/admin/kelas/${page.props.kelas.id}/absensi` : '#',
-            },
-            { title: page.props?.siswa?.name ?? 'Detail Siswa', href: '#' },
-        ]}
-    >
-        {page}
-    </AppLayout>
-);
+AbsensiSiswaPage.layout = (page: any) => {
+    const auth = page.props?.auth ?? null;
+    const kelas = page.props?.kelas ?? null;
+    const siswa = page.props?.siswa ?? null;
+    const role = auth?.user?.role ?? 'admin';
+    const isWali = role === 'guru';
+
+    const breadcrumbs = [
+        { 
+            title: isWali ? 'Dashboard' : 'Portal Admin', 
+            href: isWali ? '/dashboard' : '/admin/dashboard' 
+        },
+        ...(isWali ? [] : [{ title: 'Data Kelas', href: '/admin/kelas' }]),
+        {
+            title: kelas?.nama_kelas ?? 'Detail Kelas',
+            href: isWali ? '#' : (kelas?.id ? `/admin/kelas/${kelas.id}/detail` : '#'),
+        },
+        {
+            title: 'Detail Absensi',
+            href: kelas?.id ? `/admin/kelas/${kelas.id}/absensi` : '#',
+        },
+        { title: siswa?.name ?? 'Detail Siswa', href: '#' },
+    ];
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            {page}
+        </AppLayout>
+    );
+};

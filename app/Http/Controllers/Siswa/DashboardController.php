@@ -107,11 +107,11 @@ class DashboardController extends Controller
 
         // 7. General statistics for legacy features / widgets
         $presensiAll = Presensi::where('siswa_id', $siswa->id)->get();
-        $totalAll = $presensiAll->count();
         $hadirAll = $presensiAll->where('status', 'hadir')->count();
         $sakitAll = $presensiAll->where('status', 'sakit')->count();
         $izinAll = $presensiAll->where('status', 'izin')->count();
         $alpaAll = $presensiAll->where('status', 'alpa')->count();
+        $totalAll = $hadirAll + $sakitAll + $izinAll + $alpaAll;
 
         $stats = [
             'total' => $totalAll,

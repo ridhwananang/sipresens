@@ -323,11 +323,11 @@ class DashboardService
 
         // Attendance statistics
         $presensi = Presensi::where('siswa_id', $siswa->id)->with(['jadwal.mapel'])->get();
-        $total = $presensi->count();
         $hadir = $presensi->where('status', 'hadir')->count();
         $sakit = $presensi->where('status', 'sakit')->count();
         $izin = $presensi->where('status', 'izin')->count();
         $alpa = $presensi->where('status', 'alpa')->count();
+        $total = $hadir + $sakit + $izin + $alpa;
 
         // Leave applications
         $leaveRequests = PengajuanIzinResource::collection(
@@ -375,11 +375,11 @@ class DashboardService
             ->get()
             ->map(function ($siswa) {
                 $presensi = Presensi::where('siswa_id', $siswa->id)->with(['jadwal.mapel'])->get();
-                $total = $presensi->count();
                 $hadir = $presensi->where('status', 'hadir')->count();
                 $sakit = $presensi->where('status', 'sakit')->count();
                 $izin = $presensi->where('status', 'izin')->count();
                 $alpa = $presensi->where('status', 'alpa')->count();
+                $total = $hadir + $sakit + $izin + $alpa;
 
                 $history = PresensiResource::collection(
                     $presensi->sortByDesc('tanggal')->take(10)

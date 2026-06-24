@@ -51,6 +51,7 @@ interface ChildData {
 
 interface OrangTuaDashboardProps {
     children: ChildData[];
+    stats_period: string;
     auth: {
         user: {
             id: number;
@@ -103,6 +104,7 @@ function StatusBadge({ status }: { status: string }) {
 export default function OrangTuaDashboard({
     children,
     auth,
+    stats_period,
 }: OrangTuaDashboardProps) {
     const parent = auth.user;
     const getInitials = useInitials();
@@ -182,7 +184,12 @@ export default function OrangTuaDashboard({
                     </div>
 
                     {/* Stats */}
-                    <OrangTuaStats stats={child.stats} />
+                    <div className="space-y-1">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-neutral-600 text-right pr-0.5">
+                            Statistik {stats_period}
+                        </p>
+                        <OrangTuaStats stats={child.stats} />
+                    </div>
 
                     {/* ── Sedang Berlangsung ── */}
                     <div className="space-y-2.5">

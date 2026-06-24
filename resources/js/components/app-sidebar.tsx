@@ -8,6 +8,7 @@ import {
   School,
   BookOpen,
   Calendar,
+  CalendarDays,
   GraduationCap,
   Users,
   HeartHandshake,
@@ -193,9 +194,21 @@ export function AppSidebar() {
               <SidebarMenuLink href="/presensi" isActive={isCurrentUrl('/presensi')} icon={ClipboardCheck} label="Input Presensi" role="guru" state={state} />
               <SidebarMenuLink href="/izin" isActive={isCurrentUrl('/izin')} icon={ShieldCheck} label="Verifikasi Izin" role="guru" state={state} />
               <SidebarMenuLink href="/jadwal" isActive={isCurrentUrl('/jadwal')} icon={CalendarClock} label="Jadwal Mengajar" role="guru" state={state} />
+              <SidebarMenuLink href="/guru/wali-kelas" isActive={isCurrentUrl('/guru/wali-kelas')} icon={Users} label="Daftar Murid Kelas" role="guru" state={state} />
+              {auth?.user?.guru?.kelas_wali && (
+                <SidebarMenuLink
+                  href={`/admin/kelas/${auth.user.guru.kelas_wali.id}/absensi`}
+                  isActive={isCurrentUrl(`/admin/kelas/${auth.user.guru.kelas_wali.id}/absensi`, undefined, true)}
+                  icon={ClipboardList}
+                  label="Absensi Kelas"
+                  role="guru"
+                  state={state}
+                />
+              )}
             </SidebarMenu>
           </SidebarGroup>
         )}
+
 
         {/* Siswa menu */}
         {role === 'siswa' && (

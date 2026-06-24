@@ -34,18 +34,24 @@ class DashboardController extends Controller
         $todayDateString = Carbon::today()->toDateString();
         $currentTime = Carbon::now()->format('H:i');
 
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
         $children = Siswa::where('orangtua_id', $ortu->id)
             ->with(['user', 'kelas'])
             ->get()
-            ->map(function ($siswa) use ($todayDayName, $todayDateString, $currentTime) {
+            ->map(function ($siswa) use ($todayDayName, $todayDateString, $currentTime, $currentMonth, $currentYear) {
 
-                // --- Attendance stats ---
-                $presensi = Presensi::where('siswa_id', $siswa->id)->get();
-                $total = $presensi->count();
+                // --- Attendance stats (bulan berjalan saja, sinkron dengan halaman Riwayat) ---
+                $presensi = Presensi::where('siswa_id', $siswa->id)
+                    ->whereMonth('tanggal', $currentMonth)
+                    ->whereYear('tanggal', $currentYear)
+                    ->get();
                 $hadir = $presensi->where('status', 'hadir')->count();
                 $sakit = $presensi->where('status', 'sakit')->count();
                 $izin = $presensi->where('status', 'izin')->count();
                 $alpa = $presensi->where('status', 'alpa')->count();
+                $total = $hadir + $sakit + $izin + $alpa;
 
                 // --- Active jadwal (same logic as Siswa DashboardController) ---
                 $activeJadwalData = null;
@@ -131,8 +137,15 @@ class DashboardController extends Controller
                 ];
             })->toArray();
 
+        $indonesianMonths = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+
         return Inertia::render('orangtua/dashboard', [
             'children' => $children,
+            'stats_period' => $indonesianMonths[$currentMonth].' '.$currentYear,
         ]);
     }
 }

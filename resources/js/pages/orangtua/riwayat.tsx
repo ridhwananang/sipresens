@@ -444,10 +444,10 @@ export default function OrangTuaRiwayatPage({
             <div className="space-y-4 text-left">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                        <Award className="size-4.5 text-violet-500" />
-                        <h3 className="dark:text-neutral-250 text-sm font-black text-slate-900">
-                            Detail Kehadiran
-                        </h3>
+                        <Award className="size-4.5 text-blue-500" />
+                            <h3 className="text-sm font-black text-slate-900 dark:text-slate-200">
+                                Detail Kehadiran
+                            </h3>
                     </div>
                     <span className="text-slate-600 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-black dark:border-zinc-800/40 dark:bg-zinc-900 dark:text-neutral-500">
                         {filteredHistory.length} Catatan{' '}
@@ -457,90 +457,86 @@ export default function OrangTuaRiwayatPage({
 
                 {history.length === 0 ? (
                     <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
-                        <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
+                        <Smile className="size-10 stroke-slate-300 dark:stroke-slate-600" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-slate-500">
                             Belum ada data presensi pada periode yang dipilih.
                         </p>
                     </div>
                 ) : filteredHistory.length === 0 ? (
                     <div className="flex flex-col items-center justify-center space-y-2.5 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900">
-                        <Smile className="size-10 stroke-neutral-300 dark:stroke-zinc-800" />
+                        <Smile className="size-10 stroke-slate-300 dark:stroke-slate-600" />
                         <p className="dark:text-neutral-450 text-xs font-bold text-slate-500">
                             Belum ada data presensi untuk status ini.
                         </p>
                     </div>
                 ) : (
-                    <div className="space-y-4">
-                        {filteredHistory.map((row) => {
-                            const colors = getStatusColors(row.status);
-                            return (
-                                <div
-                                    key={row.id}
-                                    className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-transform duration-200 active:scale-[0.99] dark:border-zinc-800/80 dark:bg-zinc-900"
-                                >
-                                    {/* Left accent stripe */}
-                                    <div
-                                        className={`absolute top-0 left-0 h-full w-1.5 ${colors.accent}`}
-                                    />
+<div className="space-y-4">
+    {filteredHistory.map((row) => {
+        const colors = getStatusColors(row.status);
+        return (
+            <div
+                key={row.id}
+                className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-transform duration-200 active:scale-[0.99] dark:border-slate-800 dark:bg-slate-900"
+            >
+                {/* Left colored border */}
+                <div
+                    className={`absolute top-0 left-0 h-full w-1.5 ${colors.accent}`}
+                />
 
-                                    <div className="space-y-4 pl-3.5 text-left">
-                                        {/* Top: Mapel & Status Badge */}
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div className="flex min-w-0 items-center gap-1.5">
-                                                <BookOpen className="size-4 shrink-0 text-violet-500" />
-                                                <span className="truncate text-xs font-black text-slate-900 dark:text-neutral-100">
-                                                    {row.nama_mapel}
-                                                </span>
-                                            </div>
-                                            <span
-                                                className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[9px] font-extrabold uppercase ${colors.bg} ${colors.text} ${colors.border}`}
-                                            >
-                                                {getStatusLabel(row.status)}
-                                            </span>
-                                        </div>
-
-                                        {/* Grid: Hari/Tanggal & Jam */}
-                                        <div className="dark:text-neutral-450 grid grid-cols-2 gap-x-4 gap-y-2.5 text-[10px] font-bold text-slate-600">
-                                            <div className="flex min-w-0 items-center gap-1.5">
-                                                <Calendar className="size-3.5 shrink-0 text-slate-400 dark:text-neutral-500" />
-                                                <span className="truncate">
-                                                    {row.hari},{' '}
-                                                    {row.tanggal_format}
-                                                </span>
-                                            </div>
-                                            <div className="flex min-w-0 items-center gap-1.5">
-                                                <Clock className="size-3.5 shrink-0 text-slate-400 dark:text-neutral-500" />
-                                                <span className="truncate font-mono">
-                                                    {row.jam !== 'N/A'
-                                                        ? row.jam
-                                                        : 'N/A'}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Guru */}
-                                        <div className="dark:text-neutral-450 flex items-center gap-1.5 border-t border-slate-200 pt-3 text-[10px] font-bold text-slate-655 dark:border-zinc-800/50">
-                                            <User className="size-3.5 shrink-0 text-slate-400 dark:text-neutral-500" />
-                                            <span className="truncate">
-                                                Guru: {row.nama_guru}
-                                            </span>
-                                        </div>
-
-                                        {/* Keterangan */}
-                                        <div className="border-slate-200 flex flex-col gap-1 rounded-2xl border bg-slate-50 p-3 text-[10px] dark:border-zinc-900 dark:bg-zinc-950/40">
-                                            <span className="dark:text-neutral-550 text-[8px] font-bold tracking-wider text-slate-600 uppercase">
-                                                Catatan / Keterangan
-                                            </span>
-                                            <p className="dark:text-neutral-350 leading-relaxed font-semibold text-slate-600 italic">
-                                                {row.keterangan ||
-                                                    'Tidak ada keterangan'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                <div className="space-y-4 pl-3.5 text-left">
+                    {/* Top Header: Mapel & Status */}
+                    <div className="flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                            <BookOpen className="size-4 shrink-0 text-indigo-500" />
+                            <span className="truncate text-xs font-black text-slate-800 dark:text-slate-100">
+                                {row.nama_mapel}
+                            </span>
+                        </div>
+                        <span
+                            className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[9px] font-extrabold uppercase ${colors.bg} ${colors.text} ${colors.border}`}
+                        >
+                            {getStatusLabel(row.status)}
+                        </span>
                     </div>
+
+                    {/* Grid: Day/Date & Jam Pelajaran */}
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                            <Calendar className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+                            <span className="truncate">
+                                {row.hari}, {row.tanggal_format}
+                            </span>
+                        </div>
+                        <div className="flex min-w-0 items-center gap-1.5">
+                            <Clock className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+                            <span className="truncate font-mono">
+                                {row.jam !== 'N/A' ? row.jam : 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Teacher Info */}
+                    <div className="flex items-center gap-1.5 border-t border-slate-100 pt-3 text-[10px] font-bold text-slate-500 dark:border-slate-800/50 dark:text-slate-400">
+                        <User className="size-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+                        <span className="truncate">
+                            Guru: {row.nama_guru}
+                        </span>
+                    </div>
+
+                    {/* Keterangan */}
+                    <div className="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-[10px] dark:border-slate-800 dark:bg-slate-950/40">
+                        <span className="text-[8px] font-bold tracking-wider text-slate-400 uppercase dark:text-slate-500">
+                            Catatan / Keterangan
+                        </span>
+                        <p className="leading-relaxed font-semibold text-slate-600 italic dark:text-slate-300">
+                            {row.keterangan || 'Tidak ada keterangan'}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    })}
+</div>
                 )}
             </div>
         </div>

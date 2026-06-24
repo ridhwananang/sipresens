@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Guru\WaliKelasController;
+
 use App\Http\Controllers\Admin\KelasAbsensiController;
 use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\MapelController;
@@ -92,10 +94,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('presensi', [PresensiController::class, 'storePresensi'])->name('presensi.store');
     });
 
-    // Guru-only: Wali Kelas approve/reject izin
+    // Guru-only: Wali Kelas approve/reject izin + Daftar Murid Wali Kelas
     Route::middleware('role:guru')->prefix('guru')->name('guru.')->group(function () {
         Route::post('izin/{id}/approve', [App\Http\Controllers\Guru\IzinController::class, 'approve'])->name('izin.approve');
         Route::post('izin/{id}/reject', [App\Http\Controllers\Guru\IzinController::class, 'reject'])->name('izin.reject');
+        Route::get('wali-kelas', [WaliKelasController::class, 'index'])->name('wali-kelas.index');
     });
 });
 

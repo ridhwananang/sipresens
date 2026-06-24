@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Briefcase,
@@ -71,6 +71,13 @@ export default function OrangTuaIzinForm({
 }: OrangTuaIzinFormProps) {
     const fileRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!data.bukti_foto) {
+            setPreview(null);
+            if (fileRef.current) fileRef.current.value = '';
+        }
+    }, [data.bukti_foto]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
