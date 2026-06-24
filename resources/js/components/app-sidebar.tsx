@@ -58,16 +58,22 @@ function SidebarMenuLink({ href, isActive, icon: Icon, label, tooltip, role, sta
   let dotColor = '';
 
   if (role === 'admin') {
-    activeLinkClass = 'bg-indigo-50/80 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 font-extrabold border-l-4 border-indigo-600 dark:border-indigo-500 shadow-sm';
+    activeLinkClass = `bg-indigo-50/80 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 font-extrabold border-indigo-600 dark:border-indigo-500 shadow-sm ${
+      state === 'collapsed' ? '' : 'border-l-4'
+    }`;
     iconActiveStyle = 'bg-indigo-600 text-white dark:bg-indigo-500 dark:text-white shadow-md shadow-indigo-500/20';
     dotColor = 'bg-indigo-600 dark:bg-indigo-400';
   } else if (role === 'guru') {
-    activeLinkClass = 'bg-amber-50 dark:bg-amber-950/10 text-amber-700 dark:text-amber-400 font-extrabold border-l-4 border-amber-500 shadow-sm';
+    activeLinkClass = `bg-amber-50 dark:bg-amber-950/10 text-amber-700 dark:text-amber-400 font-extrabold border-amber-500 shadow-sm ${
+      state === 'collapsed' ? '' : 'border-l-4'
+    }`;
     iconActiveStyle = 'bg-amber-600 text-white dark:bg-amber-500 dark:text-white shadow-md shadow-amber-500/20';
     dotColor = 'bg-amber-600 dark:bg-amber-400';
   } else {
     // Default fallback (siswa/orang tua)
-    activeLinkClass = 'bg-indigo-50/50 dark:bg-indigo-950/15 text-indigo-600 dark:text-indigo-400 font-extrabold border-l-4 border-indigo-600 dark:border-indigo-400 shadow-sm';
+    activeLinkClass = `bg-indigo-50/50 dark:bg-indigo-950/15 text-indigo-600 dark:text-indigo-400 font-extrabold border-indigo-600 dark:border-indigo-400 shadow-sm ${
+      state === 'collapsed' ? '' : 'border-l-4'
+    }`;
     iconActiveStyle = 'bg-indigo-600 text-white dark:bg-indigo-500 dark:text-white';
     dotColor = 'bg-indigo-600';
   }
@@ -118,13 +124,16 @@ export function AppSidebar() {
       variant="inset"
       className="bg-white dark:bg-[#111827] border-r border-[#E2E8F0] dark:border-white/[0.08] w-60 lg:w-64 transition-all duration-200"
     >
-      {/* Header – Logo & Command Center Brand */}
-  <SidebarHeader className="border-b border-[#E2E8F0] dark:border-white/[0.08] px-4 py-3 flex items-center min-h-[72px]">
+      <SidebarHeader className={`border-b border-[#E2E8F0] dark:border-white/[0.08] flex items-center h-16 transition-all duration-200 ${
+    state === 'collapsed' ? "p-2 justify-center" : "px-4 py-3"
+  }`}>
   <Link href={dashboard()} prefetch className="flex items-center gap-3 mx-auto md:mx-0 shrink-0">
     <img
       src="/images/gsi.png"
       alt="Sipresens Logo"
-      className="h-16 w-16 rounded-2xl object-contain shrink-0"
+      className={`rounded-2xl object-contain shrink-0 transition-all duration-200 ${
+        state === 'collapsed' ? "h-8 w-8" : "h-11 w-11"
+      }`}
     />
     {state !== 'collapsed' && (
       <span className="font-extrabold text-neutral-900 dark:text-white text-base tracking-tight leading-tight">
@@ -135,9 +144,13 @@ export function AppSidebar() {
 </SidebarHeader>
 
       {/* Content – Role-based Menus */}
-      <SidebarContent className="scrollbar-thin px-3 py-3 space-y-4 bg-white dark:bg-[#111827]">
+      <SidebarContent className={`scrollbar-thin bg-white dark:bg-[#111827] transition-all duration-200 ${
+        state === 'collapsed'
+          ? "px-[7px] py-5 space-y-6"
+          : "px-3 py-3 space-y-4"
+      }`}>
         {role === 'admin' && (
-          <div className="space-y-4">
+          <div className={`transition-all duration-200 ${state === 'collapsed' ? "space-y-6" : "space-y-4"}`}>
             {/* Utama */}
             <SidebarGroup className="p-0">
               <SidebarGroupLabel className={labelStyle}>Utama</SidebarGroupLabel>

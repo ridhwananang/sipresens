@@ -30,11 +30,11 @@ export function AppSidebarHeader({
     };
 
     return (
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-200/50 dark:border-zinc-800/80 bg-white dark:bg-[#111827] px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-6">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-200/50 dark:border-zinc-800/80 bg-white dark:bg-[#111827] px-6 transition-[width,height] ease-linear md:px-6">
             {/* Left Section: Breadcrumbs */}
             <div className="flex items-center gap-2">
-                <SidebarTrigger className="-ml-1 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5" />
-                <div className="h-4 w-px bg-neutral-200 dark:bg-zinc-800 mx-1" />
+                <SidebarTrigger className="-ml-1 md:hidden text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5" />
+                <div className="h-4 w-px bg-neutral-200 dark:bg-zinc-800 mx-1 md:hidden" />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
 

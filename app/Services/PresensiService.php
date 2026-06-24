@@ -19,26 +19,35 @@ class PresensiService
      */
     public function recordPresensi(array $data, ?int $guruId): Presensi
     {
+        $siswaId = $data['siswa_id'];
+        $newStatus = $data['status'];
+        $tanggal = $data['tanggal'];
+        $jadwalId = $data['jadwal_id'] ?? null;
+
+        $statusChanged = $this->hasStatusChanged($siswaId, $newStatus, $tanggal, $jadwalId);
+
         $presensi = Presensi::updateOrCreate(
             [
-                'siswa_id' => $data['siswa_id'],
-                'tanggal' => $data['tanggal'],
-                'jadwal_id' => $data['jadwal_id'] ?? null,
+                'siswa_id' => $siswaId,
+                'tanggal' => $tanggal,
+                'jadwal_id' => $jadwalId,
             ],
             [
-                'status' => $data['status'],
+                'status' => $newStatus,
                 'keterangan' => $data['keterangan'] ?? null,
                 'diverifikasi_oleh' => $guruId,
             ]
         );
 
-        $this->triggerWhatsappNotification(
-            $data['siswa_id'],
-            $data['status'],
-            $data['tanggal'],
-            $data['keterangan'] ?? null,
-            $data['jadwal_id'] ?? null
-        );
+        if ($statusChanged) {
+            $this->triggerWhatsappNotification(
+                $siswaId,
+                $newStatus,
+                $tanggal,
+                $data['keterangan'] ?? null,
+                $jadwalId
+            );
+        }
 
         return $presensi;
     }
@@ -49,26 +58,35 @@ class PresensiService
     public function recordPresensiBatch(array $data, ?int $guruId): void
     {
         foreach ($data['presensi'] as $item) {
+            $siswaId = $item['siswa_id'];
+            $newStatus = $item['status'];
+            $tanggal = $data['tanggal'];
+            $jadwalId = $data['jadwal_id'] ?? null;
+
+            $statusChanged = $this->hasStatusChanged($siswaId, $newStatus, $tanggal, $jadwalId);
+
             Presensi::updateOrCreate(
                 [
-                    'siswa_id' => $item['siswa_id'],
-                    'tanggal' => $data['tanggal'],
-                    'jadwal_id' => $data['jadwal_id'] ?? null,
+                    'siswa_id' => $siswaId,
+                    'tanggal' => $tanggal,
+                    'jadwal_id' => $jadwalId,
                 ],
                 [
-                    'status' => $item['status'],
+                    'status' => $newStatus,
                     'keterangan' => $item['keterangan'] ?? null,
                     'diverifikasi_oleh' => $guruId,
                 ]
             );
 
-            $this->triggerWhatsappNotification(
-                $item['siswa_id'],
-                $item['status'],
-                $data['tanggal'],
-                $item['keterangan'] ?? null,
-                $data['jadwal_id'] ?? null
-            );
+            if ($statusChanged) {
+                $this->triggerWhatsappNotification(
+                    $siswaId,
+                    $newStatus,
+                    $tanggal,
+                    $item['keterangan'] ?? null,
+                    $jadwalId
+                );
+            }
         }
     }
 
@@ -96,26 +114,34 @@ class PresensiService
 
             // 2. Record Presensi Siswa
             foreach ($data['presensi'] as $item) {
+                $siswaId = $item['siswa_id'];
+                $newStatus = $item['status'];
+                $tanggal = $data['tanggal'];
+
+                $statusChanged = $this->hasStatusChanged($siswaId, $newStatus, $tanggal, $jadwal->id);
+
                 Presensi::updateOrCreate(
                     [
-                        'siswa_id' => $item['siswa_id'],
-                        'tanggal' => $data['tanggal'],
+                        'siswa_id' => $siswaId,
+                        'tanggal' => $tanggal,
                         'jadwal_id' => $jadwal->id,
                     ],
                     [
-                        'status' => $item['status'],
+                        'status' => $newStatus,
                         'keterangan' => $item['keterangan'] ?? null,
                         'diverifikasi_oleh' => $guruId,
                     ]
                 );
 
-                $this->triggerWhatsappNotification(
-                    $item['siswa_id'],
-                    $item['status'],
-                    $data['tanggal'],
-                    $item['keterangan'] ?? null,
-                    $jadwal->id
-                );
+                if ($statusChanged) {
+                    $this->triggerWhatsappNotification(
+                        $siswaId,
+                        $newStatus,
+                        $tanggal,
+                        $item['keterangan'] ?? null,
+                        $jadwal->id
+                    );
+                }
             }
 
             // 3. Record Sikap Siswa (updateOrCreate by unique session + student keys)
@@ -320,5 +346,40 @@ class PresensiService
         $monday = CarbonImmutable::parse($relativeToDate)->startOfWeek(CarbonImmutable::MONDAY);
 
         return $monday->addDays($targetDayIndex - 1)->toDateString();
+    }
+
+    /**
+     * Detect if the attendance status has actually changed compared to the pre-existing state.
+     */
+    private function hasStatusChanged(int $siswaId, string $newStatus, string $tanggal, ?int $jadwalId): bool
+    {
+        // 1. Check if there is an existing subject-specific presensi record
+        $existing = Presensi::where([
+            'siswa_id' => $siswaId,
+            'tanggal' => $tanggal,
+            'jadwal_id' => $jadwalId,
+        ])->first();
+
+        if ($existing) {
+            return $existing->status !== $newStatus;
+        }
+
+        // 2. If no subject-specific presensi, check if there is an approved permit (izin/sakit) on that day
+        $izin = PengajuanIzin::where('status', 'disetujui')
+            ->where('tanggal_mulai', '<=', $tanggal)
+            ->where('tanggal_selesai', '>=', $tanggal)
+            ->where('siswa_id', $siswaId)
+            ->first();
+
+        if ($izin) {
+            return $izin->jenis_izin !== $newStatus;
+        }
+
+        // 3. Otherwise, the default state was 'belum' (which defaults to 'hadir' on submit)
+        if ($newStatus === 'hadir') {
+            return false;
+        }
+
+        return true;
     }
 }

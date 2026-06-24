@@ -298,7 +298,8 @@ export default function InputPresensi({
                                 if (
                                     next[s.id] &&
                                     next[s.id].status !== 'izin' &&
-                                    next[s.id].status !== 'sakit'
+                                    next[s.id].status !== 'sakit' &&
+                                    !s.izin_default
                                 ) {
                                     next[s.id] = { ...next[s.id], status: 'hadir' };
                                 }

@@ -54,6 +54,7 @@ class AdminService
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'email_verified_at' => now(),
                 'password' => Hash::make($data['password']),
                 'role' => 'guru',
             ]);
@@ -129,6 +130,7 @@ class AdminService
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'email_verified_at' => now(),
                 'password' => Hash::make($data['password']),
                 'role' => 'siswa',
             ]);
@@ -198,6 +200,7 @@ class AdminService
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'email_verified_at' => now(),
                 'password' => Hash::make($data['password']),
                 'role' => 'orangtua',
             ]);

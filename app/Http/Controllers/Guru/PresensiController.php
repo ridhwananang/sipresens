@@ -101,14 +101,7 @@ class PresensiController extends Controller
                 $izin = $izinDb[$siswa->id] ?? null;
                 $izinDefault = null;
 
-                if ($presensi) {
-                    // Sudah ada catatan presensi per jadwal → pakai itu
-                    $status = $presensi->status;
-                    $keterangan = $presensi->keterangan ?? '';
-                } elseif ($izin) {
-                    // Belum ada presensi, tetapi ada izin disetujui → jadikan default
-                    $status = $izin->jenis_izin; // 'izin' atau 'sakit'
-                    $keterangan = 'Izin disetujui: '.$izin->alasan;
+                if ($izin) {
                     $izinDefault = [
                         'jenis' => $izin->jenis_izin,
                         'alasan' => $izin->alasan,
@@ -118,6 +111,16 @@ class PresensiController extends Controller
                                             : Storage::disk('public')->url($izin->bukti_foto))
                                         : null,
                     ];
+                }
+
+                if ($presensi) {
+                    // Sudah ada catatan presensi per jadwal → pakai itu
+                    $status = $presensi->status;
+                    $keterangan = $presensi->keterangan ?? '';
+                } elseif ($izin) {
+                    // Belum ada presensi, tetapi ada izin disetujui → jadikan default
+                    $status = $izin->jenis_izin; // 'izin' atau 'sakit'
+                    $keterangan = 'Izin disetujui: '.$izin->alasan;
                 } else {
                     // Tidak ada presensi dan tidak ada izin disetujui
                     $status = 'belum';
