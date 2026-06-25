@@ -46,6 +46,25 @@ class OrangTuaController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        Gate::authorize('create', OrangTua::class);
+
+        $students = Siswa::with('user', 'kelas')->get()->map(function ($s) {
+            return [
+                'id' => $s->id,
+                'name' => $s->user ? $s->user->name : '',
+                'nisn' => $s->nisn,
+                'kelas' => $s->kelas ? $s->kelas->nama_kelas : 'Belum masuk kelas',
+                'orangtua_id' => $s->orangtua_id,
+            ];
+        })->toArray();
+
+        return Inertia::render('admin/orangtua/create', [
+            'students' => $students,
+        ]);
+    }
+
     public function store(StoreOrangTuaRequest $request)
     {
         Gate::authorize('create', OrangTua::class);
@@ -60,7 +79,40 @@ class OrangTuaController extends Controller
 
         $this->adminService->createOrangTua($validated);
 
-        return back()->with('success', 'Data Orang Tua berhasil ditambahkan.');
+        return redirect()->route('admin.orangtua.index')->with('success', 'Data Orang Tua berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $ortu = OrangTua::with(['user', 'anak.user', 'anak.kelas'])->findOrFail($id);
+        Gate::authorize('update', $ortu);
+
+        $parent = [
+            'id' => $ortu->id,
+            'name' => $ortu->user->name,
+            'email' => $ortu->user->email,
+            'no_hp' => $ortu->no_hp ?? '',
+            'jenis_kelamin' => $ortu->jenis_kelamin,
+            'foto_profile_url' => $ortu->foto_profile_url,
+            'anak' => $ortu->anak->map(function ($a) {
+                return ['id' => $a->id];
+            })->toArray(),
+        ];
+
+        $students = Siswa::with('user', 'kelas')->get()->map(function ($s) {
+            return [
+                'id' => $s->id,
+                'name' => $s->user ? $s->user->name : '',
+                'nisn' => $s->nisn,
+                'kelas' => $s->kelas ? $s->kelas->nama_kelas : 'Belum masuk kelas',
+                'orangtua_id' => $s->orangtua_id,
+            ];
+        })->toArray();
+
+        return Inertia::render('admin/orangtua/edit', [
+            'parent' => $parent,
+            'students' => $students,
+        ]);
     }
 
     public function update(UpdateOrangTuaRequest $request, $id)
@@ -81,7 +133,7 @@ class OrangTuaController extends Controller
 
         $this->adminService->updateOrangTua($id, $validated);
 
-        return back()->with('success', 'Data Orang Tua berhasil diperbarui.');
+        return redirect()->route('admin.orangtua.index')->with('success', 'Data Orang Tua berhasil diperbarui.');
     }
 
     public function destroy($id)

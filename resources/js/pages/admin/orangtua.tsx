@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2, UsersRound, Search, Phone, Mail, User } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportDropdown from '@/components/ExportDropdown';
-import OrangTuaModal from './orangtua/OrangTuaModal';
 import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface AnakItem {
@@ -64,22 +63,10 @@ function avatarColor(id: number, gender: 'L' | 'P'): string {
 }
 
 export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editItem, setEditItem] = useState<ParentItem | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterFoto, setFilterFoto] = useState<'' | 'ada' | 'tidak-ada'>('');
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-
-    const openCreateModal = () => {
-        setEditItem(null);
-        setIsModalOpen(true);
-    };
-
-    const openEditModal = (item: ParentItem) => {
-        setEditItem(item);
-        setIsModalOpen(true);
-    };
 
     const handleDelete = (id: number) => {
         setDeleteId(id);
@@ -176,7 +163,7 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                         filename="daftar_orangtua"
                     />
                     <Button
-                        onClick={openCreateModal}
+                        onClick={() => router.get('/admin/orangtua/create')}
                         className="gap-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl h-9 px-3 text-xs font-black cursor-pointer shadow-sm shadow-indigo-500/20"
                     >
                         <Plus className="size-3.5" /> Tambah Orang Tua
@@ -247,7 +234,7 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-end gap-1.5">
-                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(p)}>
+                                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => router.get(`/admin/orangtua/${p.id}/edit`)}>
                                                         <Pencil className="size-3.5" />
                                                     </Button>
                                                     <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 dark:hover:bg-rose-950/20 cursor-pointer" onClick={() => handleDelete(p.id)}>
@@ -300,7 +287,7 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                                     </div>
                                 </div>
                                 <div className="flex shrink-0 gap-1.5 ml-2">
-                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => openEditModal(p)}>
+                                    <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer" onClick={() => router.get(`/admin/orangtua/${p.id}/edit`)}>
                                         <Pencil className="size-3.5" />
                                     </Button>
                                     <Button size="sm" variant="outline" className="h-8 w-8 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-400 cursor-pointer" onClick={() => handleDelete(p.id)}>
@@ -351,16 +338,7 @@ export default function OrangTuaPage({ parents, students }: OrangTuaPageProps) {
                 )}
             </div>
 
-            {/* Modal */}
-            <OrangTuaModal
-                isOpen={isModalOpen}
-                onClose={() => {
-                    setIsModalOpen(false);
-                    setEditItem(null);
-                }}
-                editItem={editItem}
-                students={students}
-            />
+            {/* Modal placeholder removed */}
             <ConfirmationModal
                 isOpen={isDeleteConfirmOpen}
                 onClose={() => {

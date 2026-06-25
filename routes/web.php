@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('guru', GuruController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::post('promote-students', [SiswaController::class, 'promote'])->name('promote-students');
-        Route::resource('orangtua', OrangTuaController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('orangtua', OrangTuaController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('mapel', MapelController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('jadwal', App\Http\Controllers\Admin\JadwalController::class)->only(['index', 'store', 'update', 'destroy']);
         // Admin: view-only izin management
